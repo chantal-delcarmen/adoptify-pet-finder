@@ -1,21 +1,25 @@
-🐾 Adoptify: Pet Finder
+# 🐾 Adoptify: Pet Finder
 
 Welcome to the Adoptify project! This guide will walk you through setting up and running the app locally using Docker.
 
-📋 Project Overview
+> **Disclaimer**: This README was generated with the assistance of Generative AI (GenAI). Please verify the information and adapt it as needed.
+
+---
+
+## 📋 Project Overview
 
 Adoptify is a full-stack application built to help users discover adoptable pets across different shelters. It includes:
 
-Backend: Django + MySQL
+- **Backend**: Django + MySQL
+- **Frontend**: React.js
+- **Database**: MySQL (Dockerized)
+- **Container Management**: Docker + Docker Compose
 
-Frontend: React.js
+---
 
-Database: MySQL (Dockerized)
+## 📁 Folder Structure
 
-Container Management: Docker + Docker Compose
-
-📁 Folder Structure
-
+```
 adoptify-pet-finder/
 ├── backend/                 # Django backend
 │   ├── adoptify_backend/   # Django settings and URLs
@@ -31,60 +35,74 @@ adoptify-pet-finder/
 ├── docker-compose.yml      # Defines all services
 ├── README.md
 └── .gitignore
+```
 
-🚀 Local Setup Guide
+---
 
-✅ Prerequisites
+## 🚀 Local Setup Guide
 
-📦 Docker Desktop
+### ✅ Prerequisites
 
-🧰 Git
+- 📦 Docker Desktop
+- 🧰 Git
+- 📝 (Optional) VS Code
 
-📝 (Optional) VS Code
+---
 
-🛠️ Getting Started
+### 🛠️ Getting Started
 
 1. Clone the repository
 
+```bash
 git clone https://github.com/chantal-delcarmen/adoptify-pet-finder.git
 cd adoptify-pet-finder
+```
 
 2. Build and run the project
 
+```bash
 docker-compose down               # (Optional) Stops any running containers
 docker-compose build --no-cache  # Rebuild everything cleanly
 docker-compose up                # Start all services
+```
 
 3. Open the application
 
-🌐 Frontend: http://localhost:3000
-
-🔌 Backend Test API: http://localhost:8000/api/test/
+- 🌐 Frontend: http://localhost:3000
+- 🔌 Backend Test API: http://localhost:8000/api/test/
 
 You should see a response:
 
+```json
 {"message": "Backend is working!"}
+```
 
-🧯 Troubleshooting & Fixes
+---
 
-🚫 Error reaching backend
+## 🧯 Troubleshooting & Fixes
 
-Ensure your frontend/.env.development contains:
+### 🚫 Error reaching backend
 
+Ensure your `frontend/.env.development` contains:
+
+```env
 REACT_APP_API_URL=http://localhost:8000/api/
+```
 
 Then rebuild the frontend:
 
+```bash
 docker-compose build frontend
+```
 
-🔐 CORS errors
+### 🔐 CORS errors
 
 Ensure the backend has the following:
 
-django-cors-headers installed (listed in requirements.txt)
+- `django-cors-headers` installed (listed in `requirements.txt`)
+- `settings.py` includes:
 
-settings.py includes:
-
+```python
 INSTALLED_APPS += ["corsheaders"]
 MIDDLEWARE = [
   "corsheaders.middleware.CorsMiddleware",
@@ -94,19 +112,27 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+```
 
-🔄 Frontend changes not showing?
+### 🔄 Frontend changes not showing?
 
 Rebuild the frontend container:
 
+```bash
 docker-compose build frontend
+```
 
-🏷️ Git Tag Reference
+---
 
-v0.1.0-local-complete — Full local setup: frontend, backend, and DB running through Docker Compose.
+## 🏷️ Git Tag Reference
 
-🙋‍♀️ Need Help?
+- `v0.1.0-local-complete` — Full local setup: frontend, backend, and DB running through Docker Compose.
+
+---
+
+## 🙋‍♀️ Need Help?
 
 If you're stuck, unsure about setup steps, or just want to confirm things are working — feel free to ask or open an issue in the repo.
 
 Happy coding, and welcome to Adoptify! 🐶🐱
+
