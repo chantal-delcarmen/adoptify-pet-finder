@@ -21,7 +21,7 @@ Adoptify is a full-stack application built to help users discover adoptable pets
 
 ```
 adoptify-pet-finder/
-├── backend/                 # Django backend
+├── backend/                # Django backend
 │   ├── adoptify_backend/   # Django settings and URLs
 │   ├── api/                # API views
 │   ├── .env                # Backend env variables
@@ -61,7 +61,7 @@ cd adoptify-pet-finder
 2. Build and run the project
 
 ```bash
-docker-compose down               # (Optional) Stops any running containers
+docker-compose down              # (Optional) Stops any running containers
 docker-compose build --no-cache  # Rebuild everything cleanly
 docker-compose up                # Start all services
 ```
