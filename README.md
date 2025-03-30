@@ -1,22 +1,43 @@
 # adoptify-pet-finder
 
+```
 adoptify-pet-finder/
-├── backend/            # Django app (connects to DB)
-│   ├── Dockerfile
-│   ├── requirements.txt
-│   ├── manage.py
+├── backend/                       # Django backend
 │   ├── .env
-│   └── adoptify_backend/
-│       └── settings.py
-│       └── ...
-│
-├── frontend/           # React app
+│   ├── .env.example
+│   ├── .dockerignore
+│   ├── Dockerfile
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── wait_for_db.py
+│   ├── adoptify_backend/
+│   │   ├── __init__.py
+│   │   ├── asgi.py
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   └── wsgi.py
+│   └── api/
+│       └── views.py
+├── frontend/                      # React frontend
+│   ├── .env
+│   ├── .env.development
+│   ├── .env.example
+│   ├── .env.production
+│   ├── .dockerignore
 │   ├── Dockerfile
 │   ├── package.json
+│   ├── package-lock.json
+│   ├── public/
 │   └── src/
-│       └── ...
-│
-├── docker-compose.yml  # Defines MySQL as a container service
-├── README.md
-└── .gitignore
-
+│       ├── App.css
+│       ├── App.js
+│       ├── App.test.js
+│       ├── index.css
+│       ├── index.js
+│       ├── logo.svg
+│       ├── reportWebVitals.js
+│       └── setupTests.js
+├── docker-compose.yml
+├── .gitignore
+└── README.md
+```
