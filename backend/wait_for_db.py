@@ -1,21 +1,19 @@
 import time
 import MySQLdb
-from django.db import OperationalError
+import os
 
 db_settings = {
-    "host": "db",
-    "port": 3306,
-    "user": "adoptify_user",
-    "passwd": "adoptify_pw",
-    "db": "adoptify"
+    "host": os.environ.get("DB_HOST", "db"),
+    "user": os.environ.get("DB_USER", "adoptify_user"),
+    "passwd": os.environ.get("DB_PASSWORD", "yourpassword"),
+    "db": os.environ.get("DB_NAME", "adoptify"),
 }
 
 while True:
     try:
         conn = MySQLdb.connect(**db_settings)
-        conn.close()
         print("✅ Database is ready!")
         break
-    except OperationalError:
-        print("⏳ Waiting for database to be ready...")
-        time.sleep(1)
+    except MySQLdb.OperationalError as e:
+        print("⏳ Waiting for database...", str(e))
+        time.sleep(2)
