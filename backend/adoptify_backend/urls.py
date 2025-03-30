@@ -17,10 +17,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from api.views import test
+from api import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/test/', test),  # Endpoint created in the views.py file to test the backend
+    path('', views.health_check, name='health_check'),  # Health check at root ("/")
+    path('api/test/', views.test),  # Endpoint created in the views.py file to test the backend
 ]

@@ -1,0 +1,8 @@
+services:
+  backend:
+    env_file:
+      - ./backend/adoptify_backend/.env.development
+
+  frontend:
+    env_file:
+      - ./backend/adoptify_backend/.env.development
