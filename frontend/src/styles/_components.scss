@@ -1,38 +1,244 @@
+// Hero Section
 .hero {
-    background-color: $color-primary;
-    color: $color-white;
+  background-color: $color-primary;
+  color: rgba(255, 255, 255, 0.8); // Slightly transparent white text
+  text-align: center;
+  padding: $spacing-lg $spacing-md;
+
+  h1 {
+    font-size: $font-size-lg * 2; // Double the base font size for emphasis
+    text-transform: uppercase;   // Make "ADOPTIFY" all caps
+    font-weight: bold;           // Ensure bold styling
+    margin-bottom: $spacing-sm;
+    color: rgba(255, 255, 255, 0.7); // Slightly less transparent for emphasis
+  }
+
+  p {
+    font-size: $font-size-lg;    // Larger font size for the tagline
+    margin-bottom: $spacing-sm;
+    color: rgba(255, 255, 255, 0.8); // Slightly transparent white text
+  }
+
+  // Use the centralized button class
+  .button--primary {
+    margin-top: $spacing-sm;
+  }
+}
+
+// About Section
+.about {
+  text-align: center;
+  padding: $spacing-md;
+
+  h2 {
+    font-size: $font-size-lg;
+    color: $color-text;
+    margin-bottom: $spacing-sm;
+    font-weight: bold;           // Bold for section titles
+  }
+
+  p {
+    color: $color-muted;
+    font-size: $font-size-base;
+    line-height: 1.6;            // Add line height for better readability
+  }
+}
+
+// How It Works Section
+.how-it-works {
+  padding: $spacing-md;
+
+  h2 {
     text-align: center;
-    padding: $spacing-lg $spacing-md;
-  
-    h1 {
-      font-size: $font-size-lg;
-      margin-bottom: $spacing-sm;
-    }
-  
-    .hero-btn {
-      margin-top: $spacing-sm;
+    font-size: $font-size-lg;
+    color: $color-text;
+    margin-bottom: $spacing-xs;
+  }
+
+  p {
+    color: $color-muted;
+    font-size: $font-size-base;
+    margin-top: 0; // Remove any top margin
+    margin-bottom: $spacing-sm;
+    line-height: 1.6;
+  }
+
+  .steps {
+    display: flex;
+    justify-content: space-between;
+    gap: $spacing-sm;
+
+    .step {
+      flex: 1;
+      text-align: center;
+      background-color: $color-secondary;
+      padding: $spacing-xs;
+      border-radius: $radius;
+
+      i {
+        font-size: 2rem;
+        color: $color-primary;
+        margin-bottom: $spacing-sm;
+      }
+
+      h3 {
+        font-size: $font-size-base;
+        color: $color-text;
+        margin-bottom: $spacing-xs;
+      }
+
+      p {
+        color: $color-muted;
+        font-size: $font-size-sm;
+      }
     }
   }
-  
-  .card {
-    background: $color-white;
-    border-radius: $radius;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    padding: $spacing-sm;
+}
+
+// Call-to-Action Section
+.cta {
+  text-align: center;
+  padding: $spacing-lg;
+  background-color: $color-tertiary;
+
+  h2 {
+    font-size: $font-size-lg;
+    color: $color-text;
     margin-bottom: $spacing-sm;
-  
-    h2 {
-      font-size: $font-size-base;
-      color: $color-primary;
+    font-weight: bold;
+  }
+
+  p {
+    color: $color-muted;
+    font-size: $font-size-base;
+    margin-bottom: $spacing-sm;
+    line-height: 1.6;
+  }
+
+  // Use the centralized button class
+  .button--secondary {
+    margin-top: $spacing-sm;
+  }
+}
+
+// Card Component
+.card {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-md;
+  background: $color-white;
+  border-radius: $radius;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: $spacing-sm;
+  margin-bottom: $spacing-sm;
+
+  h2 {
+    font-size: $font-size-base;
+    color: $color-primary;
+  }
+
+  p {
+    color: $color-muted;
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: $radius;
+  }
+}
+
+.content {
+  display: flex; // Enable Flexbox for horizontal layout
+  flex-direction: column; // Stack columns and bottom section vertically
+  gap: $spacing-lg; // Add spacing between sections
+  padding: $spacing-lg;
+
+  .columns {
+    display: flex; // Enable Flexbox for horizontal layout
+    justify-content: space-between; // Space between left and right columns
+    gap: $spacing-md;
+
+    .left-column {
+      flex: 2; // Left column takes more space
+      display: flex;
+      flex-direction: column;
+      gap: $spacing-md;
+      border-radius: $radius;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-  
+
+    .right-column {
+      flex: 1; // Right column takes less space
+      background-color: $color-secondary;
+      padding: $spacing-md;
+      border-radius: $radius;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      h2 {
+        font-size: $font-size-lg;
+        color: $color-text;
+        margin-bottom: $spacing-sm;
+      }
+
+      p {
+        color: $color-muted;
+        font-size: $font-size-base;
+        margin-bottom: $spacing-sm;
+        line-height: 1.6;
+      }
+
+      .button--primary {
+        margin-top: $spacing-sm;
+      }
+    }
+  }
+
+  .bottom-section {
+    text-align: center;
+    padding: $spacing-md;
+    background-color: $color-secondary;
+    border-radius: $radius;
+
+    h2 {
+      font-size: $font-size-lg;
+      color: $color-text;
+      margin-bottom: $spacing-sm;
+      font-weight: bold;
+    }
+
     p {
       color: $color-muted;
-    }
-  
-    img {
-      max-width: 100%;
-      border-radius: $radius;
+      font-size: $font-size-base;
+      line-height: 1.6;
     }
   }
-  
+}
+
+@media (max-width: 768px) {
+  .columns {
+    flex-direction: column; // Stack left and right columns vertically on smaller screens
+    gap: $spacing-sm;
+
+    .left-column,
+    .right-column {
+      flex: unset; // Reset flex properties
+      width: 100%; // Full width for both columns
+    }
+  }
+
+  .steps {
+    flex-direction: column; // Stack steps vertically
+    gap: $spacing-sm;
+  }
+
+  .content {
+    flex-direction: column; // Stack everything vertically on smaller screens
+    gap: $spacing-sm;
+
+    .left-column,
+    .right-column {
+      flex: unset; // Reset flex properties
+      width: 100%; // Full width for both columns
+    }
+  }
+}
