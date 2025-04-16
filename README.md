@@ -53,10 +53,12 @@ adoptify-pet-finder/
 
 ### ✅ Prerequisites
 
-Before starting, ensure you have the following installed:
+Before starting, ensure you have the following installed and running:
 
-- 📦 [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- 🧰 [Git](https://git-scm.com/)
+- 📦 [Docker Desktop](https://www.docker.com/products/docker-desktop)  
+  > **Note**: Make sure Docker Desktop is open and running before proceeding with the setup.
+- 🧰 [GitHub](https://github.com/)  
+  > **Note**: Ensure you have a GitHub account and access to the repository.
 - 📝 (Optional) [VS Code](https://code.visualstudio.com/)
 
 ---
@@ -77,20 +79,53 @@ cp backend/adoptify_backend/.env.example backend/adoptify_backend/.env.developme
 cp backend/adoptify_backend/.env.example backend/adoptify_backend/.env.production
 ```
 
-Update the .env.development file the secret values (ask Chantal)
-
 Frontend:
 ```bash
 cp frontend/.env.example frontend/.env.development
 cp frontend/.env.example frontend/.env.production
 ```
 
+- **.env.development**: Used for local development (e.g., `http://localhost:8000/api/`).
+- **.env.production**: Used for production deployment (e.g., `http://backend:8000/api/`).
+
+> **Note**: Ensure you update these files with the appropriate values for each environment.
+
 3. Build and run the project
 
+Before running the following commands, make sure **Docker Desktop** is installed and running on your machine.
+
+Navigate to the root directory of the project (`adoptify-pet-finder/`) before running the following commands:
+
+### 🛠️ First-Time Setup
+If this is your first time setting up the project, run the following commands:
+
 ```bash
+cd adoptify-pet-finder  # Ensure you're in the root directory
+
 docker-compose down              # (Optional) Stops any running containers
 docker-compose build --no-cache  # Rebuild everything cleanly
 docker-compose up                # Start all services
+```
+
+### 🔄 Running the Project Next Time
+If the project is already set up and no code changes were made, you can skip the build step and simply start the containers:
+
+```bash
+cd adoptify-pet-finder  # Ensure you're in the root directory
+
+docker-compose up       # Start all services
+```
+
+To run the containers in detached mode (in the background), use:
+```bash
+docker-compose up -d
+```
+
+If you made changes to the code, rebuild the affected container(s) before starting:
+```bash
+docker-compose build frontend  # For frontend changes
+docker-compose build backend   # For backend changes
+docker-compose up
 ```
 
 4. Open the application

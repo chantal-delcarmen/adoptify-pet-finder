@@ -1,7 +1,8 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import './App.css';
+import './styles/main.scss';
+import Home from './pages/Home';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -17,10 +18,11 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Adoptify 🐾</h1>
-      <p><strong>Message from backend:</strong> {message}</p>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home message={message} />} />
+      </Routes>
+    </Router>
   );
 }
 

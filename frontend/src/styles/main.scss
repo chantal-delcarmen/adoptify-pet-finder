@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+@import 'variables';
+@import 'layout';
+@import 'buttons';
+@import 'components';
+
+// Global Styles
+body {
+    font-family: $font-stack;       // Apply the font stack
+    font-size: $font-size-base;     // Base font size
+    color: $color-text;             // Default text color
+    line-height: 1.6;               // Comfortable line height
+    background-color: $color-secondary; // Light background
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-align: center; // Center text by default
+  }
