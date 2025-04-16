@@ -79,13 +79,16 @@ cp backend/adoptify_backend/.env.example backend/adoptify_backend/.env.developme
 cp backend/adoptify_backend/.env.example backend/adoptify_backend/.env.production
 ```
 
-Update the .env.development file the secret values (ask Chantal)
-
 Frontend:
 ```bash
 cp frontend/.env.example frontend/.env.development
 cp frontend/.env.example frontend/.env.production
 ```
+
+- **.env.development**: Used for local development (e.g., `http://localhost:8000/api/`).
+- **.env.production**: Used for production deployment (e.g., `http://backend:8000/api/`).
+
+> **Note**: Ensure you update these files with the appropriate values for each environment.
 
 3. Build and run the project
 
