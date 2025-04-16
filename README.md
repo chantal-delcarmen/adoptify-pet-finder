@@ -93,12 +93,29 @@ Before running the following commands, make sure **Docker Desktop** is installed
 
 Navigate to the root directory of the project (`adoptify-pet-finder/`) before running the following commands:
 
+### 🛠️ First-Time Setup
+If this is your first time setting up the project, run the following commands:
+
 ```bash
 cd adoptify-pet-finder  # Ensure you're in the root directory
 
 docker-compose down              # (Optional) Stops any running containers
 docker-compose build --no-cache  # Rebuild everything cleanly
 docker-compose up                # Start all services
+```
+
+### 🔄 Running the Project Next Time
+If the project is already set up, you can skip the build step and simply start the containers:
+
+```bash
+cd adoptify-pet-finder  # Ensure you're in the root directory
+
+docker-compose up       # Start all services
+```
+
+To run the containers in detached mode (in the background), use:
+```bash
+docker-compose up -d
 ```
 
 4. Open the application
