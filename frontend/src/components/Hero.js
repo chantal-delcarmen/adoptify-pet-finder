@@ -4,7 +4,7 @@ function Hero() {
   return (
     <div className="hero">
       <h1>Adoptify</h1>
-      <p>Connecting You with Your New Best Friend</p>
+      <h2>Connecting You with Your New Best Friend</h2>
       <button className="button button--primary">View Pets</button>
     </div>
   );
