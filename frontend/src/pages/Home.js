@@ -6,16 +6,33 @@ import Card from '../components/Card';
 function Home({ message }) {
   return (
     <div>
+      {/* Hero Section */}
       <Hero />
-      <div className="card-container">
-        <Card title="Search Pets" description="Explore our listings of pets available for adoption." />
-        <Card title="Learn More" description="Read about pet personality, care, and adoption tips." />
-        <Card title="Apply Online" description="Fill out an application form to begin the adoption process." />
-      </div>
-      <div style={{ padding: "2rem" }}>
-        <h2>Backend Status</h2>
-        <p><strong>Message from backend:</strong> {message}</p>
-      </div>
+
+      {/* About Section */}
+      <section className="about-section">
+        <h2>About Us</h2>
+        <p>
+          Adoptify is a dedicated online platform that helps connect individuals with adoptable pets from shelters and rescue groups. We make finding your new best friend easy and accessible.
+        </p>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="how-it-works-section">
+        <h2>How it Works</h2>
+        <div className="card-container">
+          <Card title="Search Pets" description="Explore our listings of pets available for adoption." buttonText="Search Now" />
+          <Card title="Learn More" description="Read about pet personality, care, and adoption tips." buttonText="Learn More" />
+          <Card title="Apply Online" description="Fill out an application form to begin the adoption process." buttonText="Apply Now" />
+        </div>
+      </section>
+
+      {/* Footer Section */}
+      <footer className="footer-section">
+        <h2>Start Your Adoption Journey Today!</h2>
+        <p>Find your perfect pet and give them the loving home they deserve.</p>
+        <button className="button button--primary">Get Started</button>
+      </footer>
     </div>
   );
 }
