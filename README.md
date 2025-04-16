@@ -53,10 +53,12 @@ adoptify-pet-finder/
 
 ### ✅ Prerequisites
 
-Before starting, ensure you have the following installed:
+Before starting, ensure you have the following installed and running:
 
-- 📦 [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- 🧰 [Git](https://git-scm.com/)
+- 📦 [Docker Desktop](https://www.docker.com/products/docker-desktop)  
+  > **Note**: Make sure Docker Desktop is open and running before proceeding with the setup.
+- 🧰 [GitHub](https://github.com/)  
+  > **Note**: Ensure you have a GitHub account and access to the repository.
 - 📝 (Optional) [VS Code](https://code.visualstudio.com/)
 
 ---
