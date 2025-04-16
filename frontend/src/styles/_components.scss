@@ -76,7 +76,7 @@
       border-radius: $radius;
 
       i {
-        font-size: 2rem;
+        font-size: 3rem; // Increase the icon size (was 2rem)
         color: $color-primary;
         margin-bottom: $spacing-sm;
       }
