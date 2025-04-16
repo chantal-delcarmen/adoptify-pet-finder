@@ -1,0 +1,38 @@
+.hero {
+    background-color: $color-primary;
+    color: $color-white;
+    text-align: center;
+    padding: $spacing-lg $spacing-md;
+  
+    h1 {
+      font-size: $font-size-lg;
+      margin-bottom: $spacing-sm;
+    }
+  
+    .hero-btn {
+      margin-top: $spacing-sm;
+    }
+  }
+  
+  .card {
+    background: $color-white;
+    border-radius: $radius;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: $spacing-sm;
+    margin-bottom: $spacing-sm;
+  
+    h2 {
+      font-size: $font-size-base;
+      color: $color-primary;
+    }
+  
+    p {
+      color: $color-muted;
+    }
+  
+    img {
+      max-width: 100%;
+      border-radius: $radius;
+    }
+  }
+  
