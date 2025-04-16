@@ -87,7 +87,13 @@ cp frontend/.env.example frontend/.env.production
 
 3. Build and run the project
 
+Before running the following commands, make sure **Docker Desktop** is installed and running on your machine.
+
+Navigate to the root directory of the project (`adoptify-pet-finder/`) before running the following commands:
+
 ```bash
+cd adoptify-pet-finder  # Ensure you're in the root directory
+
 docker-compose down              # (Optional) Stops any running containers
 docker-compose build --no-cache  # Rebuild everything cleanly
 docker-compose up                # Start all services
