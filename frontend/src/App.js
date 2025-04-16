@@ -1,7 +1,7 @@
-import logo from './logo.svg';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/main.scss';
+import Home from './pages/Home';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -17,9 +17,8 @@ function App() {
   }, []);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Adoptify 🐾</h1>
-      <p><strong>Message from backend:</strong> {message}</p>
+    <div>
+      <Home message={message} />
     </div>
   );
 }
