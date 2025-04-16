@@ -1,3 +1,4 @@
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/main.scss';
@@ -17,9 +18,11 @@ function App() {
   }, []);
 
   return (
-    <div>
-      <Home message={message} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home message={message} />} />
+      </Routes>
+    </Router>
   );
 }
 
