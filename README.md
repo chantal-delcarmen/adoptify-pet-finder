@@ -108,7 +108,7 @@ docker-compose up                # Start all services
 ```
 
 ### 🔄 Running the Project Next Time
-If the project is already set up, you can skip the build step and simply start the containers:
+If the project is already set up and no code changes were made, you can skip the build step and simply start the containers:
 
 ```bash
 cd adoptify-pet-finder  # Ensure you're in the root directory
@@ -119,6 +119,13 @@ docker-compose up       # Start all services
 To run the containers in detached mode (in the background), use:
 ```bash
 docker-compose up -d
+```
+
+If you made changes to the code, rebuild the affected container(s) before starting:
+```bash
+docker-compose build frontend  # For frontend changes
+docker-compose build backend   # For backend changes
+docker-compose up
 ```
 
 4. Open the application
