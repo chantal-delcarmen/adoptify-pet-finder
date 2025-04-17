@@ -18,10 +18,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
+from api.views import CreateUserView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.urls import include
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.health_check, name='health_check'),  # Health check at root ("/")
     path('api/test/', views.test),  # Endpoint created in the views.py file to test the backend
+    path("api/user/register/", CreateUserView.as_view(), name="register"),
+    path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
+    path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
+    path("api-auth/", include("rest_framework.urls")),
+    path("api/", include("api.urls")),
 ]
