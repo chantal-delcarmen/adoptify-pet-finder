@@ -37,7 +37,7 @@ class Shelter(models.Model):
     website_url = models.URLField()
 
 class Pet(models.Model):
-    pet_id = models.BigAutoField(primary_key=True)
+    pet_id = models.BigAutoField(primary_key=True, null=False)
     age = models.IntegerField()
     gender = models.CharField(max_length=50)
     domesticated = models.BooleanField()
