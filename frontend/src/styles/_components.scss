@@ -214,6 +214,18 @@
   }
 }
 
+.navbar {
+  display: flex;
+  justify-content: flex-end; /* Aligns the links to the right */
+  padding: 1rem 2rem;
+  background-color: $color-tertiary;
+}
+
+.navbar__auth {
+  display: flex;
+  gap: 1rem; /* Adds spacing between the links */
+}
+
 @media (max-width: 768px) {
   .columns {
     flex-direction: column; // Stack left and right columns vertically on smaller screens

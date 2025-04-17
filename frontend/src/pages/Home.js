@@ -1,4 +1,5 @@
 import React from 'react';
+import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import Card from '../components/Card';
 import CTA from '../components/CTA';
@@ -8,6 +9,9 @@ import { faSearch, faInfoCircle, faArrowRight } from '@fortawesome/free-solid-sv
 function Home({ message }) {
   return (
     <div>
+      {/* Navbar Component */}
+      <Navbar />
+
       {/* Hero Section */}
       <Hero />
 
