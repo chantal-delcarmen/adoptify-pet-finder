@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/_signup.scss'; // Import your styles here
 
 function Signup() {
   const [username, setUsername] = useState('');
