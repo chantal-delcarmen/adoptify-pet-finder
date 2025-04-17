@@ -12,6 +12,7 @@ services:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./backend/sql:/docker-entrypoint-initdb.d/ # Mount SQL directory
     networks:
       - adoptify_network
 
