@@ -2,46 +2,50 @@ import React, { useState } from 'react'; // Import React and useState for state 
 import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [debugInfo, setDebugInfo] = useState(''); // State for debugging output
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/api/user/login/', {
+      const response = await fetch('http://localhost:8000/api-auth/login/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Login successful:', data);
-        // Save token or user data to localStorage or context
+        setDebugInfo(`Login successful: ${JSON.stringify(data, null, 2)}`); // Pretty-print JSON
         localStorage.setItem('token', data.token);
         navigate('/'); // Redirect to the homepage or dashboard
       } else {
         const errorData = await response.json();
+        console.error('Backend error:', errorData);
         setError(errorData.error || 'Login failed');
+        setDebugInfo(`Backend error: ${JSON.stringify(errorData, null, 2)}`); // Pretty-print JSON
       }
     } catch (err) {
       console.error('Error logging in:', err);
       setError('An error occurred. Please try again.');
+      setDebugInfo(`Error logging in: ${err.message}`);
     }
   };
 
   return (
     <div className="form-page">
       <h1>Login</h1>
-      <form onSubmit={handleLogin} className="form">
-        <label htmlFor="email">Email:</label>
+      <form onSubmit={handleLogin} className="login-form">
+        <label htmlFor="username">Username:</label>
         <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
 
@@ -57,7 +61,16 @@ function Login() {
         <button type="submit" className="button button--primary">Login</button>
       </form>
 
+      {/* Display error message */}
       {error && <p className="error-message">{error}</p>}
+
+      {/* Display debugging information */}
+      {debugInfo && (
+        <div className="debug-info">
+          <h3>Debug Info:</h3>
+          <pre>{debugInfo}</pre>
+        </div>
+      )}
     </div>
   );
 }

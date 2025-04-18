@@ -34,6 +34,7 @@ urlpatterns = [
     path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("api.urls")),
+  
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/user/register/admin/", CreateAdminUserView.as_view(), name="register_admin"),
 
@@ -51,5 +52,7 @@ urlpatterns = [
     # listAllPets
     path("api/pets/", views.PetListView.as_view(), name="pet_list"),  # Pet list endpoint
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
+  
+    path("api/favourites/", views.AddFavouriteView.as_view(), name="add_favourite"),
 
 ]
