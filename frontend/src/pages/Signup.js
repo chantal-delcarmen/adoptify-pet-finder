@@ -36,7 +36,17 @@ function Signup() {
         navigate('/login'); // Redirect to login page after successful signup
       } else {
         const errorData = await response.json();
-        setError(errorData.error || 'Signup failed');
+        console.error('Backend error:', errorData); // Log the backend error
+
+        // Extract and format error messages
+        const errorMessage =
+          errorData.detail || // General error
+          Object.entries(errorData) // Validation errors
+            .map(([field, messages]) => `${field}: ${messages.join(', ')}`)
+            .join(' ') || 
+          'Signup failed';
+
+        setError(errorMessage); // Display the error message
       }
     } catch (err) {
       console.error('Error signing up:', err);
@@ -114,6 +124,7 @@ function Signup() {
         <button type="submit" className="button button--primary">Signup</button>
       </form>
 
+      {/* Display error message */}
       {error && <p className="error-message">{error}</p>}
     </div>
   );
