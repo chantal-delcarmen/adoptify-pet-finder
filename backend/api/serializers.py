@@ -25,3 +25,11 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = AdoptionApplication
         fields = ["id", "status", "date", "pet_id", "adopter_user"]
         extra_kwargs = {"pet_id": {"read_only": True}, "adopter_user": {"read_only": True}}
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    
+    class meta:
+        model = AdoptionApplication
+        fields = ["id", "pet_id", "adopter_user", "Favourite"]
+        extra_kwargs = {"pet_id": {"read_only": True}, "adopter_user": {"read_only": True}, "Favourite": {"Boolean": True or False}}
+
