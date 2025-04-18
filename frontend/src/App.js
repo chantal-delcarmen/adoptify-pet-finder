@@ -2,9 +2,12 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/main.scss';
+
+// Pages Routes
 import Home from './pages/Home';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import Apply from './pages/Apply';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -25,6 +28,7 @@ function App() {
         <Route path="/" element={<Home message={message} />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/apply" element={<Apply />} />
       </Routes>
     </Router>
   );
