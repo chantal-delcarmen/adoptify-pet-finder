@@ -32,4 +32,5 @@ urlpatterns = [
     path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include("api.urls")),
+    path("api/favourites/", views.AddFavouriteView.as_view(), name="add_favourite"),
 ]
