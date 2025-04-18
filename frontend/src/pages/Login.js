@@ -1,6 +1,6 @@
 import React, { useState } from 'react'; // Import React and useState for state management
 import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
-// import '../styles/_login.scss'; // Import your styles here
+import '../styles/login.scss'; // Import login styles 
 
 function Login() {
   const [email, setEmail] = useState('');
