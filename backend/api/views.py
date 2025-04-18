@@ -5,9 +5,11 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from django.shortcuts import get_object_or_404
 
 from .models import AdoptionApplication, Pet, Shelter
@@ -64,8 +66,13 @@ class UserLogInView(APIView):
         # Authenticate the user
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            # If authentication is successful, return a success response
-            return Response({"message": "User logged in successfully."}, status=200)
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "message": "User logged in successfully."
+            }, status=200)
         else:
             # If authentication fails, return an error response
             return Response({"error": "Invalid username or password."}, status=400)
@@ -73,14 +80,22 @@ class UserLogInView(APIView):
 
 
 
-class UserLogOutView(generics.DestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserLogOutView(APIView):
     permission_classes = [IsAuthenticated]
+    def post(self, request, *args, **kwargs):
+        try:
+            # Get the refresh token from the request
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response({"error": "Refresh token is required."}, status=400)
 
-    def delete(self, request, *args, **kwargs):
-        # Perform logout logic here (if needed)
-        return Response({"message": "User logged out successfully."}, status=200)        
+            # Blacklist the refresh token
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response({"message": "User logged out successfully."}, status=200)
+        except Exception as e:
+            return Response({"error": "Invalid token or logout failed."}, status=400)      
 
 class AdoptionView(APIView):
     permission_classes = [IsAuthenticated]
