@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from .models import AdoptionApplication, Pet, Shelter
-from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer
+from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, UserLogInSerializer
 
 # DRF Test View using Response (For REST API responses)
 @api_view(['GET'])
@@ -52,6 +52,35 @@ class CreateAdoptionApplication(generics.CreateAPIView):
     def perform_create(self, serializer):
         # Automatically set the user who created the application
         serializer.save(adopter_user=self.request.user)
+
+class UserLogInView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+         # Get username and password from the request
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        # Authenticate the user
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # If authentication is successful, return a success response
+            return Response({"message": "User logged in successfully."}, status=200)
+        else:
+            # If authentication fails, return an error response
+            return Response({"error": "Invalid username or password."}, status=400)
+    
+
+
+
+class UserLogOutView(generics.DestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        # Perform logout logic here (if needed)
+        return Response({"message": "User logged out successfully."}, status=200)        
 
 class AdoptionView(APIView):
     permission_classes = [IsAuthenticated]

@@ -36,6 +36,8 @@ urlpatterns = [
     path("api/", include("api.urls")),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/user/register/admin/", CreateAdminUserView.as_view(), name="register_admin"),
+    path("api/user/login/", views.UserLogInView.as_view(), name="login"),  # User login endpoint
+    path("api/user/logout/", views.UserLogOutView.as_view(), name="logout"),  # User logout endpoint
 
     path("api/adoption-application/", views.CreateAdoptionApplication.as_view(), name="adoption_application"),
     path("api/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="adoption_application_detail"),  # Adoption application detail view

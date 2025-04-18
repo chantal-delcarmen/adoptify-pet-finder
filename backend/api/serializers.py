@@ -42,6 +42,12 @@ class AdopterUserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+class UserLogInSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
 class ApplicationSerializer(serializers.ModelSerializer):
     pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
     adopter_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
