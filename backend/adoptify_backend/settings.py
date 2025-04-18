@@ -56,6 +56,10 @@ INSTALLED_APPS = [
 #    'phonenumber_field',
 ]
 
+INSTALLED_APPS += [
+    'corsheaders',
+]
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -66,6 +70,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
 ROOT_URLCONF = 'adoptify_backend.urls'
 
