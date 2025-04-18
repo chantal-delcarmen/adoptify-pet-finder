@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/main.scss';
 import Home from './pages/Home';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -21,6 +23,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home message={message} />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

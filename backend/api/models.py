@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator, MaxValueValidator, URLValidator
 #from phonenumber_field.modelfields import PhoneNumberField
 
 # Defines the database schema using Django models
@@ -38,15 +39,15 @@ class Shelter(models.Model):
 
 class Pet(models.Model):
     pet_id = models.BigAutoField(primary_key=True, null=False)
-    age = models.IntegerField()
-    gender = models.CharField(max_length=50)
+    age = models.IntegerField(null=False, validators=[MinValueValidator(0.01), MaxValueValidator(99)])
+    gender = models.CharField(max_length=10, choices=((1, "Male"), (2, "Female")), default=None, blank=True)
     domesticated = models.BooleanField()
-    #pet_image = models.ImageField()
+    #pet_image = models.ImageField(upload_to='pet_images/', blank=True, null=True)
     name = models.CharField(max_length=100)
-    adoption_status = models.BooleanField()
-    PET_CHOICES = ((1, "Dog"), (2, "Cat"), (3, "Bird"))
-    pet_type = models.CharField(max_length=10, choices=PET_CHOICES)
-    shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE)
+    adoption_status = models.TextField(choices=((1, "Available"), (2, "Adopted")), default=1, blank=True, null=True)
+    PET_CHOICES = ((1, "Dog"), (2, "Cat"), (3, "Bird"), (4, "Rabbit"))
+    pet_type = models.CharField(max_length=10, choices=PET_CHOICES, blank=True)
+    shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='pets')
 
 class AdoptionApplication(models.Model):
     application_id = models.BigAutoField(primary_key=True)
