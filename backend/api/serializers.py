@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework  import serializers
 from .models import Pet, Shelter, AdoptionApplication, UserProfile
+from .models import Favourite
 
 class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number', required=False)
@@ -25,11 +26,23 @@ class ApplicationSerializer(serializers.ModelSerializer):
         model = AdoptionApplication
         fields = ["id", "status", "date", "pet_id", "adopter_user"]
         extra_kwargs = {"pet_id": {"read_only": True}, "adopter_user": {"read_only": True}}
+class PetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pet
+        fields = '__all__'
 
 class FavouriteSerializer(serializers.ModelSerializer):
+    pet = PetSerializer()
+
+    class Meta:
+        model = Favourite
+        fields = ['id', 'user', 'pet', 'added_at']
+        read_only_fields = ['user', 'added_at']
+
+#class FavouriteSerializer(serializers.ModelSerializer):
     
-    class meta:
-        model = AdoptionApplication
-        fields = ["id", "pet_id", "adopter_user", "Favourite"]
-        extra_kwargs = {"pet_id": {"read_only": True}, "adopter_user": {"read_only": True}, "Favourite": {"Boolean": True or False}}
+    #class meta:
+     #   model = AdoptionApplication
+      #  fields = ["id", "pet_id", "adopter_user", "Favourite"]
+       # extra_kwargs = {"pet_id": {"read_only": True}, "adopter_user": {"read_only": True}, "Favourite": {"Boolean": True or False}}
 
