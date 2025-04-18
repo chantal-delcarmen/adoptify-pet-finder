@@ -32,13 +32,13 @@ class PetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class FavouriteSerializer(serializers.ModelSerializer):
-    pet = PetSerializer()
-
+    pet = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = Favourite
         fields = ['id', 'user', 'pet', 'added_at']
         read_only_fields = ['user', 'added_at']
-
+    
 #class FavouriteSerializer(serializers.ModelSerializer):
     
     #class meta:
