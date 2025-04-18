@@ -11,6 +11,24 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name', 'email', 'password', 'phone_number', 'address']
         extra_kwargs = {'password': {'write_only': True}}
 
+    def validate_username(self, value):
+        # Check if the username already exists
+        if User.objects.filter(username=value).exists():
+            raise serializers.ValidationError("A user with this username already exists.")
+        return value
+
+    def validate_email(self, value):
+        # Check if the email already exists
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email already exists.")
+        return value
+
+    def validate_phone_number(self, value):
+        # Example: Ensure phone number is numeric
+        if not value.isdigit():
+            raise serializers.ValidationError("Phone number must contain only digits.")
+        return value
+
     def create(self, validated_data):
         # Extract profile data
         profile_data = validated_data.pop('profile', {})

@@ -2,7 +2,7 @@
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.views import APIView
 
@@ -21,13 +21,14 @@ def test(request):
 
 
 # Create new User
-class CreateUserView(generics.CreateAPIView):
-    # Unique user
-    queryset = User.objects.all()
-    # Date for user
-    serializer_class = UserSerializer
-    # Access by anyone
-    permission_classes = [AllowAny]
+class CreateUserView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Return detailed validation errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateAdminUserView(generics.CreateAPIView):
     # Unique user
