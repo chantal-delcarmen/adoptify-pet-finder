@@ -6,6 +6,10 @@ function Signup() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [address, setAddress] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -15,14 +19,21 @@ function Signup() {
       const response = await fetch('http://localhost:8000/api/user/register/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          first_name: firstName,
+          last_name: lastName,
+          phone_number: phoneNumber,
+          address,
+        }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Signup successful:', data);
-        // Redirect to login or profile page after successful signup
-        navigate('/login');
+        navigate('/login'); // Redirect to login page after successful signup
       } else {
         const errorData = await response.json();
         setError(errorData.error || 'Signup failed');
@@ -46,6 +57,24 @@ function Signup() {
           required
         />
 
+        <label htmlFor="firstName">First Name:</label>
+        <input
+          type="text"
+          id="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+
+        <label htmlFor="lastName">Last Name:</label>
+        <input
+          type="text"
+          id="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+
         <label htmlFor="email">Email:</label>
         <input
           type="email"
@@ -61,6 +90,24 @@ function Signup() {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <label htmlFor="phoneNumber">Phone Number:</label>
+        <input
+          type="text"
+          id="phoneNumber"
+          value={phoneNumber}
+          onChange={(e) => setPhoneNumber(e.target.value)}
+          required
+        />
+
+        <label htmlFor="address">Address:</label>
+        <input
+          type="text"
+          id="address"
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
           required
         />
 
