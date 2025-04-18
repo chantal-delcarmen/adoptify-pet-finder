@@ -1,6 +1,5 @@
 import React, { useState } from 'react'; // Import React and useState for state management
 import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
-import '../styles/login.scss'; // Import login styles 
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -38,7 +37,7 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
+    <div className="form-page">
       <h1>Login</h1>
       <form onSubmit={handleLogin} className="login-form">
         <label htmlFor="username">Username:</label>

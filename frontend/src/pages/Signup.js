@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/signup.scss'; 
 
 function Signup() {
   const [username, setUsername] = useState('');
@@ -55,9 +54,9 @@ function Signup() {
   };
 
   return (
-    <div className="signup-page">
+    <div className="form-page">
       <h1>Signup</h1>
-      <form onSubmit={handleSignup} className="signup-form">
+      <form onSubmit={handleSignup} className="form">
         <label htmlFor="username">Username:</label>
         <input
           type="text"

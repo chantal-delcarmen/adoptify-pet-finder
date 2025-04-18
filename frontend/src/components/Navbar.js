@@ -9,6 +9,7 @@ function Navbar() {
                 <Link to="/pets" className="button button--secondary">Pets</Link>
                 <Link to="/login" className="button button--secondary">Login</Link>
                 <Link to="/signup" className="button button--secondary">Signup</Link>
+                <Link to="/apply" className="button button--secondary">Apply To Adopt Now</Link>
             </div>
         </nav>
     );
