@@ -1,6 +1,9 @@
 from django.contrib.auth.models import User
 from rest_framework  import serializers
-from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement
+
+from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement, Favourite
+from .models import Favourite
+
 
 class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number', required=False)
@@ -47,6 +50,22 @@ class ApplicationSerializer(serializers.ModelSerializer):
     adopter_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     class Meta:
         model = AdoptionApplication
+      
+class FavouriteSerializer(serializers.ModelSerializer):
+    pet = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    class Meta:
+        model = Favourite
+        fields = ['id', 'user', 'pet', 'added_at']
+        read_only_fields = ['user', 'added_at']
+    
+#class FavouriteSerializer(serializers.ModelSerializer):
+    
+    #class meta:
+     #   model = AdoptionApplication
+      #  fields = ["id", "pet_id", "adopter_user", "Favourite"]
+       # extra_kwargs = {"pet_id": {"read_only": True}, "adopter_user": {"read_only": True}, "Favourite": {"Boolean": True or False}}
+        
         fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user"]
         extra_kwargs = {"submission_date": {"read_only": True}}
 
@@ -92,3 +111,4 @@ class ShelterManagementSerializer(serializers.ModelSerializer):
         extra_kwargs = {'manage_id': {'read_only': True}}
     def create(self, validated_data):
         return ShelterManagement.objects.create(**validated_data)
+

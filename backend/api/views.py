@@ -1,6 +1,7 @@
 # backend/api/views.py
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
@@ -8,10 +9,11 @@ from rest_framework.views import APIView
 
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter
-from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer
+from .models import AdoptionApplication, Pet, Shelter, Favourite
+from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer
 
 # DRF Test View using Response (For REST API responses)
 @api_view(['GET'])
@@ -128,3 +130,33 @@ class ShelterManagementView(APIView):
 def health_check(request):
     return JsonResponse({"status": "OK", "message": "Backend is working"})
 
+class FavouriteListView(generics.ListAPIView):
+    serializer_class = FavouriteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Favourite.objects.filter(user=self.request.user)
+
+class AddFavouriteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pet_id):
+        try:
+            pet = Pet.objects.get(id=pet_id)
+            favourite, created = Favourite.objects.get_or_create(user=request.user, pet=pet)
+            if created:
+                return Response({"message": "Pet added to favourites!"}, status=201)
+            return Response({"message": "Pet is already in favourites!"}, status=200)
+        except Pet.DoesNotExist:
+            return Response({"error": "Pet not found!"}, status=404)
+
+class RemoveFavouriteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pet_id):
+        try:
+            favourite = Favourite.objects.get(user=request.user, pet_id=pet_id)
+            favourite.delete()
+            return Response({"message": "Pet removed from favourites!"}, status=status.HTTP_204_NO_CONTENT)
+        except Favourite.DoesNotExist:
+            return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
