@@ -41,11 +41,14 @@ urlpatterns = [
     path("api/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="adoption_application_detail"),  # Adoption application detail view
     path("api/adoption-application/list", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
 
-    #path("api/shelter/", views.CreateShelterView.as_view(), name="shelter"),  # Shelter endpoint
+    # addRecord
     path("api/admin/shelter-management/", views.CreateShelterManagementView.as_view(), name="shelter_management"),  # Shelter management endpoint
+    # getRecordDetails
     path("api/admin/shelter-management/<int:pk>", views.ShelterManagementView.as_view(), name="shelter_management_detail"),  # Shelter management detail view
 
+    # addPetPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint
+    # listAllPets
     path("api/pets/", views.PetListView.as_view(), name="pet_list"),  # Pet list endpoint
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
 
