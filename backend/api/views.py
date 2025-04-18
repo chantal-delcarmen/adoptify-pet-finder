@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from .models import AdoptionApplication
 from .models import Pet, Favourite
-from .serializers import AdoptionApplicationSerializer, FavouriteSerializer
+from .serializers import FavouriteSerializer
 
 # DRF Test View using Response (For REST API responses)
 @api_view(['GET'])
