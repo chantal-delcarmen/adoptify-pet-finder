@@ -33,10 +33,10 @@ class CreateUserView(APIView):
 class CreateAdminUserView(generics.CreateAPIView):
     # Unique user
     queryset = User.objects.all()
-    # Date for user
+    # Data for user
     serializer_class = AdminUserSerializer
-    # Access by admins only
-    permission_classes = [AllowAny]
+    # Access restricted to admins only
+    permission_classes = [IsAdminUser]
 
 
 # Create new Adoption Application
