@@ -20,14 +20,14 @@ function Login() {
       if (response.ok) {
         const data = await response.json();
         console.log('Login successful:', data);
-        setDebugInfo(`Login successful: ${JSON.stringify(data, null, 2)}`); // Pretty-print JSON
+        setDebugInfo(`Login successful: ${JSON.stringify(data, null, 2)}`);
         localStorage.setItem('token', data.token);
         navigate('/'); // Redirect to the homepage or dashboard
       } else {
         const errorData = await response.json();
         console.error('Backend error:', errorData);
         setError(errorData.error || 'Login failed');
-        setDebugInfo(`Backend error: ${JSON.stringify(errorData, null, 2)}`); // Pretty-print JSON
+        setDebugInfo(`Backend error: ${JSON.stringify(errorData, null, 2)}`);
       }
     } catch (err) {
       console.error('Error logging in:', err);
@@ -39,7 +39,7 @@ function Login() {
   return (
     <div className="form-page">
       <h1>Login</h1>
-      <form onSubmit={handleLogin} className="login-form">
+      <form onSubmit={handleLogin} className="form">
         <label htmlFor="username">Username:</label>
         <input
           type="text"
