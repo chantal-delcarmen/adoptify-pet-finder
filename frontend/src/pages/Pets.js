@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import '../styles/pets.scss'; // Import styles for the Pets page
+import Navbar from '../components/Navbar';
 
 function Pets() {
   const [pets, setPets] = useState([]);
@@ -32,15 +32,8 @@ function Pets() {
 
   return (
     <div className="pets-page">
-      {/* Navbar */}
-      <nav className="navbar">
-        <h1>Adoptify</h1>
-        <ul>
-          <li><a href="/">Home</a></li>
-          <li><a href="/pets">Pets</a></li>
-          <li><a href="/about">About</a></li>
-        </ul>
-      </nav>
+      {/* Navbar Component */}
+      <Navbar />
 
       {/* Hero Section */}
       <section className="hero">
