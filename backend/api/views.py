@@ -78,7 +78,7 @@ class CreatePetView(generics.CreateAPIView):
     # Create new pet
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
-    permission_classes = [AllowAny]  #[IsAuthenticated]  # Only authenticated users can create pets
+    permission_classes = [IsAdminUser] # Only admin users can create pets
 
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
