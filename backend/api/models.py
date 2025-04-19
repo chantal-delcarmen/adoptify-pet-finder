@@ -31,7 +31,7 @@ class AdminUser(models.Model):
 # Shelter Model
 class Shelter(models.Model):
     shelter_id = models.BigAutoField(primary_key=True)  # Auto-incrementing ID
-    name = models.CharField(max_length=100)  # Shelter name
+    name = models.CharField(max_length=100, unique=True)  # Shelter name (added uniqueness for better data integrity)
     address = models.CharField(max_length=200)  # Shelter address
     phone_number = models.CharField(max_length=15, blank=True, null=True)  # Optional phone number
     website_url = models.URLField(blank=True, null=True)  # Optional website URL
@@ -48,10 +48,7 @@ class ShelterManagement(models.Model):
         default=1,  # Default to the root admin user (ID=1)
         related_name="managed_shelters"
     )
-    manage_id = models.BigAutoField(primary_key=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Optional phone number
-    address = models.TextField(blank=True, null=True)  # Optional additional address
-    website_url = models.URLField(blank=True, null=True)  # Optional website URL
+    manage_id = models.BigAutoField(primary_key=True)  # Auto-incrementing ID for management records
 
     def __str__(self):
         return f"Shelter Management for {self.shelter_id.name} by {self.admin_user.user.username}"

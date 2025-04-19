@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework  import serializers
 from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement
+from django.db import models
 
 class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number', required=False)
@@ -96,17 +97,22 @@ class PetSerializer(serializers.ModelSerializer):
 class ShelterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shelter
-        fields = ['shelter_id', 'name', 'address', 'website_url']
+        fields = ['shelter_id', 'name', 'address', 'phone_number', 'website_url']
         extra_kwargs = {'shelter_id': {'read_only': True}}
+
     def create(self, validated_data):
+        # Create a new Shelter object
         return Shelter.objects.create(**validated_data)
 
 class ShelterManagementSerializer(serializers.ModelSerializer):
     admin_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())
+
     class Meta:
         model = ShelterManagement
-        fields = ['shelter_id', 'admin_user', 'manage_id', 'address']
+        fields = ['shelter_id', 'admin_user', 'manage_id']
         extra_kwargs = {'manage_id': {'read_only': True}}
+
     def create(self, validated_data):
+        # Create the ShelterManagement object
         return ShelterManagement.objects.create(**validated_data)

@@ -44,10 +44,14 @@ urlpatterns = [
     path("api/adoption-application/list", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
     path("api/adoption-application/<int:pk>/update-status/", UpdateApplicationStatusView.as_view(), name="update_application_status"), # Update application status endpoint
 
-    # addRecord
-    path("api/admin/shelter-management/", views.CreateShelterManagementView.as_view(), name="shelter_management"),  # Shelter management endpoint
-    # getRecordDetails
-    path("api/admin/shelter-management/<int:pk>", views.ShelterManagementView.as_view(), name="shelter_management_detail"),  # Shelter management detail view
+    # Create a new shelter
+    path("api/admin/shelter/", views.CreateShelterView.as_view(), name="create_shelter"),
+    
+    # Create a new shelter management record
+    path("api/admin/shelter-management/", views.CreateShelterManagementView.as_view(), name="create_shelter_management"),
+    
+    # Retrieve or delete a shelter management record
+    path("api/admin/shelter-management/<int:pk>/", views.ShelterManagementDetailView.as_view(), name="shelter_management_detail"),
 
     # addPetPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint

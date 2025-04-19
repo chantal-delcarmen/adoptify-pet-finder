@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter
+from .models import AdoptionApplication, Pet, Shelter, ShelterManagement
 from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer
 
 # DRF Test View using Response (For REST API responses)
@@ -98,17 +98,12 @@ class PetListView(generics.ListAPIView):
 class CreateShelterView(generics.CreateAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
-    permission_classes = [AllowAny]  # Allow any user to view the list of shelters
+    permission_classes = [IsAdminUser]  # Only admin users can create shelters
 
 class CreateShelterManagementView(generics.CreateAPIView):
-    queryset = Shelter.objects.all()
+    queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
-    permission_classes = [IsAdminUser]  # Only admin users can create shelters
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=201)
+    permission_classes = [IsAdminUser]  # Only admin users can create shelter management records
 
 class ShelterManagementView(APIView):
     permission_classes = [IsAdminUser]
@@ -124,6 +119,11 @@ class ShelterManagementView(APIView):
         shelter_management = get_object_or_404(Shelter, pk=pk)
         shelter_management.delete()
         return Response({"message": "Shelter management deleted successfully."})
+
+class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
+    queryset = ShelterManagement.objects.all()
+    serializer_class = ShelterManagementSerializer
+    permission_classes = [IsAdminUser]  # Only admin users can retrieve or delete shelter management records
 
 # Basic Health Check View using JsonResponse (For simple GET requests)
 def health_check(request):
