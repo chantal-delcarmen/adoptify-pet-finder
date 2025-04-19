@@ -21,6 +21,8 @@ from api import views
 from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import include
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -54,3 +56,7 @@ urlpatterns = [
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
 
 ]
+
+# Serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

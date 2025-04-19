@@ -83,7 +83,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class PetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
-        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id']
+        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'image']
         extra_kwargs = {'pet_id': {'read_only': True}}
     def create(self, validated_data):
         # Create a new pet
