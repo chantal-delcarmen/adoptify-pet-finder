@@ -36,7 +36,7 @@ class CreateAdminUserView(generics.CreateAPIView):
     # Data for user
     serializer_class = AdminUserSerializer
     # Access restricted to admins only
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminUser] # Only admin users can create admin users
 
 
 # Create new Adoption Application
@@ -128,4 +128,21 @@ class ShelterManagementView(APIView):
 # Basic Health Check View using JsonResponse (For simple GET requests)
 def health_check(request):
     return JsonResponse({"status": "OK", "message": "Backend is working"})
+
+# Update Application Status View for Admins
+class UpdateApplicationStatusView(APIView):
+    permission_classes = [IsAdminUser]  # Only admins can update application status
+
+    def patch(self, request, pk):
+        # Retrieve the adoption application by primary key (pk)
+        adoption_application = get_object_or_404(AdoptionApplication, pk=pk)
+        
+        # Update the application status
+        new_status = request.data.get('application_status')
+        if new_status not in ['Pending', 'Approved', 'Rejected']:
+            return Response({"error": "Invalid status"}, status=400)
+        
+        adoption_application.application_status = new_status
+        adoption_application.save()
+        return Response({"message": "Application status updated successfully", "status": new_status})
 

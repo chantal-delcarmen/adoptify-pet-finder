@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
-from api.views import CreateUserView, CreateAdminUserView
+from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import include
 
@@ -40,6 +40,7 @@ urlpatterns = [
     path("api/adoption-application/", views.CreateAdoptionApplication.as_view(), name="adoption_application"),
     path("api/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="adoption_application_detail"),  # Adoption application detail view
     path("api/adoption-application/list", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
+    path("api/adoption-application/<int:pk>/update-status/", UpdateApplicationStatusView.as_view(), name="update_application_status"), # Update application status endpoint
 
     # addRecord
     path("api/admin/shelter-management/", views.CreateShelterManagementView.as_view(), name="shelter_management"),  # Shelter management endpoint
