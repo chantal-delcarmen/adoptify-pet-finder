@@ -1,5 +1,6 @@
 import React, { useState } from 'react'; // Import React and useState for state management
 import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
+import Navbar from '../components/Navbar'; // Import Navbar component
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -37,40 +38,45 @@ function Login() {
   };
 
   return (
-    <div className="form-page">
-      <h1>Login</h1>
-      <form onSubmit={handleLogin} className="form">
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+    <div>
+      {/* Navbar Component */}
+      <Navbar />
 
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+      <div className="form-page">
+        <h1>Login</h1>
+        <form onSubmit={handleLogin} className="form">
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
 
-        <button type="submit" className="button button--primary">Login</button>
-      </form>
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-      {/* Display error message */}
-      {error && <p className="error-message">{error}</p>}
+          <button type="submit" className="button button--primary">Login</button>
+        </form>
 
-      {/* Display debugging information */}
-      {debugInfo && (
-        <div className="debug-info">
-          <h3>Debug Info:</h3>
-          <pre>{debugInfo}</pre>
-        </div>
-      )}
+        {/* Display error message */}
+        {error && <p className="error-message">{error}</p>}
+
+        {/* Display debugging information */}
+        {debugInfo && (
+          <div className="debug-info">
+            <h3>Debug Info:</h3>
+            <pre>{debugInfo}</pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
