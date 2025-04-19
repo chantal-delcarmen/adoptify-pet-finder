@@ -81,10 +81,3 @@ class Adopter(models.Model):
 
     def __str__(self):
         return self.adopter_user.username
-    # create favourite
-
-class Favourite(models.Model):
-    pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE)
-    AdoptionUserID = models.ForeignKey(User, on_delete=models.CASCADE)
-    Favourite = models.BooleanField(Pet)
-# create serializer for favourite and donation
