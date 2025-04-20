@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter
+from .models import AdoptionApplication, Pet, Shelter, ShelterManagement
 from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer
 
 # DRF Test View using Response (For REST API responses)
@@ -33,10 +33,10 @@ class CreateUserView(APIView):
 class CreateAdminUserView(generics.CreateAPIView):
     # Unique user
     queryset = User.objects.all()
-    # Date for user
+    # Data for user
     serializer_class = AdminUserSerializer
-    # Access by admins only
-    permission_classes = [AllowAny]
+    # Access restricted to admins only
+    permission_classes = [IsAdminUser] # Only admin users can create admin users
 
 
 # Create new Adoption Application
@@ -78,7 +78,7 @@ class CreatePetView(generics.CreateAPIView):
     # Create new pet
     queryset = Pet.objects.all()
     serializer_class = PetSerializer
-    permission_classes = [AllowAny]  #[IsAuthenticated]  # Only authenticated users can create pets
+    permission_classes = [IsAdminUser] # Only admin users can create pets
 
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
@@ -98,34 +98,58 @@ class PetListView(generics.ListAPIView):
 class CreateShelterView(generics.CreateAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
-    permission_classes = [AllowAny]  # Allow any user to view the list of shelters
+    permission_classes = [IsAdminUser]  # Only admin users can create shelters
 
 class CreateShelterManagementView(generics.CreateAPIView):
-    queryset = Shelter.objects.all()
+    queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
-    permission_classes = [IsAdminUser]  # Only admin users can create shelters
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=201)
+    permission_classes = [IsAdminUser]  # Only admin users can create shelter management records
 
 class ShelterManagementView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request, pk):
         # Retrieve the shelter management with the given primary key (pk)
-        shelter_management = get_object_or_404(Shelter, pk=pk)
-        serializer = ShelterSerializer(shelter_management)
+        shelter_management = get_object_or_404(ShelterManagement, pk=pk)
+        serializer = ShelterManagementSerializer(shelter_management)
         return Response(serializer.data)
+
+    def post(self, request):
+        # Assign an admin user to a shelter
+        serializer = ShelterManagementSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=201)
 
     def delete(self, request, pk):
         # Delete the shelter management with the given primary key (pk)
-        shelter_management = get_object_or_404(Shelter, pk=pk)
+        shelter_management = get_object_or_404(ShelterManagement, pk=pk)
         shelter_management.delete()
-        return Response({"message": "Shelter management deleted successfully."})
+        return Response({"message": "Shelter management deleted successfully."}, status=204)
+
+class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
+    queryset = ShelterManagement.objects.all()
+    serializer_class = ShelterManagementSerializer
+    permission_classes = [IsAdminUser]  # Only admin users can retrieve or delete shelter management records
 
 # Basic Health Check View using JsonResponse (For simple GET requests)
 def health_check(request):
     return JsonResponse({"status": "OK", "message": "Backend is working"})
+
+# Update Application Status View for Admins
+class UpdateApplicationStatusView(APIView):
+    permission_classes = [IsAdminUser]  # Only admins can update application status
+
+    def patch(self, request, pk):
+        # Retrieve the adoption application by primary key (pk)
+        adoption_application = get_object_or_404(AdoptionApplication, pk=pk)
+        
+        # Update the application status
+        new_status = request.data.get('application_status')
+        if new_status not in ['Pending', 'Approved', 'Rejected']:
+            return Response({"error": "Invalid status"}, status=400)
+        
+        adoption_application.application_status = new_status
+        adoption_application.save()
+        return Response({"message": "Application status updated successfully", "status": new_status})
 

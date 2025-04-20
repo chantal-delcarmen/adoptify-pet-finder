@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework  import serializers
 from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement
+from django.db import models
 
 class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number', required=False)
@@ -83,7 +84,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 class PetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
-        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id']
+        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'image']
         extra_kwargs = {'pet_id': {'read_only': True}}
     def create(self, validated_data):
         # Create a new pet
@@ -96,17 +97,34 @@ class PetSerializer(serializers.ModelSerializer):
 class ShelterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shelter
-        fields = ['shelter_id', 'name', 'address', 'website_url']
+        fields = ['shelter_id', 'name', 'address', 'phone_number', 'website_url']
         extra_kwargs = {'shelter_id': {'read_only': True}}
+
     def create(self, validated_data):
-        return Shelter.objects.create(**validated_data)
+        # Create a new Shelter object
+        shelter = Shelter.objects.create(**validated_data)
+
+        # Automatically assign the root admin user as the manager
+        root_admin = User.objects.filter(is_superuser=True).first()  # Get the root admin user
+        if root_admin:
+            ShelterManagement.objects.create(
+                shelter_id=shelter,
+                admin_user=root_admin
+            )
+
+        return shelter
 
 class ShelterManagementSerializer(serializers.ModelSerializer):
     admin_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())
+
     class Meta:
         model = ShelterManagement
-        fields = ['shelter_id', 'admin_user', 'manage_id', 'address']
+        fields = ['shelter_id', 'admin_user', 'manage_id']
         extra_kwargs = {'manage_id': {'read_only': True}}
+
     def create(self, validated_data):
+        # Resolve the SimpleLazyObject to a User instance
+        validated_data['admin_user'] = validated_data['admin_user']._wrapped if hasattr(validated_data['admin_user'], '_wrapped') else validated_data['admin_user']
+        # Create the ShelterManagement object
         return ShelterManagement.objects.create(**validated_data)
