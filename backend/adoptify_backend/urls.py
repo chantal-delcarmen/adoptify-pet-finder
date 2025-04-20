@@ -26,35 +26,50 @@ from django.conf.urls.static import static
 
 
 urlpatterns = [
+    # ----------------------------------- Admin Panel -------------------------------------------
     path('admin/', admin.site.urls),
+
+    # ----------------------------------- Health Check -------------------------------------------
     path('', views.health_check, name='health_check'),  # Health check at root ("/")
 
-    #path("api/home/", views.home, name="home"),  # Home page endpoint
+    # ----------------------------------- API Endpoints -------------------------------------------
+    path("api/", include("api.urls")),
+
+    # ------------------------------------- Test Endpoint -------------------------------------------
     path('api/test/', views.test),  # Endpoint created in the views.py file to test the backend
 
+    # -------------------------------- Home Page Endpoint -------------------------------------------
+    #path("api/home/", views.home, name="home"),  # Home page endpoint
+
+    # ------------------------------------- Authentication -------------------------------------------
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
-    path("api/", include("api.urls")),
+
+    # ------------------------------------- User Registration -------------------------------------------
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/user/register/admin/", CreateAdminUserView.as_view(), name="register_admin"),
 
+    # ------------------------------------- Application Management -------------------------------------------
     path("api/adoption-application/", views.CreateAdoptionApplication.as_view(), name="adoption_application"),
     path("api/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="adoption_application_detail"),  # Adoption application detail view
     path("api/adoption-application/list", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
     path("api/adoption-application/<int:pk>/update-status/", UpdateApplicationStatusView.as_view(), name="update_application_status"), # Update application status endpoint
 
+    # ------------------------------------- Shelter Management -------------------------------------------
     # Create a new shelter
     path("api/admin/shelter/", views.CreateShelterView.as_view(), name="create_shelter"),
-    
+
     # Create a new shelter management record
     path("api/admin/shelter-management/", views.CreateShelterManagementView.as_view(), name="create_shelter_management"),
     
     # Retrieve or delete a shelter management record
     path("api/admin/shelter-management/<int:pk>/", views.ShelterManagementDetailView.as_view(), name="shelter_management_detail"),
 
+    # -------------------------------------- Pet Management -------------------------------------------
     # addPetPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint
+    
     # listAllPets
     path("api/pets/", views.PetListView.as_view(), name="pet_list"),  # Pet list endpoint
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
