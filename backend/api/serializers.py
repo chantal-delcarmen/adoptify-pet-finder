@@ -102,7 +102,17 @@ class ShelterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Create a new Shelter object
-        return Shelter.objects.create(**validated_data)
+        shelter = Shelter.objects.create(**validated_data)
+
+        # Automatically assign the root admin user as the manager
+        root_admin = User.objects.filter(is_superuser=True).first()  # Get the root admin user
+        if root_admin:
+            ShelterManagement.objects.create(
+                shelter_id=shelter,
+                admin_user=root_admin
+            )
+
+        return shelter
 
 class ShelterManagementSerializer(serializers.ModelSerializer):
     admin_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
@@ -114,5 +124,7 @@ class ShelterManagementSerializer(serializers.ModelSerializer):
         extra_kwargs = {'manage_id': {'read_only': True}}
 
     def create(self, validated_data):
+        # Resolve the SimpleLazyObject to a User instance
+        validated_data['admin_user'] = validated_data['admin_user']._wrapped if hasattr(validated_data['admin_user'], '_wrapped') else validated_data['admin_user']
         # Create the ShelterManagement object
         return ShelterManagement.objects.create(**validated_data)

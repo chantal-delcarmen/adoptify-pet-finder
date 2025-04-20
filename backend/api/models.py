@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator, URLValidator
 #from phonenumber_field.modelfields import PhoneNumberField
 
+def get_root_admin_user():
+    return User.objects.filter(is_superuser=True).first()
+
 # Defines the database schema using Django models
 # When to Edit:
 # - To create or modify database tables
@@ -43,15 +46,15 @@ class Shelter(models.Model):
 class ShelterManagement(models.Model):
     shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name="management")
     admin_user = models.ForeignKey(
-        AdminUser,
+        User,  # Ensure this points to the default User model
         on_delete=models.CASCADE,
-        default=1,  # Default to the root admin user (ID=1)
-        related_name="managed_shelters"
+        related_name="managed_shelters",
+        default=get_root_admin_user  # Default to root admin user
     )
-    manage_id = models.BigAutoField(primary_key=True)  # Auto-incrementing ID for management records
+    manage_id = models.BigAutoField(primary_key=True)
 
     def __str__(self):
-        return f"Shelter Management for {self.shelter_id.name} by {self.admin_user.user.username}"
+        return f"Shelter Management for {self.shelter_id.name} by {self.admin_user.username}"
 
 # Pet Model
 class Pet(models.Model):

@@ -110,15 +110,22 @@ class ShelterManagementView(APIView):
 
     def get(self, request, pk):
         # Retrieve the shelter management with the given primary key (pk)
-        shelter_management = get_object_or_404(Shelter, pk=pk)
-        serializer = ShelterSerializer(shelter_management)
+        shelter_management = get_object_or_404(ShelterManagement, pk=pk)
+        serializer = ShelterManagementSerializer(shelter_management)
         return Response(serializer.data)
+
+    def post(self, request):
+        # Assign an admin user to a shelter
+        serializer = ShelterManagementSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=201)
 
     def delete(self, request, pk):
         # Delete the shelter management with the given primary key (pk)
-        shelter_management = get_object_or_404(Shelter, pk=pk)
+        shelter_management = get_object_or_404(ShelterManagement, pk=pk)
         shelter_management.delete()
-        return Response({"message": "Shelter management deleted successfully."})
+        return Response({"message": "Shelter management deleted successfully."}, status=204)
 
 class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
     queryset = ShelterManagement.objects.all()
