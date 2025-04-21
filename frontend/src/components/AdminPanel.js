@@ -9,6 +9,7 @@ function AdminPanel() {
         <nav className="admin-navbar__auth"> {/* Admin-specific navbar */}
           <Link to="/admin-dashboard">Dashboard</Link>
           <Link to="/create-pet">Create Pet</Link>
+          <Link to="/pets">View All Pets</Link>
           <Link to="/admin/shelters">Manage Shelters</Link>
           <Link to="/admin/applications">Manage Applications</Link>
         </nav>
