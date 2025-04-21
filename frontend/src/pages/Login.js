@@ -25,7 +25,29 @@ function Login() {
         const data = await response.json();
         localStorage.setItem('access', data.access); // Store access token
         localStorage.setItem('refresh', data.refresh); // Store refresh token
-        navigate('/'); // Redirect to the homepage or dashboard
+
+        // Fetch user details to determine role
+        const userResponse = await fetch('http://localhost:8000/api/user/details/', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${data.access}`, // Use the access token
+          },
+        });
+
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          localStorage.setItem('role', userData.role); // Store user role (e.g., admin)
+
+          // Redirect based on role
+          if (userData.role === 'admin') {
+            navigate('/admin-dashboard'); // Redirect to admin dashboard
+          } else {
+            navigate('/'); // Redirect to homepage for non-admin users
+          }
+        } else {
+          setError('Failed to fetch user details.');
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Invalid username or password');
