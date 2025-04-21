@@ -11,8 +11,8 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true
-    setError(''); // Clear previous errors
+    setLoading(true);
+    setError('');
 
     try {
       const response = await fetch('http://localhost:8000/api/token/', {
@@ -23,39 +23,43 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('access', data.access); // Store access token
-        localStorage.setItem('refresh', data.refresh); // Store refresh token
+        localStorage.setItem('access', data.access);
+        localStorage.setItem('refresh', data.refresh);
 
-        // Fetch user details to determine role
+        // Fetch user details
         const userResponse = await fetch('http://localhost:8000/api/user/details/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${data.access}`, // Use the access token
+            Authorization: `Bearer ${data.access}`,
           },
         });
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
-          localStorage.setItem('role', userData.role); // Store user role (e.g., admin)
+          localStorage.setItem('role', userData.role);
 
           // Redirect based on role
           if (userData.role === 'admin') {
-            navigate('/admin-dashboard'); // Redirect to admin dashboard
+            navigate('/admin-dashboard');
           } else {
-            navigate('/'); // Redirect to homepage for non-admin users
+            navigate('/');
           }
         } else {
+          const errorData = await userResponse.json();
+          console.error('User details error:', errorData);
           setError('Failed to fetch user details.');
         }
       } else {
         const errorData = await response.json();
+        console.error('Login error:', errorData);
         setError(errorData.detail || 'Invalid username or password');
       }
     } catch (err) {
+      console.error('Network error:', err);
       setError('An error occurred. Please try again.');
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 

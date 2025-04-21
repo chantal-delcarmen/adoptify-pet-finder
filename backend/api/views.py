@@ -35,7 +35,7 @@ class UserDetailsView(APIView):
         user = request.user
         return Response({
             "username": user.username,
-            "role": "admin" if user.is_staff else "user",  # Determine role based on `is_staff`
+            "role": "admin" if user.is_staff else "user",
         })
     
 # -------------------------------------- User Registration -------------------------------------------
