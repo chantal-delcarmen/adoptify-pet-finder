@@ -12,11 +12,6 @@ function Navbar() {
                 <Link to="/login">Login</Link>
                 <Link to="/signup">Signup</Link>
                 <Link to="/apply">Apply</Link>
-                
-                {/* Conditionally render the Create Pet link for admins */}
-                {userRole === 'admin' && (
-                    <Link to="/create-pet">Create Pet</Link>
-                )}
             </div>
         </nav>
     );
