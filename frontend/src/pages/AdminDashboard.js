@@ -23,7 +23,7 @@ function AdminDashboard() {
             <Link to="/create-pet">Create a New Pet</Link>
           </li>
           <li>
-            <Link to="/pets">View All Pets</Link>
+            <Link to="/admin-view-pets">View All Pets</Link>
           </li>
           <li>
             <Link to="/apply">Manage Applications</Link>

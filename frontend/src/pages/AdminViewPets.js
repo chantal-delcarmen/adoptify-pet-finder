@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import AdminPanel from '../components/AdminPanel';
+import PetCard from '../components/PetCard'; // Import the PetCard component
 
 function AdminViewPets() {
   const [pets, setPets] = useState([]);
@@ -46,7 +47,7 @@ function AdminViewPets() {
         },
       });
       if (response.ok) {
-        setPets((prevPets) => prevPets.filter((pet) => pet.id !== petId)); // Remove the deleted pet from the list
+        setPets((prevPets) => prevPets.filter((pet) => pet.petID !== petId)); // Remove the deleted pet from the list
       } else {
         setError('Failed to delete pet');
       }
@@ -60,37 +61,20 @@ function AdminViewPets() {
       {/* Navbar Component */}
       <AdminPanel />
 
-      {/* Hero Section */}
-      <section className="hero">
-        <h2>All Pets</h2>
-        <p>Manage all pets in the system.</p>
-      </section>
+      <h2>All Pets</h2>
+      <p>Manage all pets in the system.</p>
 
       {/* Pets List */}
       <div className="pets-list">
         {error && <p className="error-message">{error}</p>}
         {pets.map((pet) => (
-          <div key={pet.id} className="pet-card">
-            <img src={pet.image_url} alt={pet.name} className="pet-image" />
-            <h3>{pet.name}</h3>
-            <p><strong>Breed:</strong> {pet.breed}</p>
-            <p><strong>Age:</strong> {pet.age} years</p>
-            <p><strong>Description:</strong> {pet.description}</p>
-            <div className="admin-actions">
-              <button
-                className="button button--secondary"
-                onClick={() => handleEditClick(pet.id)} // Navigate to edit pet page
-              >
-                Edit
-              </button>
-              <button
-                className="button button--danger"
-                onClick={() => handleDeleteClick(pet.id)} // Delete the pet
-              >
-                Delete
-              </button>
-            </div>
-          </div>
+          <PetCard
+            key={pet.petID}
+            pet={pet}
+            isAdmin={true} // Indicate that this is an admin view
+            onEdit={handleEditClick} // Pass the edit handler
+            onDelete={handleDeleteClick} // Pass the delete handler
+          />
         ))}
       </div>
     </div>
