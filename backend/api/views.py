@@ -88,11 +88,21 @@ class AdoptionApplicationListView(generics.ListAPIView):
 # --------------------------------------- Pet Management -------------------------------------------
 
 # Create new Pet
-class CreatePetView(generics.CreateAPIView):
-    # Create new pet
-    queryset = Pet.objects.all()
-    serializer_class = PetSerializer
-    permission_classes = [IsAdminUser] # Only admin users can create pets
+class CreatePetView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        serializer = PetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        pet = serializer.save()
+
+        # Add the pet to the specified shelter
+        shelter_id = request.data.get("shelter_id")
+        if shelter_id:
+            shelter = get_object_or_404(Shelter, pk=shelter_id)
+            shelter.add_pet(pet)
+
+        return Response(serializer.data, status=201)
 
 # Retrieve Pet Info by PK
 class PetDetailView(APIView):
@@ -105,11 +115,18 @@ class PetDetailView(APIView):
         return Response(serializer.data)
 
 # List All Pets
-class PetListView(generics.ListAPIView):
-    # List all pets
-    queryset = Pet.objects.all()
-    serializer_class = PetSerializer
-    permission_classes = [AllowAny]  # Allow any user to view the list of pets
+class PetListView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, shelter_id=None):
+        if shelter_id:
+            shelter = get_object_or_404(Shelter, pk=shelter_id)
+            pets = shelter.list_all_pets()
+        else:
+            pets = Pet.objects.all()
+
+        serializer = PetSerializer(pets, many=True)
+        return Response(serializer.data)
 
 # --------------------------------------- Shelter Management -------------------------------------------
 
