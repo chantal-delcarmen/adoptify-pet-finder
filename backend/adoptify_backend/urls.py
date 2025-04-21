@@ -32,22 +32,33 @@ urlpatterns = [
 
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh", TokenRefreshView.as_view(), name="refresh"),
-    path("api-auth/", include("rest_framework.urls")),
-    path("accounts/profile/", include("rest_framework.urls")),  # Redirect to the login page after registration
+    #path("api-auth/", include("rest_framework.urls")),
     path("api/", include("api.urls")),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/user/register/admin/", CreateAdminUserView.as_view(), name="register_admin"),
     path("api/user/login/", views.UserLogInView.as_view(), name="login"),  # User login endpoint
     path("api/user/logout/", views.UserLogOutView.as_view(), name="logout"),  # User logout endpoint
 
+    # Add a new application
     path("api/adoption-application/", views.CreateAdoptionApplication.as_view(), name="adoption_application"),
+    # View an application
     path("api/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="adoption_application_detail"),  # Adoption application detail view
+    # View a list of applications 
     path("api/adoption-application/list", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
 
-    # addRecord
+    # Add a new Shelter Management
     path("api/admin/shelter-management/", views.CreateShelterManagementView.as_view(), name="shelter_management"),  # Shelter management endpoint
-    # getRecordDetails
-    path("api/admin/shelter-management/<int:pk>", views.ShelterManagementView.as_view(), name="shelter_management_detail"),  # Shelter management detail view
+    # View a specific Shelter
+    path("api/admin/shelter/<int:pk>", views.ShelterManagementView.as_view(), name="shelter_management_detail"),  # Shelter management detail view
+    # Add a new Shelter
+    path("api/admin/shelter/", views.CreateShelterView.as_view(), name="shelter"),  # Shelter list endpoint
+    # View list of Shelters 
+    path("api/admin/shelter/list", views.ShelterListView.as_view(), name="shelter_list"),
+    
+    # Admin view all applications
+    path("api/admin/adoption-application/list", views.AdminAdoptionApplicationListView.as_view(), name="admin_adoption_applications"),  # Admin adoption applications list view
+    # Admin approve or reject application
+    path("api/admin/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="update_application_status"),  # Update application status endpoint
 
     # addPetPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint

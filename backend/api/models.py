@@ -8,16 +8,14 @@ from django.core.validators import MinValueValidator, MaxValueValidator, URLVali
 # - To create or modify database tables
 # - To define relationships between tables
 
-# Example add a new model for pets
-
-class UserProfile(models.Model):
+class UserProfile(models.Model):    
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone_number = models.CharField(max_length=15, blank=True)
     address = models.TextField(blank=True)
 
     def __str__(self):
         return self.user.username
-    
+
 class AdminUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin_profile')
     phone_number = models.CharField(max_length=15, blank=True)
@@ -25,6 +23,8 @@ class AdminUser(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
 
 class PetTest(models.Model):
     name = models.CharField(max_length=100)
@@ -44,17 +44,18 @@ class Pet(models.Model):
     domesticated = models.BooleanField()
     #pet_image = models.ImageField(upload_to='pet_images/', blank=True, null=True)
     name = models.CharField(max_length=100)
-    adoption_status = models.TextField(choices=((1, "Available"), (2, "Adopted")), default=1, blank=True, null=True)
+    adoption_status = models.BooleanField(default=False)  # True if adopted, False if available for adoption
     PET_CHOICES = ((1, "Dog"), (2, "Cat"), (3, "Bird"), (4, "Rabbit"))
     pet_type = models.CharField(max_length=10, choices=PET_CHOICES, blank=True)
     shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='pets')
 
 class AdoptionApplication(models.Model):
     application_id = models.BigAutoField(primary_key=True)
-    application_status = models.BooleanField(auto_created=True)
+    application_status = models.BooleanField(default=False)
     submission_date = models.DateTimeField(auto_now_add=True) 
     pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE)
-    adopter_user = models.ForeignKey(User, on_delete=models.CASCADE,)
+    adopter_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    admin_user = models.ForeignKey(AdminUser, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.application_status
