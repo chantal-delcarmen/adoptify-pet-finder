@@ -12,8 +12,8 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter, ShelterManagement, Favourite, Adopter
-from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer
+from .models import AdoptionApplication, Pet, Shelter, ShelterManagement, Favourite, Adopter, Donation
+from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer, DonationSerializer
 
 # -------------------------------------- Health Check Endpoint -------------------------------------------
 # Check if the backend is working (Test Endpoint)
@@ -277,3 +277,53 @@ class FavouriteListView(ListAPIView):
         favourites = Favourite.objects.filter(adopter_user_id=request.user)
         serializer = FavouriteSerializer(favourites, many=True)
         return Response(serializer.data)
+
+    def post(self, request, pet_id):
+        try:
+            pet = Pet.objects.get(id=pet_id)
+            favourite, created = Favourite.objects.get_or_create(user=request.user, pet=pet)
+            if created:
+                return Response({"message": "Pet added to favourites!"}, status=201)
+            return Response({"message": "Pet is already in favourites!"}, status=200)
+        except Pet.DoesNotExist:
+            return Response({"error": "Pet not found!"}, status=404)
+
+class RemoveFavouriteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pet_id):
+        try:
+            favourite = Favourite.objects.get(user=request.user, pet_id=pet_id)
+            favourite.delete()
+            return Response({"message": "Pet removed from favourites!"}, status=status.HTTP_204_NO_CONTENT)
+        except Favourite.DoesNotExist:
+            return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+class DonationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pet_id):
+        try:
+            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation.add(donation)
+            return Response({"message": "Donation received!"}, status=status.HTTP_201_CREATED)
+        except Donation.DoesNotExist:
+            return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+        # For example, you can save the donation details to the database
+
+    def get(self, request, pet_id):
+        try:
+            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation.history = donation.history.all()  # Assuming you have a related name for the donation history
+            return Response({"message": "Donation history retrieved!"}, status=status.HTTP_200_OK)
+        except Donation.DoesNotExist:
+            return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
+        
+class DonationListView(generics.ListAPIView):
+    serializer_class = DonationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Donation.objects.filter(user=self.request.user)
+

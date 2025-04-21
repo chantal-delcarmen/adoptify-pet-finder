@@ -3,7 +3,7 @@ FROM python:3.10
 WORKDIR /app
 
 # Install MySQL client
-RUN apt-get update && apt-get install -y default-mysql-client
+RUN apt-get update && apt-get install -y default-mysql-client 
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
