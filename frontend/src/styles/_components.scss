@@ -216,14 +216,28 @@
 
 .navbar {
   display: flex;
-  justify-content: flex-end; /* Aligns the links to the right */
+  justify-content: flex-start; /* Align links to the left */
   padding: 1rem 2rem;
-  background-color: $color-tertiary;
+  background-color: $color-primary; /* Match the primary color of the page */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
 }
 
 .navbar__auth {
   display: flex;
-  gap: 1rem; /* Adds spacing between the links */
+  gap: 2rem; /* Add spacing between the links */
+}
+
+.navbar__auth a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.9); /* White text with slight transparency */
+  font-weight: bold;
+  font-size: 1rem; /* Adjust font size for better readability */
+  transition: color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.navbar__auth a:hover {
+  color: rgba(255, 255, 255, 1); /* Fully opaque white on hover */
+  text-decoration: underline; /* Add underline on hover */
 }
 
 @media (max-width: 768px) {
@@ -252,5 +266,16 @@
       flex: unset; // Reset flex properties
       width: 100%; // Full width for both columns
     }
+  }
+
+  .navbar {
+    flex-direction: column; /* Stack links vertically on smaller screens */
+    align-items: flex-start; /* Align links to the left */
+    padding: 1rem;
+  }
+
+  .navbar__auth {
+    flex-direction: column; /* Stack links vertically */
+    gap: 1rem; /* Adjust spacing for vertical layout */
   }
 }

@@ -9,6 +9,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Apply from './pages/Apply';
 import Pets from './pages/Pets';
+import CreatePet from './pages/CreatePet';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -31,6 +32,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/apply" element={<Apply />} />
         <Route path="/pets" element={<Pets />} />
+        <Route path="/create-pet" element={<CreatePet />} />
       </Routes>
     </Router>
   );
