@@ -13,6 +13,7 @@ import CreatePet from './pages/CreatePet';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminViewPets from './pages/AdminViewPets';
 import LogoutPage from './pages/LogoutPage';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -39,6 +40,7 @@ function App() {
         <Route path="/create-pet" element={<CreatePet />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-view-pets" element={<AdminViewPets />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );

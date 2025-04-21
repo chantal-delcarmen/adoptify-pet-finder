@@ -15,6 +15,7 @@ function Navbar() {
                 {username ? (
                     <>
                         <span>Welcome, {username}!</span>
+                        <Link to="/profile">Profile</Link>
                         <LogoutLink /> {/* Use the Logout component */}
                     </>
                 ) : (
