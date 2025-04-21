@@ -87,6 +87,7 @@ urlpatterns = [
 
     path("api/donations/", views.DonationView.as_view(), name="donation"),  # Donation endpoint
     path("api/donations/list/", views.DonationListView.as_view(), name="donation_list"),  # List of donations for a user
+
 ]
 
 # Serve media files during development

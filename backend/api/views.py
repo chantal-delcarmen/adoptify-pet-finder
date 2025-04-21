@@ -1,3 +1,10 @@
+"""This module contains the API views for the Adoptify Pet Finder application.
+It includes views for user management, pet management, adoption applications,
+favorites, donations, and shelter management.
+
+Each view handles specific HTTP requests and interacts with the database models
+to provide the required functionality."""
+
 # backend/api/views.py
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
@@ -20,6 +27,15 @@ from .serializers import UserSerializer, ApplicationSerializer, AdminUserSeriali
 @api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def test(request):
+    """
+    Test API endpoint to verify the backend is working.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        Response: A JSON response with a success message.
+    """
     return Response({"message": "Backend is working!"})
 
 # Basic Health Check Endpoint
@@ -302,9 +318,9 @@ class RemoveFavouriteView(APIView):
 class DonationView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, pet_id):
+    def post(self, request, shelter_id):
         try:
-            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation = Donation.objects.get(user=request.user, )
             donation.add(donation)
             return Response({"message": "Donation received!"}, status=status.HTTP_201_CREATED)
         except Donation.DoesNotExist:
@@ -312,9 +328,9 @@ class DonationView(APIView):
 
         # For example, you can save the donation details to the database
 
-    def get(self, request, pet_id):
+    def get(self, request, shelter_id):
         try:
-            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation = Donation.objects.get(user=request.user, shelter_id=shelter_id)
             donation.history = donation.history.all()  # Assuming you have a related name for the donation history
             return Response({"message": "Donation history retrieved!"}, status=status.HTTP_200_OK)
         except Donation.DoesNotExist:
