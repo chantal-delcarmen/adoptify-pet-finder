@@ -69,9 +69,11 @@ urlpatterns = [
     # -------------------------------------- Pet Management -------------------------------------------
     # addPetPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint
-    
+
     # listAllPets
     path("api/pets/", views.PetListView.as_view(), name="pet_list"),  # Pet list endpoint
+
+    # Pet details
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
 
 ]
