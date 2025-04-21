@@ -75,10 +75,11 @@ function CreatePet() {
     });
 
     try {
+      const token = localStorage.getItem('access'); // Use 'access' instead of 'token'
       const response = await fetch('http://localhost:8000/api/register-pet/', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token for admin authentication
+          Authorization: `Bearer ${token}`, // Include token for authentication
         },
         body: formDataToSend,
       });
