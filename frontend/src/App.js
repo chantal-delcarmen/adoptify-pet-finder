@@ -6,12 +6,14 @@ import './styles/main.scss';
 // Pages Routes
 import Home from './pages/Home';
 import Signup from './pages/Signup';
-import Login from './pages/Login';
+import LoginPage from './pages/LoginPage';
 import Apply from './pages/Apply';
 import Pets from './pages/Pets';
 import CreatePet from './pages/CreatePet';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminViewPets from './pages/AdminViewPets';
+import LogoutPage from './pages/LogoutPage';
+import UserProfile from './pages/UserProfile';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -31,12 +33,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Home message={message} />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
         <Route path="/apply" element={<Apply />} />
         <Route path="/pets" element={<Pets />} />
         <Route path="/create-pet" element={<CreatePet />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-view-pets" element={<AdminViewPets />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );
