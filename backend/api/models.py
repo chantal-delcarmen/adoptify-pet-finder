@@ -169,6 +169,6 @@ class Favourite(models.Model):
         self.save()
     def removePetFromFavourites(self, pet, adopter):
         """Remove a pet from the user's favourites."""
-        favourite = self.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
+        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
         if favourite:
             favourite.delete()

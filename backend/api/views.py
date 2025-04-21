@@ -228,11 +228,10 @@ class FavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        get_object_or_404(Pet, pk=pk)
-        
-        adopter, created = Adopter.objects.get_or_create(adopter_user_id=request.user)
-
-        favourite = adopter.favouritePet(pk)
+        pet = get_object_or_404(Pet, pk=pk)
+        adopter = request.user
+        favourite, created = Favourite.objects.get_or_create(pet_id=pet, adopter_user_id=adopter)
+        favourite.addPetToFavourites(pet, adopter)
         if favourite:
             return Response({"message": "Pet added to favourites"}, status=status.HTTP_201_CREATED)
         else:
@@ -245,11 +244,11 @@ class FavouriteView(APIView):
     def delete(self, request, pk):
         # Get the pet object
         pet = get_object_or_404(Pet, pk=pk)
-
-        # Ensure the current user has an Adopter object
-        adopter = get_object_or_404(Adopter, adopter_user_id=request.user)
-
-        # Call the unfavouritePet method to remove the pet from favourites
-        adopter.unfavouritePet(pet)
-
+        adopter = request.user
+        # Check if the pet is in the user's favourites
+        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
+        if not favourite:
+            return Response({"message": "Pet not found in favourites."}, status=status.HTTP_404_NOT_FOUND)
+        # Remove the pet from favourites
+        favourite.removePetFromFavourites(pet, adopter)
         return Response({"message": f"Pet '{pet.name}' removed from favourites."}, status=status.HTTP_204_NO_CONTENT)
