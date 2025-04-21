@@ -14,6 +14,7 @@ from pathlib import Path
 # from decouple import AutoConfig, Config
 from dotenv import load_dotenv
 import os
+import sys
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -102,6 +103,13 @@ DATABASES = {
     }
 }
 
+if 'test' in sys.argv:  # Check if tests are being run
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db_test.sqlite3'),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
