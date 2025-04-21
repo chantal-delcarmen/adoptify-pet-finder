@@ -2,7 +2,7 @@ import React, { useState } from 'react'; // Import React and useState for state 
 import { useNavigate } from 'react-router-dom'; // Use react-router-dom for navigation
 import Navbar from '../components/Navbar'; // Import Navbar component
 
-function Login() {
+function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,6 +25,7 @@ function Login() {
         const data = await response.json();
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
+        localStorage.setItem('username', username); // Store the username in localStorage
 
         // Fetch user details
         const userResponse = await fetch('http://localhost:8000/api/user/details/', {
@@ -37,7 +38,7 @@ function Login() {
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
-          localStorage.setItem('role', userData.role);
+          localStorage.setItem('role', userData.role); // Store the role in localStorage
 
           // Redirect based on role
           if (userData.role === 'admin') {
@@ -101,4 +102,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;
