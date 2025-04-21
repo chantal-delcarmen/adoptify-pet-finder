@@ -13,7 +13,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
 from .models import AdoptionApplication, Pet, Shelter, Favourite, Donation
-from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer
+from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer, DonationSerializer
 
 # DRF Test View using Response (For REST API responses)
 @api_view(['GET'])
@@ -182,3 +182,9 @@ class DonationView(APIView):
         except Donation.DoesNotExist:
             return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
         
+class DonationListView(generics.ListAPIView):
+    serializer_class = DonationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Donation.objects.filter(user=self.request.user)
