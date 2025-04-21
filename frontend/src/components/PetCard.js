@@ -11,7 +11,6 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
       <p><strong>Domesticated:</strong> {pet.domesticated ? 'Yes' : 'No'}</p>
       <p><strong>Type:</strong> {pet.petType}</p>
       <p><strong>Status:</strong> {pet.adoptionStatus}</p>
-      <p><strong>Description:</strong> {pet.description}</p>
 
       {isAdmin ? (
         <div className="admin-actions">
