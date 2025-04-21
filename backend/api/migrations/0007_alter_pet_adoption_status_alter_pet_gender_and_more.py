@@ -28,12 +28,4 @@ class Migration(migrations.Migration):
             name='pet_type',
             field=models.CharField(choices=[('Dog', 'Dog'), ('Cat', 'Cat'), ('Bird', 'Bird'), ('Rabbit', 'Rabbit')], default='Dog', max_length=10),
         ),
-        migrations.CreateModel(
-            name='Favourite',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('adopter_user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favourites_adpters', to=settings.AUTH_USER_MODEL)),
-                ('pet_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='favourites', to='api.pet')),
-            ],
-        ),
     ]
