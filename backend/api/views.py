@@ -182,7 +182,7 @@ class DonationView(APIView):
 
     def post(self, request, shelter_id):
         try:
-            donation = Donation.objects.get(user=request.user, )
+            donation = Donation.objects.get(user=request.user, shelter_id=shelter_id)
             donation.add(donation)
             return Response({"message": "Donation received!"}, status=status.HTTP_201_CREATED)
         except Donation.DoesNotExist:
