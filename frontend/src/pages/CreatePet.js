@@ -12,6 +12,7 @@ function CreatePet() {
     shelter_id: '',
     image: null,
   });
+  const [shelters, setShelters] = useState([]); // State to store the list of shelters
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
@@ -21,6 +22,34 @@ function CreatePet() {
     if (userRole !== 'admin') {
       navigate('/'); // Redirect non-admin users to the home page
     }
+
+    // Fetch the list of shelters
+    const fetchShelters = async () => {
+      const token = localStorage.getItem('access'); // Use 'access' to get token
+      console.log('Token:', token); // Verify the token is being retrieved
+      try {
+        const response = await fetch('http://localhost:8000/api/admin/shelters/', {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`, // Include token for authentication
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const formattedShelters = data.map((shelter) => ({
+            id: shelter.shelter_id,
+            name: shelter.name,
+          }));
+          setShelters(formattedShelters);
+        } else {
+          console.error('Failed to fetch shelters');
+        }
+      } catch (err) {
+        console.error('Error fetching shelters:', err);
+      }
+    };
+
+    fetchShelters();
   }, [navigate]);
 
   const handleChange = (e) => {
@@ -70,48 +99,103 @@ function CreatePet() {
   };
 
   return (
-    <div className="create-pet-page">
-      <Navbar />
-      <h2>Create a New Pet</h2>
-      {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
-      <form onSubmit={handleSubmit} className="create-pet-form">
-        <label>
-          Name:
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </label>
-        <label>
-          Age:
-          <input type="number" name="age" value={formData.age} onChange={handleChange} required />
-        </label>
-        <label>
-          Gender:
-          <select name="gender" value={formData.gender} onChange={handleChange} required>
+    <div>
+      <AdminPanel /> {/* Include the AdminPanel for the navbar and header */}
+      <div className="form-page">
+        <h1>Create a New Pet</h1>
+        <form onSubmit={handleSubmit} className="form">
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+
+          <label htmlFor="age">Age:</label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+            required
+          />
+
+          <label htmlFor="gender">Gender:</label>
+          <select
+            id="gender"
+            name="gender"
+            value={formData.gender}
+            onChange={handleChange}
+            required
+          >
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
-        </label>
-        <label>
-          Domesticated:
-          <input type="checkbox" name="domesticated" checked={formData.domesticated} onChange={handleChange} />
-        </label>
-        <label>
-          Pet Type:
-          <input type="text" name="pet_type" value={formData.pet_type} onChange={handleChange} required />
-        </label>
-        <label>
-          Shelter ID:
-          <input type="number" name="shelter_id" value={formData.shelter_id} onChange={handleChange} required />
-        </label>
-        <label>
-          Image:
-          <input type="file" name="image" onChange={handleFileChange} />
-        </label>
-        <button type="submit" className="button button--primary">
-          Create Pet
-        </button>
-      </form>
+
+          <label htmlFor="domesticated">Domesticated:</label>
+          <input
+            type="checkbox"
+            id="domesticated"
+            name="domesticated"
+            checked={formData.domesticated}
+            onChange={handleChange}
+          />
+
+          <label htmlFor="pet_type">Pet Type:</label>
+          <select
+            id="pet_type"
+            name="pet_type"
+            value={formData.pet_type}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Pet Type</option>
+            <option value="Dog">Dog</option>
+            <option value="Cat">Cat</option>
+            <option value="Bird">Bird</option>
+            <option value="Rabbit">Rabbit</option>
+          </select>
+
+          <label htmlFor="shelter_id">Shelter:</label>
+          <select
+            id="shelter_id"
+            name="shelter_id"
+            value={formData.shelter_id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Shelter</option>
+            {shelters.map((shelter) => {
+              console.log(shelter); // Log each shelter object
+              return (
+                <option key={shelter.id} value={shelter.id}>
+                  {shelter.name}
+                </option>
+              );
+            })}
+          </select>
+
+          <label htmlFor="image">Image:</label>
+          <input
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleFileChange}
+          />
+
+          <button type="submit" className="button button--primary">
+            Create Pet
+          </button>
+        </form>
+
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+      </div>
     </div>
   );
 }
