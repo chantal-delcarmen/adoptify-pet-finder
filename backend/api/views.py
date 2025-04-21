@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter, Favourite
+from .models import AdoptionApplication, Pet, Shelter, Favourite, Donation
 from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer
 
 # DRF Test View using Response (For REST API responses)
@@ -160,3 +160,25 @@ class RemoveFavouriteView(APIView):
             return Response({"message": "Pet removed from favourites!"}, status=status.HTTP_204_NO_CONTENT)
         except Favourite.DoesNotExist:
             return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+class DonationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pet_id):
+        try:
+            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation.add(donation)
+            return Response({"message": "Donation received!"}, status=status.HTTP_201_CREATED)
+        except Donation.DoesNotExist:
+            return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+        # For example, you can save the donation details to the database
+
+    def get(self, request, pet_id):
+        try:
+            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation.history = donation.history.all()  # Assuming you have a related name for the donation history
+            return Response({"message": "Donation history retrieved!"}, status=status.HTTP_200_OK)
+        except Donation.DoesNotExist:
+            return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
+        
