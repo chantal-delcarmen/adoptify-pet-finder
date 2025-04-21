@@ -67,6 +67,9 @@ urlpatterns = [
     # Retrieve or delete a shelter management record
     path("api/admin/shelter-management/<int:pk>/", views.ShelterManagementDetailView.as_view(), name="shelter_management_detail"),
 
+    # Shelter list endpoint
+    path("api/admin/shelters/", views.ShelterListView.as_view(), name="shelter_list"),
+
     # -------------------------------------- Pet Management -------------------------------------------
     # addPetPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint
