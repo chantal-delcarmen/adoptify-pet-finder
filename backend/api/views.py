@@ -26,6 +26,18 @@ def test(request):
 def health_check(request):
     return JsonResponse({"status": "OK", "message": "Backend is working"})
 
+# ---------------------------------------- User Details -------------------------------------------
+
+class UserDetailsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "username": user.username,
+            "role": "admin" if user.is_staff else "user",  # Determine role based on `is_staff`
+        })
+    
 # -------------------------------------- User Registration -------------------------------------------
 # Create new User
 class CreateUserView(APIView):
@@ -199,4 +211,6 @@ class UpdateApplicationStatusView(APIView):
         adoption_application.application_status = new_status
         adoption_application.save()
         return Response({"message": "Application status updated successfully", "status": new_status})
+
+
 
