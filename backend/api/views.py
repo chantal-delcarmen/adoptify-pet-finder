@@ -93,9 +93,19 @@ class AdoptionView(APIView):
 
 # List Adoption Applications
 class AdoptionApplicationListView(generics.ListAPIView):
-    queryset = AdoptionApplication.objects.all()
-    serializer_class = ApplicationSerializer   
-    permission_classes = [AllowAny]  # Only authenticated users can view the list of applications
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # List all adoption applications for the authenticated user
+        if request.user.is_staff:
+            # Admin can see all applications
+            adoption_applications = AdoptionApplication.objects.all()
+        else:
+            # Regular user can only see their own applications
+            adoption_applications = AdoptionApplication.objects.filter(adopter_user=request.user)
+        serializer = ApplicationSerializer(adoption_applications, many=True)
+        return Response(serializer.data)
+
 
 
 # --------------------------------------- Pet Management -------------------------------------------
@@ -224,6 +234,8 @@ class UpdateApplicationStatusView(APIView):
 
         return Response({"message": "Application status updated successfully", "status": new_status})
 
+# ---------------------------------------- Favourite Pets Management -------------------------------------------
+
 class FavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -252,3 +264,12 @@ class FavouriteView(APIView):
         # Remove the pet from favourites
         favourite.removePetFromFavourites(pet, adopter)
         return Response({"message": f"Pet '{pet.name}' removed from favourites."}, status=status.HTTP_204_NO_CONTENT)
+
+class FavouriteListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Get the list of favourite pets for the authenticated user
+        favourites = Favourite.objects.filter(adopter_user_id=request.user)
+        serializer = FavouriteSerializer(favourites, many=True)
+        return Response(serializer.data)

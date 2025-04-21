@@ -67,7 +67,7 @@ class AdopterUserSerializer(serializers.ModelSerializer):
 
 class ApplicationSerializer(serializers.ModelSerializer):
     pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
-    adopter_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    adopter_user = serializers.PrimaryKeyRelatedField(read_only=True)  #
     class Meta:
         model = AdoptionApplication
         fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user"]
