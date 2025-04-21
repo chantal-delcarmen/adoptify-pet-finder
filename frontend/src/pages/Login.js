@@ -6,13 +6,16 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [debugInfo, setDebugInfo] = useState(''); // State for debugging output
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true
+    setError(''); // Clear previous errors
+
     try {
-      const response = await fetch('http://localhost:8000/api-auth/login/', {
+      const response = await fetch('http://localhost:8000/api/token/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -20,20 +23,17 @@ function Login() {
 
       if (response.ok) {
         const data = await response.json();
-        console.log('Login successful:', data);
-        setDebugInfo(`Login successful: ${JSON.stringify(data, null, 2)}`);
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('access', data.access); // Store access token
+        localStorage.setItem('refresh', data.refresh); // Store refresh token
         navigate('/'); // Redirect to the homepage or dashboard
       } else {
         const errorData = await response.json();
-        console.error('Backend error:', errorData);
-        setError(errorData.error || 'Login failed');
-        setDebugInfo(`Backend error: ${JSON.stringify(errorData, null, 2)}`);
+        setError(errorData.detail || 'Invalid username or password');
       }
     } catch (err) {
-      console.error('Error logging in:', err);
       setError('An error occurred. Please try again.');
-      setDebugInfo(`Error logging in: ${err.message}`);
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -63,19 +63,13 @@ function Login() {
             required
           />
 
-          <button type="submit" className="button button--primary">Login</button>
+          <button type="submit" className="button button--primary" disabled={loading}>
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
         </form>
 
         {/* Display error message */}
         {error && <p className="error-message">{error}</p>}
-
-        {/* Display debugging information */}
-        {debugInfo && (
-          <div className="debug-info">
-            <h3>Debug Info:</h3>
-            <pre>{debugInfo}</pre>
-          </div>
-        )}
       </div>
     </div>
   );
