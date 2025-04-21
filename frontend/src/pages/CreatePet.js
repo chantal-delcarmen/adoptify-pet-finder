@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminPanel from '../components/AdminPanel';
+import { refreshAccessToken } from '../utils/authUtils';
 
 function CreatePet() {
   const [formData, setFormData] = useState({
@@ -75,7 +76,11 @@ function CreatePet() {
     });
 
     try {
-      const token = localStorage.getItem('access'); // Use 'access' instead of 'token'
+      let token = localStorage.getItem('access');
+      if (!token) {
+        token = await refreshAccessToken(navigate); // Use the shared function
+      }
+
       const response = await fetch('http://localhost:8000/api/register-pet/', {
         method: 'POST',
         headers: {
