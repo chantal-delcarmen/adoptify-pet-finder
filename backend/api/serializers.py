@@ -94,6 +94,7 @@ class PetSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'pet_id': {'read_only': True},
             'adoption_status': {'required': True},  # Ensure adoption_status is required
+            'gender': {'required': True},  
             'pet_type': {'required': True},  # Ensure pet_type is required
             'image': {'required': False},  # Make image optional
         }
