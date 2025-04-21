@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import Navbar from '../components/Navbar';
+import PetCard from '../components/PetCard'; // Import the PetCard component
 
 function Pets() {
   const [pets, setPets] = useState([]);
@@ -45,19 +46,12 @@ function Pets() {
       <div className="pets-list">
         {error && <p className="error-message">{error}</p>}
         {pets.map((pet) => (
-          <div key={pet.id} className="pet-card">
-            <img src={pet.image_url} alt={pet.name} className="pet-image" />
-            <h3>{pet.name}</h3>
-            <p><strong>Breed:</strong> {pet.breed}</p>
-            <p><strong>Age:</strong> {pet.age} years</p>
-            <p><strong>Description:</strong> {pet.description}</p>
-            <button
-              className="button button--primary"
-              onClick={() => handleApplyClick(pet.id)} // Navigate to application page
-            >
-              Apply to Adopt Me
-            </button>
-          </div>
+          <PetCard
+            key={pet.petID}
+            pet={pet}
+            onPrimaryAction={handleApplyClick} // Pass the apply handler
+            primaryActionLabel="Apply to Adopt Me" // Label for the button
+          />
         ))}
       </div>
     </div>
