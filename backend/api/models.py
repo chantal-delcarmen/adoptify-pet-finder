@@ -163,6 +163,14 @@ class Donation(models.Model):
 
     def __str__(self):
         return f"Donation {self.fundId} - ${self.amount}"
+    def recordDonation(self, adopter, shelter, amount):
+        """Record a donation."""
+        self.adopter_user_id = adopter
+        self.shelter_id = shelter
+        self.amount = amount
+        self.save()
+    def getDonationDetails(self):
+        return {self.fundId, self.adopter_user_id.username, self.shelter_id.name, self.amount, self.donation_date}
 
 # Adopter Model
 class Adopter(models.Model):

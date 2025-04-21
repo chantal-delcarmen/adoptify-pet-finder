@@ -165,11 +165,15 @@ class ShelterManagementSerializer(serializers.ModelSerializer):
         return ShelterManagement.objects.create(**validated_data)
     
 class DonationSerializer(serializers.ModelSerializer):
+    adopter_user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+    shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())
+
     class Meta:
         model = Donation
-        fields = ['donation_id', 'amount', 'donor_user', 'shelter_id']
+        fields = ['fundId', 'adopter_user_id', 'shelter_id', 'amount', 'donation_date']
         extra_kwargs = {'donation_id': {'read_only': True}}
     def create(self, validated_data):
+         # Create a new donation object
         return Donation.objects.create(**validated_data)
 
 class FavouriteSerializer(serializers.ModelSerializer):

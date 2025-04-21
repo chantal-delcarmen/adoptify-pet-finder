@@ -315,31 +315,48 @@ class RemoveFavouriteView(APIView):
         except Favourite.DoesNotExist:
             return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
 
+
+# ---------------------------------------- Donation Management -------------------------------------------
+# Create new Donation
+class CreateDonationView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        donator = request.user
+        shelter_id = request.data.get("shelter_id")
+        amount = request.data.get("amount")
+
+        # Validate required fields
+        if not shelter_id or not amount:
+            return Response({"error": "Shelter ID and amount are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Get the shelter object
+            shelter = Shelter.objects.get(pk=shelter_id)
+        except Shelter.DoesNotExist:
+            return Response({"error": "Shelter not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Create a new donation using the recordDonation method
+        donation = Donation()
+        donation.recordDonation(donator, shelter, amount)
+
+        # Serialize the created donation
+        serializer = DonationSerializer(donation)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# View Donation Details
 class DonationView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, shelter_id):
-        try:
-            donation = Donation.objects.get(user=request.user, )
-            donation.add(donation)
-            return Response({"message": "Donation received!"}, status=status.HTTP_201_CREATED)
-        except Donation.DoesNotExist:
-            return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
+    def get(self, request, pk):
+        donation = get_object_or_404(Donation, pk=pk)
+        donation.getDonationDetails()
+        serializer = DonationSerializer(donation)
+        return Response(serializer.data)
 
-        # For example, you can save the donation details to the database
-
-    def get(self, request, shelter_id):
-        try:
-            donation = Donation.objects.get(user=request.user, shelter_id=shelter_id)
-            donation.history = donation.history.all()  # Assuming you have a related name for the donation history
-            return Response({"message": "Donation history retrieved!"}, status=status.HTTP_200_OK)
-        except Donation.DoesNotExist:
-            return Response({"error": "Donation not found!"}, status=status.HTTP_404_NOT_FOUND)
-        
 class DonationListView(generics.ListAPIView):
-    serializer_class = DonationSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Donation.objects.filter(user=self.request.user)
+    def get(self, request):
+        # List all donations for the authenticated user
+        donations = Donation.objects.filter(adopter_user_id=request.user)
+        serializer = DonationSerializer(donations, many=True)
+        return Response(serializer.data)
 
