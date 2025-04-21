@@ -147,3 +147,28 @@ class Adopter(models.Model):
 
     def __str__(self):
         return self.adopter_user_id.username
+    
+    def favouritePet(self, pet):
+        """Add a pet to the user's favourites."""
+        favourite = Favourite.objects.create(pet_id=pet, adopter_user_id=self.adopter_user_id)
+        return favourite
+    def unfavouritePet(self, pet):
+        """Remove a pet from the user's favourites."""
+        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=self.adopter_user_id).first()
+        if favourite:
+            favourite.delete()
+
+class Favourite(models.Model):
+    pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='favourites')
+    adopter_user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites_adpters')
+
+    def addPetToFavourites(self, pet, adopter):
+        """Add a pet to the user's favourites."""
+        self.pet_id = pet
+        self.adopter_user_id = adopter
+        self.save()
+    def removePetFromFavourites(self, pet, adopter):
+        """Remove a pet from the user's favourites."""
+        favourite = self.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
+        if favourite:
+            favourite.delete()
