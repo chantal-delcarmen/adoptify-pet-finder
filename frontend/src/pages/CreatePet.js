@@ -68,8 +68,29 @@ function CreatePet() {
     });
   };
 
+  // Validate the form data
+  const validatePetForm = (data) => {
+    const errors = {};
+    if (!data.name) errors.name = 'Name is required.';
+    if (!data.age || data.age <= 0) errors.age = 'Age must be greater than 0.';
+    if (!data.gender) errors.gender = 'Gender is required.';
+    if (!data.pet_type) errors.pet_type = 'Pet type is required.';
+    if (!data.shelter_id) errors.shelter_id = 'Shelter is required.';
+    return errors;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate the form data
+    const validationErrors = validatePetForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      console.log('Validation Errors:', validationErrors); // Log validation errors
+      setError(Object.values(validationErrors).join(' ')); // Combine all errors into a single message
+      setSuccess('');
+      return;
+    }
+
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
@@ -90,15 +111,18 @@ function CreatePet() {
       });
 
       if (response.ok) {
+        console.log('Pet created successfully!'); // Log success message
         setSuccess('Pet created successfully!');
         setError('');
         navigate('/admin-view-pets'); // Redirect to the pets page
       } else {
         const data = await response.json();
+        console.error('Error Response:', data); // Log error response
         setError(data.error || 'Failed to create pet');
         setSuccess('');
       }
     } catch (err) {
+      console.error('Error creating pet:', err); // Log error
       setError('An error occurred while creating the pet');
       setSuccess('');
     }
