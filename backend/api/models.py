@@ -76,9 +76,29 @@ class ShelterManagement(models.Model):
         default=get_root_admin_user  # Default to root admin user
     )
     manage_id = models.BigAutoField(primary_key=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return f"Shelter Management for {self.shelter_id.name} by {self.admin_user.username}"
+
+    def add_record(self, admin, shelter, start_date, end_date):
+        """Assign an admin to manage a shelter."""
+        self.admin_user = admin
+        self.shelter_id = shelter
+        self.start_date = start_date
+        self.end_date = end_date
+        self.save()
+
+    def get_record_details(self):
+        """Get details of this shelter management record."""
+        return {
+            "manage_id": self.manage_id,
+            "admin_user": self.admin_user.username,
+            "shelter_name": self.shelter_id.name,
+            "start_date": self.start_date,
+            "end_date": self.end_date,
+        }
 
 # Pet Model
 class Pet(models.Model):
