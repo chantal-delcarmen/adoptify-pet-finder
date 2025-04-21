@@ -82,6 +82,8 @@ urlpatterns = [
 
     # Favourite 
     path("api/favourite/<int:pk>/", views.FavouriteView.as_view(), name="favourite_pet"),  # Favourite pet endpoint
+    # Favourite List for a user
+    path("api/favourite/list/", views.FavouriteListView.as_view(), name="favourite_list"),  # List of favourite pets for a user
 ]
 
 # Serve media files during development

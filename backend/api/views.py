@@ -94,9 +94,19 @@ class AdoptionView(APIView):
 
 # List Adoption Applications
 class AdoptionApplicationListView(generics.ListAPIView):
-    queryset = AdoptionApplication.objects.all()
-    serializer_class = ApplicationSerializer   
-    permission_classes = [AllowAny]  # Only authenticated users can view the list of applications
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # List all adoption applications for the authenticated user
+        if request.user.is_staff:
+            # Admin can see all applications
+            adoption_applications = AdoptionApplication.objects.all()
+        else:
+            # Regular user can only see their own applications
+            adoption_applications = AdoptionApplication.objects.filter(adopter_user=request.user)
+        serializer = ApplicationSerializer(adoption_applications, many=True)
+        return Response(serializer.data)
+
 
 
 # --------------------------------------- Pet Management -------------------------------------------
@@ -228,15 +238,16 @@ class UpdateApplicationStatusView(APIView):
 
         return Response({"message": "Application status updated successfully", "status": new_status})
 
+# ---------------------------------------- Favourite Pets Management -------------------------------------------
+
 class FavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
-        get_object_or_404(Pet, pk=pk)
-        
-        adopter, created = Adopter.objects.get_or_create(adopter_user_id=request.user)
-
-        favourite = adopter.favouritePet(pk)
+        pet = get_object_or_404(Pet, pk=pk)
+        adopter = request.user
+        favourite, created = Favourite.objects.get_or_create(pet_id=pet, adopter_user_id=adopter)
+        favourite.addPetToFavourites(pet, adopter)
         if favourite:
             return Response({"message": "Pet added to favourites"}, status=status.HTTP_201_CREATED)
         else:
@@ -249,11 +260,20 @@ class FavouriteView(APIView):
     def delete(self, request, pk):
         # Get the pet object
         pet = get_object_or_404(Pet, pk=pk)
-
-        # Ensure the current user has an Adopter object
-        adopter = get_object_or_404(Adopter, adopter_user_id=request.user)
-
-        # Call the unfavouritePet method to remove the pet from favourites
-        adopter.unfavouritePet(pet)
-
+        adopter = request.user
+        # Check if the pet is in the user's favourites
+        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
+        if not favourite:
+            return Response({"message": "Pet not found in favourites."}, status=status.HTTP_404_NOT_FOUND)
+        # Remove the pet from favourites
+        favourite.removePetFromFavourites(pet, adopter)
         return Response({"message": f"Pet '{pet.name}' removed from favourites."}, status=status.HTTP_204_NO_CONTENT)
+
+class FavouriteListView(ListAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        # Get the list of favourite pets for the authenticated user
+        favourites = Favourite.objects.filter(adopter_user_id=request.user)
+        serializer = FavouriteSerializer(favourites, many=True)
+        return Response(serializer.data)
