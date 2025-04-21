@@ -3,6 +3,8 @@ from rest_framework  import serializers
 from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement
 from django.db import models
 
+# -------------------------------------- User Registration -------------------------------------------
+
 class UserSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='profile.phone_number', required=False)
     address = serializers.CharField(source='profile.address', required=False)
@@ -50,6 +52,8 @@ class AdminUserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data, is_staff=True, is_superuser=True)
         return user
 
+# --------------------------------------- Adoption Application -------------------------------------------
+
 class AdopterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -81,19 +85,34 @@ class ApplicationSerializer(serializers.ModelSerializer):
         # Create a new adoption application
         return adopt_application
 
+# --------------------------------------- Pet Management -------------------------------------------
+
 class PetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'image']
-        extra_kwargs = {'pet_id': {'read_only': True}}
+        extra_kwargs = {
+            'pet_id': {'read_only': True},
+            'adoption_status': {'read_only': True},  # Set adoption_status as read-only
+            'image': {'required': False},  # Make image optional
+        }
+
+    def validate_shelter_id(self, value):
+        # Validate that the shelter exists
+        if not Shelter.objects.filter(pk=value.pk).exists():
+            raise serializers.ValidationError("The specified shelter does not exist.")
+        return value
+
     def create(self, validated_data):
         # Create a new pet
         request = self.context.get('request')
         if not request.user.is_staff:
-            validated_data.pop('adoption_status') # Remove adoption status if not needed
+            validated_data.pop('adoption_status', None)  # Remove adoption status if not needed
         pet = Pet.objects.create(**validated_data)
-        return pet 
-    
+        return pet
+
+# --------------------------------------- Shelter Management -------------------------------------------
+
 class ShelterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shelter

@@ -6,6 +6,7 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
+from rest_framework.parsers import MultiPartParser, FormParser
 
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -90,9 +91,12 @@ class AdoptionApplicationListView(generics.ListAPIView):
 # Create new Pet
 class CreatePetView(APIView):
     permission_classes = [IsAdminUser]
+    parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
     def post(self, request):
-        serializer = PetSerializer(data=request.data)
+        # Automatically set default adoption status
+        request.data['adoption_status'] = 'Available'
+        serializer = PetSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         pet = serializer.save()
 
