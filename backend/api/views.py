@@ -26,7 +26,7 @@ from .serializers import UserSerializer, ApplicationSerializer, AdminUserSeriali
 @api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def test(request):
-     """
+    """
     Test API endpoint to verify the backend is working.
 
     Args:
@@ -35,7 +35,7 @@ def test(request):
     Returns:
         Response: A JSON response with a success message.
     """
-return Response({"message": "Backend is working!"})
+    return Response({"message": "Backend is working!"})
 
 
 # Create new User
@@ -180,9 +180,9 @@ class RemoveFavouriteView(APIView):
 class DonationView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, pet_id):
+    def post(self, request, shelter_id):
         try:
-            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation = Donation.objects.get(user=request.user, )
             donation.add(donation)
             return Response({"message": "Donation received!"}, status=status.HTTP_201_CREATED)
         except Donation.DoesNotExist:
@@ -190,9 +190,9 @@ class DonationView(APIView):
 
         # For example, you can save the donation details to the database
 
-    def get(self, request, pet_id):
+    def get(self, request, shelter_id):
         try:
-            donation = Donation.objects.get(user=request.user, pet_id=pet_id)
+            donation = Donation.objects.get(user=request.user, shelter_id=shelter_id)
             donation.history = donation.history.all()  # Assuming you have a related name for the donation history
             return Response({"message": "Donation history retrieved!"}, status=status.HTTP_200_OK)
         except Donation.DoesNotExist:
