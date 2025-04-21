@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import AdminLayout from '../components/AdminLayout';
+import AdminPanel from '../components/AdminPanel';
 
 function AdminDashboard() {
   const navigate = useNavigate();
@@ -13,7 +13,8 @@ function AdminDashboard() {
   }, [navigate]);
 
   return (
-    <AdminLayout>
+    <div className="admin-dashboard-page">
+      <AdminPanel /> {/* Include the AdminPanel for the navbar and header */}
       <div className="card admin-dashboard">
         <h2>Welcome, Admin!</h2>
         <p>Here are your management options:</p>
@@ -32,7 +33,7 @@ function AdminDashboard() {
           </li>
         </ul>
       </div>
-    </AdminLayout>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import AdminPanel from '../components/AdminPanel';
 
 function CreatePet() {
   const [formData, setFormData] = useState({
@@ -71,7 +71,7 @@ function CreatePet() {
 
   return (
     <div className="create-pet-page">
-      <Navbar />
+      <AdminPanel />
       <h2>Create a New Pet</h2>
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
