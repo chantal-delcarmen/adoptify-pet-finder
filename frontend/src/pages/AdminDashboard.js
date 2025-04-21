@@ -14,22 +14,24 @@ function AdminDashboard() {
 
   return (
     <AdminLayout>
-      <h1>Welcome, Admin!</h1>
-      <p>Here are your management options:</p>
-      <ul>
-        <li>
-          <Link to="/create-pet">Create a New Pet</Link>
-        </li>
-        <li>
-          <Link to="/pets">View All Pets</Link>
-        </li>
-        <li>
-          <Link to="/apply">Manage Applications</Link>
-        </li>
-        <li>
-          <Link to="/admin/shelters">Manage Shelters</Link>
-        </li>
-      </ul>
+      <div className="card admin-dashboard">
+        <h2>Welcome, Admin!</h2>
+        <p>Here are your management options:</p>
+        <ul className="admin-dashboard__links">
+          <li>
+            <Link to="/create-pet">Create a New Pet</Link>
+          </li>
+          <li>
+            <Link to="/pets">View All Pets</Link>
+          </li>
+          <li>
+            <Link to="/apply">Manage Applications</Link>
+          </li>
+          <li>
+            <Link to="/admin/shelters">Manage Shelters</Link>
+          </li>
+        </ul>
+      </div>
     </AdminLayout>
   );
 }
