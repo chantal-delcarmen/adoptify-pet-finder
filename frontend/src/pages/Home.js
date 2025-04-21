@@ -1,7 +1,6 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
-import Card from '../components/Card';
 import CTA from '../components/CTA';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faInfoCircle, faArrowRight } from '@fortawesome/free-solid-svg-icons';

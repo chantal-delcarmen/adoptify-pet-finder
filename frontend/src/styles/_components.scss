@@ -147,6 +147,101 @@
   }
 }
 
+// Pet Card Component
+.pets-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Responsive grid
+  gap: $spacing-md; // Space between cards
+  padding: $spacing-md;
+}
+
+.pet-card {
+  background-color: $color-white; // White background
+  border: 1px solid $color-muted; // Light border
+  border-radius: $radius; // Rounded corners
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow
+  overflow: hidden; // Prevent content overflow
+  transition: transform 0.2s ease, box-shadow 0.2s ease; // Smooth hover effect
+
+  &:hover {
+    transform: translateY(-5px); // Lift the card on hover
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); // Stronger shadow on hover
+  }
+
+  .pet-image {
+    width: 100%; // Full width
+    height: 200px; // Fixed height
+    object-fit: cover; // Crop image to fit
+    border-bottom: 1px solid $color-muted; // Separator line
+  }
+
+  h3 {
+    font-size: $font-size-lg;
+    margin: $spacing-sm 0;
+    text-align: center;
+    color: $color-primary;
+  }
+
+  p {
+    font-size: $font-size-base;
+    margin: $spacing-xs $spacing-sm;
+    color: $color-text;
+  }
+
+  .button {
+    display: block;
+    width: calc(100% - 30px);
+    margin: $spacing-sm auto;
+    padding: $spacing-xs;
+    text-align: center;
+    background-color: $color-primary; // Primary button color
+    color: $color-white;
+    border: none;
+    border-radius: $radius;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: darken($color-primary, 10%); // Darker on hover
+    }
+  }
+
+  .admin-actions {
+    display: flex;
+    justify-content: space-around;
+    padding: $spacing-sm;
+
+    .button {
+      width: 45%; // Buttons take half the width
+    }
+
+    .button--secondary {
+      background-color: $color-success; // Green for edit
+      &:hover {
+        background-color: darken($color-success, 10%);
+      }
+    }
+
+    .button--danger {
+      background-color: $color-danger; // Red for delete
+      &:hover {
+        background-color: darken($color-danger, 10%);
+      }
+    }
+  }
+}
+
+// Responsive Design for Pet Cards
+@media (max-width: 768px) {
+  .pets-list {
+    grid-template-columns: 1fr; // Single column on smaller screens
+  }
+
+  .pet-card {
+    margin-bottom: $spacing-md;
+  }
+}
+
 .content {
   display: flex; // Enable Flexbox for horizontal layout
   flex-direction: column; // Stack columns and bottom section vertically

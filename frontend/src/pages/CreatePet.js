@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminPanel from '../components/AdminPanel';
-import { refreshAccessToken } from '../utils/authUtils';
+import { refreshAccessToken } from '../utils/AuthUtils';
 
 function CreatePet() {
   const [formData, setFormData] = useState({
@@ -92,7 +92,7 @@ function CreatePet() {
       if (response.ok) {
         setSuccess('Pet created successfully!');
         setError('');
-        navigate('/pets'); // Redirect to the pets page
+        navigate('/admin-view-pets'); // Redirect to the pets page
       } else {
         const data = await response.json();
         setError(data.error || 'Failed to create pet');

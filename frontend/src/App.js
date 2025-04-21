@@ -11,6 +11,7 @@ import Apply from './pages/Apply';
 import Pets from './pages/Pets';
 import CreatePet from './pages/CreatePet';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminViewPets from './pages/AdminViewPets';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -35,6 +36,7 @@ function App() {
         <Route path="/pets" element={<Pets />} />
         <Route path="/create-pet" element={<CreatePet />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        <Route path="/admin-view-pets" element={<AdminViewPets />} />
       </Routes>
     </Router>
   );

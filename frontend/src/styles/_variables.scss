@@ -7,6 +7,10 @@ $color-white: #ffffff;
 $color-text: #345356;       // Dark slate (titles)
 $color-muted: #152F37;      // Body text
 
+// Color States for Admin Actions
+$color-success: #4caf50; // Green color for success
+$color-danger: #f44336;  // Red color for danger (if not already defined)
+
 // Typography
 $font-stack: 'Poppins', sans-serif; // Font stack for the entire app
 $font-size-base: 16px;
