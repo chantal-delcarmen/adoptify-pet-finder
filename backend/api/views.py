@@ -1,3 +1,10 @@
+"""This module contains the API views for the Adoptify Pet Finder application.
+It includes views for user management, pet management, adoption applications,
+favorites, donations, and shelter management.
+
+Each view handles specific HTTP requests and interacts with the database models
+to provide the required functionality."""
+
 # backend/api/views.py
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
@@ -19,7 +26,16 @@ from .serializers import UserSerializer, ApplicationSerializer, AdminUserSeriali
 @api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def test(request):
-    return Response({"message": "Backend is working!"})
+     """
+    Test API endpoint to verify the backend is working.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        Response: A JSON response with a success message.
+    """
+return Response({"message": "Backend is working!"})
 
 
 # Create new User

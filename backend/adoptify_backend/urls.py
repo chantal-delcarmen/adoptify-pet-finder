@@ -54,5 +54,6 @@ urlpatterns = [
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
   
     path("api/favourites/", views.AddFavouriteView.as_view(), name="add_favourite"),
-
+    path("api/Donation/", views.CreateDonationView.as_view(), name="donation"),  # Donation endpoint")
+    path("api/DonationView/", views.DonationView.as_view(), name="donation_view"),  # Donation view endpoint	
 ]
