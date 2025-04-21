@@ -279,3 +279,26 @@
     gap: 1rem; /* Adjust spacing for vertical layout */
   }
 }
+
+.admin-dashboard {
+  padding: 2rem;
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    li {
+      margin-bottom: 0.5rem;
+      a {
+        text-decoration: none;
+        color: $color-primary;
+        font-weight: bold;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

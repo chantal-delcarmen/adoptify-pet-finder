@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Apply from './pages/Apply';
 import Pets from './pages/Pets';
 import CreatePet from './pages/CreatePet';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -33,6 +34,7 @@ function App() {
         <Route path="/apply" element={<Apply />} />
         <Route path="/pets" element={<Pets />} />
         <Route path="/create-pet" element={<CreatePet />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
       </Routes>
     </Router>
   );
