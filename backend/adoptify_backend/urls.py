@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
-from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView
+from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import include
 from django.conf import settings
@@ -49,6 +49,7 @@ urlpatterns = [
     # ------------------------------------- User Registration -------------------------------------------
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/user/register/admin/", CreateAdminUserView.as_view(), name="register_admin"),
+    path("api/user/details/", UserDetailsView.as_view(), name="user_details"),
 
     # ------------------------------------- Application Management -------------------------------------------
     path("api/adoption-application/", views.CreateAdoptionApplication.as_view(), name="adoption_application"),
