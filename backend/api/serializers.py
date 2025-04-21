@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework  import serializers
-from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement
+from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement, Favourite
 from django.db import models
 
 # -------------------------------------- User Registration -------------------------------------------
@@ -147,3 +147,16 @@ class ShelterManagementSerializer(serializers.ModelSerializer):
         validated_data['admin_user'] = validated_data['admin_user']._wrapped if hasattr(validated_data['admin_user'], '_wrapped') else validated_data['admin_user']
         # Create the ShelterManagement object
         return ShelterManagement.objects.create(**validated_data)
+
+class FavouriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favourite
+        fields = ['pet_id', 'adopter_user_id']
+        extra_kwargs = {
+            'pet_id': {'required': True},
+            'adopter_user_id': {'required': True}
+        }
+    def create(self, validated_data):
+        # Create a new favourite pet entry
+        return Favourite.objects.create(**validated_data)
+    

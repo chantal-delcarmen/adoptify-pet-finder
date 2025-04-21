@@ -12,8 +12,8 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter, ShelterManagement
-from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer
+from .models import AdoptionApplication, Pet, Shelter, ShelterManagement, Favourite, Adopter
+from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer
 
 # -------------------------------------- Health Check Endpoint -------------------------------------------
 # Check if the backend is working (Test Endpoint)
@@ -210,7 +210,46 @@ class UpdateApplicationStatusView(APIView):
         
         adoption_application.application_status = new_status
         adoption_application.save()
+
+        if new_status == 'Approved':
+            # Automatically set the pet's adoption status to 'Adopted'
+            pet = adoption_application.pet_id
+            pet.adoption_status = 'Adopted'
+            pet.save()
+        elif new_status == 'Rejected':
+            # Automatically set the pet's adoption status to 'Available'
+            pet = adoption_application.pet_id
+            pet.adoption_status = 'Available'
+            pet.save()
+
         return Response({"message": "Application status updated successfully", "status": new_status})
 
+class FavouriteView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def post(self, request, pk):
+        get_object_or_404(Pet, pk=pk)
+        
+        adopter, created = Adopter.objects.get_or_create(adopter_user_id=request.user)
 
+        favourite = adopter.favouritePet(pk)
+        if favourite:
+            return Response({"message": "Pet added to favourites"}, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"message": "Pet already in favourites"}, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request):
+        favourites = Favourite.objects.filter(user=request.user)
+        serializer = FavouriteSerializer(favourites, many=True)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        # Get the pet object
+        pet = get_object_or_404(Pet, pk=pk)
+
+        # Ensure the current user has an Adopter object
+        adopter = get_object_or_404(Adopter, adopter_user_id=request.user)
+
+        # Call the unfavouritePet method to remove the pet from favourites
+        adopter.unfavouritePet(pet)
+
+        return Response({"message": f"Pet '{pet.name}' removed from favourites."}, status=status.HTTP_204_NO_CONTENT)
