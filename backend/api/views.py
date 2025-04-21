@@ -40,6 +40,19 @@ def test(request):
 
 # Create new User
 class CreateUserView(generics.CreateAPIView):
+    """
+    API view to create a new user.
+
+    This view allows anyone to register a new user by providing the required
+    details (username, password, email, etc.). It uses the `UserSerializer`
+    to validate and save the user data.
+
+    Permissions:
+        - AllowAny: This view is accessible to all users.
+
+    Methods:
+        - post: Handles the creation of a new user.
+    """
     # Unique user
     queryset = User.objects.all()
     # Date for user
