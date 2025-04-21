@@ -86,8 +86,9 @@ class AdoptionView(APIView):
         return Response(serializer.data)
 
     def delete(self, request, pk):
-        # Delete the adoption application with the given primary key (pk)
         adoption_application = get_object_or_404(AdoptionApplication, pk=pk)
+        if request.user != adoption_application.adopter_user and not request.user.is_staff:
+            return Response({"error": "You are not authorized to delete this application."}, status=403)
         adoption_application.delete()
         return Response({"message": "Adoption application deleted successfully."})
 
@@ -106,8 +107,10 @@ class CreatePetView(APIView):
     parser_classes = [MultiPartParser, FormParser]  # Add parsers for file uploads
 
     def post(self, request):
-        # Automatically set default adoption status
-        request.data['adoption_status'] = 'Available'
+        # Automatically set default adoption status if not provided
+        request.data.setdefault('adoption_status', 'Available')
+        request.data.setdefault('pet_type', 'Dog')  # Default to "Dog" if not provided
+
         serializer = PetSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         pet = serializer.save()
@@ -116,7 +119,8 @@ class CreatePetView(APIView):
         shelter_id = request.data.get("shelter_id")
         if shelter_id:
             shelter = get_object_or_404(Shelter, pk=shelter_id)
-            shelter.add_pet(pet)
+            pet.shelter_id = shelter
+            pet.save()
 
         return Response(serializer.data, status=201)
 

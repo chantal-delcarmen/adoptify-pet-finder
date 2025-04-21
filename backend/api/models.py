@@ -103,15 +103,41 @@ class ShelterManagement(models.Model):
 # Pet Model
 class Pet(models.Model):
     pet_id = models.BigAutoField(primary_key=True, null=False)
-    age = models.IntegerField(null=False, validators=[MinValueValidator(0.01), MaxValueValidator(99)])
-    gender = models.CharField(max_length=10, choices=(("Male", "Male"), ("Female", "Female")), default=None, blank=True)
-    domesticated = models.BooleanField()
-    name = models.CharField(max_length=100)
-    adoption_status = models.TextField(choices=(("Available", "Available"), ("Adopted", "Adopted")), default="Available", blank=True, null=True)
+    age = models.IntegerField(
+        null=False,
+        validators=[MinValueValidator(0.01), MaxValueValidator(99)]
+    )
+    gender = models.CharField(
+        max_length=10,
+        choices=(("Male", "Male"), ("Female", "Female")),
+        default=None,
+        blank=False  # Ensure gender is required
+    )
+    domesticated = models.BooleanField(null=False)  # Ensure domesticated is required
+    name = models.CharField(max_length=100, blank=False)  # Ensure name is required
+    adoption_status = models.TextField(
+        choices=(("Available", "Available"), ("Adopted", "Adopted")),
+        default="Available",
+        blank=False,  # Ensure adoption_status is required
+        null=False
+    )
     PET_CHOICES = (("Dog", "Dog"), ("Cat", "Cat"), ("Bird", "Bird"), ("Rabbit", "Rabbit"))
-    pet_type = models.CharField(max_length=10, choices=PET_CHOICES, blank=True)
-    shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name='pets')
-    image = models.ImageField(upload_to='pet_images/', blank=True, null=True)  # New field for pet images
+    pet_type = models.CharField(
+        max_length=10,
+        choices=PET_CHOICES,
+        blank=False,  # Ensure pet_type is required
+        default="Dog"
+    )
+    shelter_id = models.ForeignKey(
+        Shelter,
+        on_delete=models.CASCADE,
+        related_name='pets'
+    )
+    image = models.ImageField(
+        upload_to='pet_images/',
+        blank=True,
+        null=True  # Image is optional
+    )
 
     def __str__(self):
         return self.name

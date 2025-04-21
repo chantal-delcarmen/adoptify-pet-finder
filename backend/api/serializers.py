@@ -93,7 +93,8 @@ class PetSerializer(serializers.ModelSerializer):
         fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'image']
         extra_kwargs = {
             'pet_id': {'read_only': True},
-            'adoption_status': {'read_only': True},  # Set adoption_status as read-only
+            'adoption_status': {'required': True},  # Ensure adoption_status is required
+            'pet_type': {'required': True},  # Ensure pet_type is required
             'image': {'required': False},  # Make image optional
         }
 
@@ -102,6 +103,18 @@ class PetSerializer(serializers.ModelSerializer):
         if not Shelter.objects.filter(pk=value.pk).exists():
             raise serializers.ValidationError("The specified shelter does not exist.")
         return value
+
+    def validate_pet_type(self, value):
+        # Ensure pet_type is one of the allowed choices
+        if value not in dict(Pet.PET_CHOICES).keys():
+            raise serializers.ValidationError("Invalid pet type.")
+        return value
+
+    def validate(self, data):
+        # Ensure age is greater than 0
+        if data.get('age') <= 0:
+            raise serializers.ValidationError({"age": "Age must be greater than 0."})
+        return data
 
     def create(self, validated_data):
         # Create a new pet
@@ -159,4 +172,4 @@ class FavouriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Create a new favourite pet entry
         return Favourite.objects.create(**validated_data)
-    
+
