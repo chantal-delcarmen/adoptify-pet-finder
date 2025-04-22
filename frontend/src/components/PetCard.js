@@ -45,7 +45,7 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
                 {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
             </button>
 
-            <img src={pet.petImage} alt={pet.name} className="pet-image" />
+            <img src={`http://localhost:8000${pet.image}`} alt={pet.name} className="pet-image" />
             <h3>{pet.name}</h3>
             <p><strong>Gender:</strong> {pet.gender}</p>
             <p><strong>Age:</strong> {pet.age} years</p>
