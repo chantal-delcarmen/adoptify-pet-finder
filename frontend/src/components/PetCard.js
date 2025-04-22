@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 function PetCard({ pet, isAdmin, onEdit, onDelete }) {
     const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
+    const navigate = useNavigate(); // Initialize navigation
 
     const handleFavoriteToggle = async () => {
         const token = localStorage.getItem('access');
@@ -55,6 +57,11 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
         }
     };
 
+    const handleApplyToAdopt = () => {
+        // Navigate to the /apply page with the pet ID as a query parameter
+        navigate(`/apply?petId=${pet.pet_id}`);
+    };
+
     return (
         <div className="pet-card">
             {/* Heart Icon in the Top-Right Corner */}
@@ -73,7 +80,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
             <p><strong>Status:</strong> {pet.adoption_status}</p>
 
             <div className="pet-card-actions">
-                {isAdmin && (
+                {isAdmin ? (
                     <div className="admin-actions">
                         <button className="button button--secondary" onClick={() => onEdit(pet.pet_id)}>
                             Edit
@@ -82,6 +89,10 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
                             Delete
                         </button>
                     </div>
+                ) : (
+                    <button className="button button--primary" onClick={handleApplyToAdopt}>
+                        Apply to Adopt Me
+                    </button>
                 )}
             </div>
         </div>
