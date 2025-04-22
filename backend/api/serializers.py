@@ -70,9 +70,11 @@ class AdopterUserSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
     adopter_user = serializers.PrimaryKeyRelatedField(read_only=True)  #
+    pet_name = serializers.CharField(source='pet.name', read_only=True)  # Add pet_name from the related pet object
+
     class Meta:
         model = AdoptionApplication
-        fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user"]
+        fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user", "pet_name"]
         extra_kwargs = {"submission_date": {"read_only": True}}
 
     def validate_pet_id(self, value):

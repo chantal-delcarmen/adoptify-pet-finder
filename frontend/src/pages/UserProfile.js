@@ -44,6 +44,7 @@ function UserProfile() {
 
                 if (applicationsResponse.ok) {
                     const applicationsData = await applicationsResponse.json();
+                    console.log('Applications data:', applicationsData); // Debug the response
                     setApplications(applicationsData);
                 } else {
                     console.error('Failed to fetch applications');
@@ -92,10 +93,15 @@ function UserProfile() {
                 {applications.length > 0 ? (
                     <ul className="applications-list">
                         {applications.map((application) => (
-                            <li key={application.id} className="application-item">
-                                <h3>{application.pet_name}</h3>
-                                <p>Status: {application.status}</p>
-                                <p>Submitted on: {new Date(application.submitted_at).toLocaleDateString()}</p>
+                            <li key={application.application_id} className="application-item">
+                                <h3>{application.pet_name || 'Unknown Pet'}</h3> {/* Display pet_name */}
+                                <p>Status: {application.application_status || 'Unknown'}</p> {/* Display application_status */}
+                                <p>
+                                    Submitted on:{' '}
+                                    {application.submission_date
+                                        ? new Date(application.submission_date).toLocaleDateString()
+                                        : 'Unknown Date'} {/* Correctly parse submission_date */}
+                                </p>
                             </li>
                         ))}
                     </ul>
