@@ -84,7 +84,7 @@ urlpatterns = [
 
     # Favourite List for a user
     path("api/favourite/list/", views.FavouriteListView.as_view(), name="favourite_list"),  # List of favourite pets for a user
-    path("api/favourite/<int:pk>/", views.FavouriteView.as_view(), name="favourite_pet"),  # Check specific favorite
+    path("api/favourite/<int:pk>/", views.AddFavouriteView.as_view(), name="favourite_pet"),  # Check specific favorite
 
     # -------------------------------------- Donation Management -------------------------------------------
     path("api/donate/", views.CreateDonationView.as_view(), name="donate"),  # Donation endpoint

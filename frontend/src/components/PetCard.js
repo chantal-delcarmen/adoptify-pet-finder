@@ -89,7 +89,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
         <div className="pet-card">
             {/* Heart Icon in the Top-Right Corner */}
             {!isAdmin && (
-                <button className="favorite-icon" onClick={handleFavoriteToggle}>
+                <button className="favorite-icon" onClick={handleFavorite}>
                     {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
                 </button>
             )}
