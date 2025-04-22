@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
-from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView, AddFavouriteView
+from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import include
 from django.conf import settings
@@ -81,14 +81,10 @@ urlpatterns = [
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
 
     # -------------------------------------- Favourite a Pet ----------------------------------------
-    # Add Favourite 
-    path("api/favourite/<int:pk>/add/", views.AddFavouriteView.as_view(), name="favourite_pet"),  # Favourite pet endpoint
-
-    # Remove Favourite
-    path("api/favourite/<int:pet_id>/remove/", views.RemoveFavouriteView.as_view(), name="remove_favourite"),  # Remove favourite pet endpoint
 
     # Favourite List for a user
     path("api/favourite/list/", views.FavouriteListView.as_view(), name="favourite_list"),  # List of favourite pets for a user
+    path("api/favourite/<int:pk>/", views.FavouriteView.as_view(), name="favourite_pet"),  # Check specific favorite
 
     # -------------------------------------- Donation Management -------------------------------------------
     path("api/donate/", views.CreateDonationView.as_view(), name="donate"),  # Donation endpoint
