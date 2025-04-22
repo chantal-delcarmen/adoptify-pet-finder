@@ -73,16 +73,25 @@ function Apply() {
             const data = await response.json();
             console.log('Application submitted successfully:', data);
             alert('Your application has been submitted successfully!');
-            navigate('/'); // Redirect to the homepage or confirmation page
+            navigate('/profile'); // Redirect to the profile page
         } else {
             const errorData = await response.json();
             console.error('Error response from backend:', errorData);
-            alert(errorData.error || 'Failed to submit application');
+
+            // Handle specific error cases
+            if (errorData.pet_id && errorData.pet_id[0] === "This pet is not available for adoption.") {
+                alert("Sorry, this pet is no longer available for adoption.");
+            } else {
+                alert(errorData.error || 'Failed to submit application');
+            }
+
             setError(errorData.error || 'Failed to submit application');
+            navigate('/pets'); // Redirect to the pets page after failure
         }
     } catch (err) {
         console.error('Error submitting application:', err);
         setError('An error occurred. Please try again.');
+        navigate('/pets'); // Redirect to the pets page after failure
     }
 };
 
