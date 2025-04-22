@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import PetCard from '../components/PetCard'; // Import the PetCard component
+import ApplicationCard from '../components/ApplicationCard'; // Import the ApplicationCard component
 
 function UserProfile() {
     const [favourites, setFavourites] = useState([]); // State for favourited animals
@@ -44,6 +45,7 @@ function UserProfile() {
 
                 if (applicationsResponse.ok) {
                     const applicationsData = await applicationsResponse.json();
+                    console.log('Applications data:', applicationsData); // Debug the response
                     setApplications(applicationsData);
                 } else {
                     console.error('Failed to fetch applications');
@@ -90,15 +92,11 @@ function UserProfile() {
             <section className="applications-section">
                 <h2>Your Applications</h2>
                 {applications.length > 0 ? (
-                    <ul className="applications-list">
+                    <div className="applications-grid">
                         {applications.map((application) => (
-                            <li key={application.id} className="application-item">
-                                <h3>{application.pet_name}</h3>
-                                <p>Status: {application.status}</p>
-                                <p>Submitted on: {new Date(application.submitted_at).toLocaleDateString()}</p>
-                            </li>
+                            <ApplicationCard key={application.application_id} application={application} />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
                     <p>You have not submitted any applications yet.</p>
                 )}

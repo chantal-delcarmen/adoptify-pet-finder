@@ -70,9 +70,11 @@ class AdopterUserSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
     adopter_user = serializers.PrimaryKeyRelatedField(read_only=True)  #
+    pet_name = serializers.CharField(source='pet.name', read_only=True)  # Add pet_name from the related pet object
+
     class Meta:
         model = AdoptionApplication
-        fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user"]
+        fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user", "pet_name"]
         extra_kwargs = {"submission_date": {"read_only": True}}
 
     def validate_pet_id(self, value):
@@ -82,9 +84,12 @@ class ApplicationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        # Extract the Pet object and replace it with its primary key
+        pet = validated_data.pop('pet_id')  # Get the Pet object
+        validated_data['pet_id'] = pet.pet_id  # Replace it with the primary key (use pet.pet_id if custom primary key)
+
         # Create the AdoptionApplication object
         adopt_application = AdoptionApplication.objects.create(**validated_data)
-        # Create a new adoption application
         return adopt_application
 
 # --------------------------------------- Pet Management -------------------------------------------
