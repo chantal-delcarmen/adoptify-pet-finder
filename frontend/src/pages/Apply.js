@@ -46,39 +46,44 @@ function Apply() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('access'); // Get the user's token
-      if (!token) {
-        alert('You must be logged in to submit an application.');
-        navigate('/login'); // Redirect to login if not authenticated
-        return;
-      }
+        const token = localStorage.getItem('access'); // Get the user's token
+        if (!token) {
+            alert('You must be logged in to submit an application.');
+            navigate('/login'); // Redirect to login if not authenticated
+            return;
+        }
 
-      const response = await fetch('http://localhost:8000/api/adoption-application/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Include the token in the request
-        },
-        body: JSON.stringify({
-          pet_id: petId, // Pet ID from the query parameters
-          message: message, // Message from the form
-        }),
-      });
+        const payload = {
+            pet_id: parseInt(petId, 10), // Convert petId to an integer
+            message: message,
+        };
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log('Application submitted successfully:', data);
-        alert('Your application has been submitted successfully!');
-        navigate('/'); // Redirect to the homepage or confirmation page
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Failed to submit application');
-      }
+        console.log("Submitting payload:", payload); // Log the payload
+
+        const response = await fetch('http://localhost:8000/api/adoption-application/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`, // Include the token in the request
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('Application submitted successfully:', data);
+            alert('Your application has been submitted successfully!');
+            navigate('/'); // Redirect to the homepage or confirmation page
+        } else {
+            const errorData = await response.json();
+            console.error('Error response from backend:', errorData);
+            setError(errorData.error || 'Failed to submit application');
+        }
     } catch (err) {
-      console.error('Error submitting application:', err);
-      setError('An error occurred. Please try again.');
+        console.error('Error submitting application:', err);
+        setError('An error occurred. Please try again.');
     }
-  };
+};
 
   return (
     <div>
