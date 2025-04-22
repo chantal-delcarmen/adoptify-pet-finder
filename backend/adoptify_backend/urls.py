@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
-from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView, AddFavouriteView
+from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import include
 from django.conf import settings

@@ -28,7 +28,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
 
         fetchFavoriteStatus();
     }, [pet.pet_id]);
-    const handleFavorite = async () => {
+    const handleFavoriteToggle = async () => {
         const token = localStorage.getItem('access');
         if (!token) {
             alert('You must be logged in to favorite or unfavorite a pet.');
@@ -52,7 +52,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
                 //alert(isFavorited ? 'Pet removed from favorites!' : 'Pet added to favorites!');
             } else {
                 // Add to favorites
-                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/add/`, {
+                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

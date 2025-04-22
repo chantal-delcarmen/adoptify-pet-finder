@@ -258,7 +258,7 @@ class UpdateApplicationStatusView(APIView):
 # ---------------------------------------- Favourite Pets Management -------------------------------------------
 
 # Add Favourite Pet
-class AddFavouriteView(APIView):
+class FavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk=None):

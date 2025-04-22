@@ -4,7 +4,7 @@ import LogoutLink from './LogoutLink'; // Import the Logout component
 
 function Navbar() {
     const username = localStorage.getItem('username'); // Assume username is stored in localStorage
-    const userRole = localStorage.getItem('role'); // Assume role is stored in localStorage
+    //const userRole = localStorage.getItem('role'); // Assume role is stored in localStorage
 
     return (
         <nav className="navbar">
