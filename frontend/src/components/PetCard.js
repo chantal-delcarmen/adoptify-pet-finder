@@ -9,13 +9,16 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
 
     const handleFavorite = async () => {
         const token = localStorage.getItem('access');
+        console.log('Access token:', token); // Debug token
+        console.log('Pet ID:', pet.pet_id); // Debug pet_id
+
         if (!token) {
             alert('You must be logged in to favorite a pet.');
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:8000/api/favourite/${pet.petID}/`, { // Correct URL
+            const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, { // Use pet.pet_id
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -24,7 +27,7 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
             });
 
             if (response.ok) {
-                setIsFavorited(true); // Update the state to show the pet is favorited
+                setIsFavorited(true);
                 alert('Pet added to favorites!');
             } else {
                 const data = await response.json();
@@ -74,7 +77,7 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
 
 PetCard.propTypes = {
     pet: PropTypes.shape({
-        petID: PropTypes.number.isRequired,
+        pet_id: PropTypes.number.isRequired, // Updated from petID to pet_id
         name: PropTypes.string.isRequired,
         breed: PropTypes.string.isRequired,
         gender: PropTypes.string.isRequired,
