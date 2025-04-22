@@ -50,8 +50,8 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
             <p><strong>Gender:</strong> {pet.gender}</p>
             <p><strong>Age:</strong> {pet.age} years</p>
             <p><strong>Domesticated:</strong> {pet.domesticated ? 'Yes' : 'No'}</p>
-            <p><strong>Type:</strong> {pet.petType}</p>
-            <p><strong>Status:</strong> {pet.adoptionStatus}</p>
+            <p><strong>Type:</strong> {pet.pet_type}</p>
+            <p><strong>Status:</strong> {pet.adoption_status}</p>
 
             <div className="pet-card-actions">
                 {isAdmin ? (
@@ -77,14 +77,14 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
 
 PetCard.propTypes = {
     pet: PropTypes.shape({
-        pet_id: PropTypes.number.isRequired, // Updated from petID to pet_id
+        pet_id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
         breed: PropTypes.string.isRequired,
         gender: PropTypes.string.isRequired,
         age: PropTypes.number.isRequired,
         domesticated: PropTypes.bool.isRequired,
-        petType: PropTypes.string.isRequired,
-        adoptionStatus: PropTypes.string.isRequired,
+        pet_type: PropTypes.string.isRequired, // Updated field
+        adoption_status: PropTypes.string.isRequired, // Updated field
         description: PropTypes.string.isRequired,
         petImage: PropTypes.string.isRequired,
     }).isRequired,
