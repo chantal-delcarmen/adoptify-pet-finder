@@ -185,7 +185,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
         model = Favourite
         fields = ['id', 'pet', 'adopter_user_id']
         extra_kwargs = {
-            'adopter_user_id': {'required': True},
+            'adopter_user_id': {'read_only': True},
         }
 
     def create(self, validated_data):
