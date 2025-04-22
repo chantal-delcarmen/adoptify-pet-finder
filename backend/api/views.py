@@ -49,10 +49,12 @@ class UserDetailsView(APIView):
 
     def get(self, request):
         user = request.user
-        return Response({
-            "username": user.username,
-            "role": "admin" if user.is_staff else "user",
-        })
+        # Serialize the user data using the UserSerializer
+        serializer = UserSerializer(user)
+        # Add the role field to the response
+        user_data = serializer.data
+        user_data["role"] = "admin" if user.is_staff else "user"
+        return Response(user_data)
     
 # -------------------------------------- User Registration -------------------------------------------
 # Create new User

@@ -145,7 +145,11 @@ class Pet(models.Model):
 # Adoption Application Model
 class AdoptionApplication(models.Model):
     application_id = models.BigAutoField(primary_key=True)
-    application_status = models.CharField(max_length=20, choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")), default="Pending")
+    application_status = models.CharField(
+        max_length=20, 
+        choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")), 
+        default="Pending"
+    )
     submission_date = models.DateTimeField(auto_now_add=True)
     pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE)
     adopter_user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -182,15 +186,6 @@ class Adopter(models.Model):
     def __str__(self):
         return self.adopter_user_id.username
     
-    def favouritePet(self, pet):
-        """Add a pet to the user's favourites."""
-        favourite = Favourite.objects.create(pet_id=pet, adopter_user_id=self.adopter_user_id)
-        return favourite
-    def unfavouritePet(self, pet):
-        """Remove a pet from the user's favourites."""
-        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=self.adopter_user_id).first()
-        if favourite:
-            favourite.delete()
 
 # Favourite Model
 class Favourite(models.Model):
