@@ -84,9 +84,12 @@ class ApplicationSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
+        # Extract the Pet object and replace it with its primary key
+        pet = validated_data.pop('pet_id')  # Get the Pet object
+        validated_data['pet_id'] = pet.pet_id  # Replace it with the primary key (use pet.pet_id if custom primary key)
+
         # Create the AdoptionApplication object
         adopt_application = AdoptionApplication.objects.create(**validated_data)
-        # Create a new adoption application
         return adopt_application
 
 # --------------------------------------- Pet Management -------------------------------------------
