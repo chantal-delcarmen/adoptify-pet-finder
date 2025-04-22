@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 function UserProfile() {
-    const [favorites, setFavorites] = useState([]); // State for favorited animals
+    const [favourites, setFavourites] = useState([]); // State for favourited animals
     const [applications, setApplications] = useState([]); // State for user applications
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -17,20 +17,20 @@ function UserProfile() {
             }
 
             try {
-                // Fetch favorited animals
-                const favoritesResponse = await fetch('http://localhost:8000/api/favourite/list/', {
+                // Fetch favourited animals
+                const favouritesResponse = await fetch('http://localhost:8000/api/favourite/list/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
 
-                if (favoritesResponse.ok) {
-                    const favoritesData = await favoritesResponse.json();
-                    console.log('Favorites data:', favoritesData); // Debug the response
-                    setFavorites(favoritesData);
+                if (favouritesResponse.ok) {
+                    const favouritesData = await favouritesResponse.json();
+                    console.log('Favourites data:', favouritesData); // Debug the response
+                    setFavourites(favouritesData);
                 } else {
-                    console.error('Failed to fetch favorites');
+                    console.error('Failed to fetch favourites');
                 }
 
                 // Fetch user applications
@@ -56,10 +56,10 @@ function UserProfile() {
         fetchUserData();
     }, [navigate]);
 
-    const handleRemoveFavorite = async (petId) => {
+    const handleRemoveFavourite = async (petId) => {
         const token = localStorage.getItem('access');
         if (!token) {
-            alert('You must be logged in to remove a favorite.');
+            alert('You must be logged in to remove a favourite.');
             return;
         }
 
@@ -72,14 +72,14 @@ function UserProfile() {
             });
 
             if (response.ok) {
-                alert('Pet removed from favorites!');
-                setFavorites((prevFavorites) => prevFavorites.filter((animal) => animal.pet.id !== petId));
+                alert('Pet removed from favourites!');
+                setFavourites((prevFavourites) => prevFavourites.filter((animal) => animal.pet.id !== petId));
             } else {
-                console.error('Failed to remove favorite');
-                alert('Failed to remove pet from favorites.');
+                console.error('Failed to remove favourite');
+                alert('Failed to remove pet from favourites.');
             }
         } catch (err) {
-            console.error('Error removing favorite:', err);
+            console.error('Error removing favourite:', err);
             alert('An error occurred. Please try again.');
         }
     };
@@ -91,28 +91,28 @@ function UserProfile() {
 
             {error && <p className="error-message">{error}</p>}
 
-            <section className="favorites-section">
-                <h2>Your Favorited Animals</h2>
-                {favorites.length > 0 ? (
-                    <ul className="favorites-list">
-                        {favorites.map((animal) => (
-                            <li key={animal.id} className="favorite-item">
+            <section className="favourites-section">
+                <h2>Your Favourited Animals</h2>
+                {favourites.length > 0 ? (
+                    <ul className="favourites-list">
+                        {favourites.map((animal) => (
+                            <li key={animal.id} className="favourite-item">
                                 <img src={animal.pet.image} alt={animal.pet.name} className="animal-image" />
                                 <div>
                                     <h3>{animal.pet.name}</h3>
                                     <p>{animal.pet.description}</p>
                                     <button
-                                        className="remove-favorite-button"
-                                        onClick={() => handleRemoveFavorite(animal.pet.id)}
+                                        className="remove-favourite-button"
+                                        onClick={() => handleRemoveFavourite(animal.pet.id)}
                                     >
-                                        Remove from Favorites
+                                        Remove from Favourites
                                     </button>
                                 </div>
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <p>You have not favorited any animals yet.</p>
+                    <p>You have not favourited any animals yet.</p>
                 )}
             </section>
 
