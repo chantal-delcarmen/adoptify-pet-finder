@@ -164,6 +164,7 @@ class ShelterManagementSerializer(serializers.ModelSerializer):
         # Create the ShelterManagement object
         return ShelterManagement.objects.create(**validated_data)
     
+# --------------------------------------- Donation Management -------------------------------------------    
 class DonationSerializer(serializers.ModelSerializer):
     adopter_user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())
@@ -176,14 +177,17 @@ class DonationSerializer(serializers.ModelSerializer):
          # Create a new donation object
         return Donation.objects.create(**validated_data)
 
+# --------------------------------------- Favourite Management -------------------------------------------
 class FavouriteSerializer(serializers.ModelSerializer):
+    pet = PetSerializer(read_only=True)  # Include pet information using PetSerializer
+
     class Meta:
         model = Favourite
-        fields = ['pet_id', 'adopter_user_id']
+        fields = ['id', 'pet', 'adopter_user_id']
         extra_kwargs = {
-            'pet_id': {'required': True},
-            'adopter_user_id': {'required': True}
+            'adopter_user_id': {'read_only': True},
         }
+
     def create(self, validated_data):
         # Create a new favourite pet entry
         return Favourite.objects.create(**validated_data)

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar'; 
+import Navbar from '../components/Navbar';
+import PetCard from '../components/PetCard'; // Import the PetCard component
 
 function UserProfile() {
-    const [favorites, setFavorites] = useState([]); // State for favorited animals
+    const [favourites, setFavourites] = useState([]); // State for favourited animals
     const [applications, setApplications] = useState([]); // State for user applications
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -17,23 +18,24 @@ function UserProfile() {
             }
 
             try {
-                // Fetch favorited animals
-                const favoritesResponse = await fetch('http://localhost:8000/api/user/favorites/', {
+                // Fetch favourited animals
+                const favouritesResponse = await fetch('http://localhost:8000/api/favourite/list/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
 
-                if (favoritesResponse.ok) {
-                    const favoritesData = await favoritesResponse.json();
-                    setFavorites(favoritesData);
+                if (favouritesResponse.ok) {
+                    const favouritesData = await favouritesResponse.json();
+                    console.log('Favourites data:', favouritesData); // Debug the response
+                    setFavourites(favouritesData);
                 } else {
-                    console.error('Failed to fetch favorites');
+                    console.error('Failed to fetch favourites');
                 }
 
                 // Fetch user applications
-                const applicationsResponse = await fetch('http://localhost:8000/api/user/applications/', {
+                const applicationsResponse = await fetch('http://localhost:8000/api/adoption-application/list', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -62,22 +64,26 @@ function UserProfile() {
 
             {error && <p className="error-message">{error}</p>}
 
-            <section className="favorites-section">
-                <h2>Your Favorited Animals</h2>
-                {favorites.length > 0 ? (
-                    <ul className="favorites-list">
-                        {favorites.map((animal) => (
-                            <li key={animal.id} className="favorite-item">
-                                <img src={animal.image} alt={animal.name} className="animal-image" />
-                                <div>
-                                    <h3>{animal.name}</h3>
-                                    <p>{animal.description}</p>
-                                </div>
-                            </li>
+            <section className="favourites-section">
+                <h2>Your Favourited Animals</h2>
+                {favourites.length > 0 ? (
+                    <div className="favourites-grid profile-favourites-grid">
+                        {favourites.map((animal) => (
+                            <PetCard
+                                key={animal.id}
+                                pet={animal.pet}
+                                isFavorited={true} // Always true for favourites
+                                onToggleFavorite={(petId) => {
+                                    // Update the favourites list when toggling
+                                    setFavourites((prevFavourites) =>
+                                        prevFavourites.filter((fav) => fav.pet.pet_id !== petId)
+                                    );
+                                }}
+                            />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
-                    <p>You have not favorited any animals yet.</p>
+                    <p>You have not favourited any animals yet.</p>
                 )}
             </section>
 

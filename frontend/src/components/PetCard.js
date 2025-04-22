@@ -2,38 +2,55 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
 
-function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, onDelete }) {
+function PetCard({ pet, isAdmin, onEdit, onDelete }) {
     const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
 
-    const handleFavorite = async () => {
+    const handleFavoriteToggle = async () => {
         const token = localStorage.getItem('access');
-        console.log('Access token:', token); // Debug token
-        console.log('Pet ID:', pet.pet_id); // Debug pet_id
-
         if (!token) {
-            alert('You must be logged in to favorite a pet.');
+            alert('You must be logged in to favorite or unfavorite a pet.');
             return;
         }
 
         try {
-            const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            if (isFavorited) {
+                // Remove from favorites
+                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/remove/`, {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
 
-            if (response.ok) {
-                setIsFavorited(true);
-                alert('Pet added to favorites!');
+                if (response.ok) {
+                    setIsFavorited(false);
+                    alert('Pet removed from favorites!');
+                } else {
+                    const data = await response.json();
+                    console.error('Backend error:', data);
+                    alert(data.message || 'Failed to remove pet from favorites.');
+                }
             } else {
-                const data = await response.json();
-                console.error('Backend error:', data);
-                alert(data.message || 'Failed to add pet to favorites.');
+                // Add to favorites
+                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/add/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    setIsFavorited(true);
+                    alert('Pet added to favorites!');
+                } else {
+                    const data = await response.json();
+                    console.error('Backend error:', data);
+                    alert(data.message || 'Failed to add pet to favorites.');
+                }
             }
         } catch (err) {
-            console.error('Error adding pet to favorites:', err);
+            console.error('Error toggling favorite status:', err);
             alert('An error occurred. Please try again.');
         }
     };
@@ -41,9 +58,11 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
     return (
         <div className="pet-card">
             {/* Heart Icon in the Top-Right Corner */}
-            <button className="favorite-icon" onClick={handleFavorite}>
-                {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
-            </button>
+            {!isAdmin && (
+                <button className="favorite-icon" onClick={handleFavoriteToggle}>
+                    {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
+                </button>
+            )}
 
             <img src={`http://localhost:8000${pet.image}`} alt={pet.name} className="pet-image" />
             <h3>{pet.name}</h3>
@@ -54,7 +73,7 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
             <p><strong>Status:</strong> {pet.adoption_status}</p>
 
             <div className="pet-card-actions">
-                {isAdmin ? (
+                {isAdmin && (
                     <div className="admin-actions">
                         <button className="button button--secondary" onClick={() => onEdit(pet.pet_id)}>
                             Edit
@@ -63,12 +82,6 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
                             Delete
                         </button>
                     </div>
-                ) : (
-                    <>
-                        <button className="button button--primary" onClick={() => onPrimaryAction(pet.pet_id)}>
-                            {primaryActionLabel}
-                        </button>
-                    </>
                 )}
             </div>
         </div>
@@ -88,16 +101,12 @@ PetCard.propTypes = {
         description: PropTypes.string.isRequired,
         petImage: PropTypes.string.isRequired,
     }).isRequired,
-    onPrimaryAction: PropTypes.func,
-    primaryActionLabel: PropTypes.string,
     isAdmin: PropTypes.bool,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
 };
 
 PetCard.defaultProps = {
-    onPrimaryAction: null,
-    primaryActionLabel: 'Take Action',
     isAdmin: false,
     onEdit: null,
     onDelete: null,
