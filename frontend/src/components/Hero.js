@@ -1,7 +1,10 @@
-import React from 'react'; // Import React to use JSX and create components
+import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 // Define the Hero functional component
 function Hero() {
+  const navigate = useNavigate(); // Initialize navigate
+
   return (
     // Main container for the Hero section
     <div className="hero">
@@ -12,7 +15,12 @@ function Hero() {
       <h2>Connecting You with Your New Best Friend</h2>
       
       {/* Primary button to view pets */}
-      <button className="button button--primary">View Pets</button>
+      <button
+        className="button button--primary"
+        onClick={() => navigate('/pets')} // Navigate to /pets
+      >
+        View Pets
+      </button>
     </div>
   );
 }
