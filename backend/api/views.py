@@ -276,7 +276,7 @@ class RemoveFavouriteView(APIView):
 
     def delete(self, request, pet_id):
         """Remove a pet from the user's favourites."""
-        pet = get_object_or_404(Pet, id=pet_id)
+        pet = get_object_or_404(Pet, pet_id=pet_id) 
         adopter = request.user
         removed = Favourite().removePetFromFavourites(pet, adopter)  # Use the updated method
         if removed:

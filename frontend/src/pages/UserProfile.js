@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar'; 
+import Navbar from '../components/Navbar';
 
 function UserProfile() {
     const [favorites, setFavorites] = useState([]); // State for favorited animals
@@ -56,6 +56,34 @@ function UserProfile() {
         fetchUserData();
     }, [navigate]);
 
+    const handleRemoveFavorite = async (petId) => {
+        const token = localStorage.getItem('access');
+        if (!token) {
+            alert('You must be logged in to remove a favorite.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8000/api/favourite/${petId}/remove/`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                alert('Pet removed from favorites!');
+                setFavorites((prevFavorites) => prevFavorites.filter((animal) => animal.pet.id !== petId));
+            } else {
+                console.error('Failed to remove favorite');
+                alert('Failed to remove pet from favorites.');
+            }
+        } catch (err) {
+            console.error('Error removing favorite:', err);
+            alert('An error occurred. Please try again.');
+        }
+    };
+
     return (
         <div className="user-profile">
             <Navbar />
@@ -69,10 +97,16 @@ function UserProfile() {
                     <ul className="favorites-list">
                         {favorites.map((animal) => (
                             <li key={animal.id} className="favorite-item">
-                                <img src={animal.image} alt={animal.name} className="animal-image" />
+                                <img src={animal.pet.image} alt={animal.pet.name} className="animal-image" />
                                 <div>
-                                    <h3>{animal.name}</h3>
-                                    <p>{animal.description}</p>
+                                    <h3>{animal.pet.name}</h3>
+                                    <p>{animal.pet.description}</p>
+                                    <button
+                                        className="remove-favorite-button"
+                                        onClick={() => handleRemoveFavorite(animal.pet.id)}
+                                    >
+                                        Remove from Favorites
+                                    </button>
                                 </div>
                             </li>
                         ))}
