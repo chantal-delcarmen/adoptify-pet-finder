@@ -102,6 +102,12 @@ class ShelterManagement(models.Model):
 
 # Pet Model
 class Pet(models.Model):
+    ADOPTION_STATUS_CHOICES = [
+        ("Available", "Available"),
+        ("Pending", "Pending"),
+        ("Adopted", "Adopted"),
+    ]
+
     pet_id = models.BigAutoField(primary_key=True, null=False)
     age = models.IntegerField(
         null=False,
@@ -115,8 +121,9 @@ class Pet(models.Model):
     )
     domesticated = models.BooleanField(null=False)  # Ensure domesticated is required
     name = models.CharField(max_length=100, blank=False)  # Ensure name is required
-    adoption_status = models.TextField(
-        choices=(("Available", "Available"), ("Adopted", "Adopted")),
+    adoption_status = models.CharField(
+        max_length=10,
+        choices=ADOPTION_STATUS_CHOICES,
         default="Available",
         blank=False,  # Ensure adoption_status is required
         null=False

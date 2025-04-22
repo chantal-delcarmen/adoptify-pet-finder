@@ -77,6 +77,7 @@ function Apply() {
         } else {
             const errorData = await response.json();
             console.error('Error response from backend:', errorData);
+            alert(errorData.error || 'Failed to submit application');
             setError(errorData.error || 'Failed to submit application');
         }
     } catch (err) {
