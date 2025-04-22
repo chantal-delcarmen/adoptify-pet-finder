@@ -259,6 +259,20 @@ class UpdateApplicationStatusView(APIView):
 class FavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get(self, request, pk=None):
+        if pk:
+            # Check if the pet is in the user's favorites
+            try:
+                favourite = Favourite.objects.get(adopter_user_id=request.user, pet_id=pk)
+                return Response({"is_favorited": True}, status=status.HTTP_200_OK)
+            except Favourite.DoesNotExist:
+                return Response({"is_favorited": False}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Return all favorites for the user
+            favourites = Favourite.objects.filter(adopter_user_id=request.user)
+            favourite_list = [{"pet_id": fav.pet.id, "pet_name": fav.pet.name} for fav in favourites]
+            return Response(favourite_list, status=status.HTTP_200_OK)
+
     def post(self, request, pk):
         pet = get_object_or_404(Pet, pk=pk)
         adopter = request.user
@@ -268,10 +282,6 @@ class FavouriteView(APIView):
             return Response({"message": "Pet added to favourites"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Pet already in favourites"}, status=status.HTTP_400_BAD_REQUEST)
-    def get(self, request):
-        favourites = Favourite.objects.filter(user=request.user)
-        serializer = FavouriteSerializer(favourites, many=True)
-        return Response(serializer.data)
 
     def delete(self, request, pk):
         # Get the pet object
@@ -288,33 +298,11 @@ class FavouriteView(APIView):
 class FavouriteListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        # Get the list of favourite pets for the authenticated user
+    def get (self, request):
+        # List all favourite pets for the authenticated user
         favourites = Favourite.objects.filter(adopter_user_id=request.user)
         serializer = FavouriteSerializer(favourites, many=True)
         return Response(serializer.data)
-
-    def post(self, request, pet_id):
-        try:
-            pet = Pet.objects.get(id=pet_id)
-            favourite, created = Favourite.objects.get_or_create(user=request.user, pet=pet)
-            if created:
-                return Response({"message": "Pet added to favourites!"}, status=201)
-            return Response({"message": "Pet is already in favourites!"}, status=200)
-        except Pet.DoesNotExist:
-            return Response({"error": "Pet not found!"}, status=404)
-
-class RemoveFavouriteView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def delete(self, request, pet_id):
-        try:
-            favourite = Favourite.objects.get(user=request.user, pet_id=pet_id)
-            favourite.delete()
-            return Response({"message": "Pet removed from favourites!"}, status=status.HTTP_204_NO_CONTENT)
-        except Favourite.DoesNotExist:
-            return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
-
 
 # ---------------------------------------- Donation Management -------------------------------------------
 # Create new Donation

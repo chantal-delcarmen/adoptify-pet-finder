@@ -1,10 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
+import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import heart icons
 
 function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, onDelete }) {
     const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
 
+    useEffect(() => {
+        const fetchFavoriteStatus = async () => {
+            const token = localStorage.getItem('access');
+            if (!token) return;
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    setIsFavorited(true); // Set to true if the pet is already favorited
+                }
+            } catch (err) {
+                console.error('Error fetching favorite status:', err);
+            }
+        };
+
+        fetchFavoriteStatus();
+    }, [pet.pet_id]);
     const handleFavorite = async () => {
         const token = localStorage.getItem('access');
         console.log('Access token:', token); // Debug token
@@ -16,8 +39,10 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
         }
 
         try {
+            // Use the appropriate method based on the current state
+            const method = isFavorited ? 'DELETE' : 'POST';
             const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
-                method: 'POST',
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
@@ -25,8 +50,8 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
             });
 
             if (response.ok) {
-                setIsFavorited(true);
-                alert('Pet added to favorites!');
+                setIsFavorited(!isFavorited); // Toggle the favorite state
+                //alert(isFavorited ? 'Pet removed from favorites!' : 'Pet added to favorites!');
             } else {
                 const data = await response.json();
                 console.error('Backend error:', data);
