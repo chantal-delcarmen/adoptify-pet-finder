@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
 
 function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, onDelete }) {
-  console.log('Pet object:', pet); // Debug - log the pet object  
-
-  const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
+    const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
 
     const handleFavorite = async () => {
         const token = localStorage.getItem('access');
@@ -18,7 +16,7 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
         }
 
         try {
-            const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, { // Use pet.pet_id
+            const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -42,6 +40,11 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
 
     return (
         <div className="pet-card">
+            {/* Heart Icon in the Top-Right Corner */}
+            <button className="favorite-icon" onClick={handleFavorite}>
+                {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
+            </button>
+
             <img src={pet.petImage} alt={pet.name} className="pet-image" />
             <h3>{pet.name}</h3>
             <p><strong>Gender:</strong> {pet.gender}</p>
@@ -53,20 +56,17 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
             <div className="pet-card-actions">
                 {isAdmin ? (
                     <div className="admin-actions">
-                        <button className="button button--secondary" onClick={() => onEdit(pet.petID)}>
+                        <button className="button button--secondary" onClick={() => onEdit(pet.pet_id)}>
                             Edit
                         </button>
-                        <button className="button button--danger" onClick={() => onDelete(pet.petID)}>
+                        <button className="button button--danger" onClick={() => onDelete(pet.pet_id)}>
                             Delete
                         </button>
                     </div>
                 ) : (
                     <>
-                        <button className="button button--primary" onClick={() => onPrimaryAction(pet.petID)}>
+                        <button className="button button--primary" onClick={() => onPrimaryAction(pet.pet_id)}>
                             {primaryActionLabel}
-                        </button>
-                        <button className="favorite-button" onClick={handleFavorite}>
-                            {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
                         </button>
                     </>
                 )}
