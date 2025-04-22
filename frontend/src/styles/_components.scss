@@ -162,6 +162,8 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow
   overflow: hidden; // Prevent content overflow
   transition: transform 0.2s ease, box-shadow 0.2s ease; // Smooth hover effect
+  position: relative; // Required for the heart icon to be positioned correctly
+  text-align: center;
 
   &:hover {
     transform: translateY(-5px); // Lift the card on hover
@@ -228,6 +230,30 @@
         background-color: darken($color-danger, 10%);
       }
     }
+  }
+}
+
+.favorite-icon {
+  position: absolute;
+  top: 10px; // Keep it at the top
+  right: 10px; // Move it to the right
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  .heart-icon {
+    font-size: 24px;
+    color: #ccc; // Default color for the heart icon
+    transition: color 0.3s ease;
+  }
+
+  .heart-icon.favorited {
+    color: #f44336; // Red color for favorited heart
+  }
+
+  &:hover .heart-icon {
+    color: #f44336; // Red color on hover
   }
 }
 
