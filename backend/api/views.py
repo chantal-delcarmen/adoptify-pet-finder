@@ -157,7 +157,7 @@ class PetDetailView(APIView):
     def get(self, request, pk):
         # Retrieve the pet with the given primary key (pk)
         pet = get_object_or_404(Pet, pk=pk)
-        serializer = PetSerializer(pet)
+        serializer = PetSerializer(pet, context={'request': request})
         return Response(serializer.data)
 
 # List All Pets
@@ -171,8 +171,9 @@ class PetListView(APIView):
         else:
             pets = Pet.objects.all()
 
-        serializer = PetSerializer(pets, many=True)
+        serializer = PetSerializer(pets, many=True, context={'request': request})
         return Response(serializer.data)
+    
 
 # --------------------------------------- Shelter Management -------------------------------------------
 
