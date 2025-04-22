@@ -77,7 +77,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
     def validate_pet_id(self, value):
         # Ensure the pet is available for adoption
-        if value.adoption_status != 1:  # Assuming 1 means "Available"
+        if value.adoption_status != "Available":  # Match the string used in the view
             raise serializers.ValidationError("This pet is not available for adoption.")
         return value
 

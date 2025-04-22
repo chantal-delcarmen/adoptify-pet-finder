@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import CTA from '../components/CTA';
@@ -6,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faInfoCircle, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
 function Home({ message }) {
+  const navigate = useNavigate(); // Initialize navigate
+
   return (
     <div>
       {/* Navbar Component */}
@@ -55,7 +58,12 @@ function Home({ message }) {
               <p>
                 Browse through thousands of adoptable dogs, cats, and more. Use filters to narrow down your search and find the ideal pet for you.
               </p>
-              <button className="button button--primary">Search Now</button>
+              <button
+                className="button button--primary"
+                onClick={() => navigate('/pets')} // Navigate to /pets
+              >
+                Search Now
+              </button>
             </div>
           </div>
         </div>
@@ -63,7 +71,13 @@ function Home({ message }) {
         {/* Bottom Section */}
         <div className="bottom-section">
           <h2>Start Your Adoption Journey Today!</h2>
-          <p>Find your perfect pet and give them the loving home they deserve.</p>  
+          <p>Find your perfect pet and give them the loving home they deserve.</p>
+          <button
+            className="button button--primary"
+            onClick={() => navigate('/pets')} // Navigate to /pets
+          >
+            Browse Pets
+          </button>
         </div>
       </div>
 

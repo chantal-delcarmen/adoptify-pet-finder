@@ -49,10 +49,12 @@ class UserDetailsView(APIView):
 
     def get(self, request):
         user = request.user
-        return Response({
-            "username": user.username,
-            "role": "admin" if user.is_staff else "user",
-        })
+        # Serialize the user data using the UserSerializer
+        serializer = UserSerializer(user)
+        # Add the role field to the response
+        user_data = serializer.data
+        user_data["role"] = "admin" if user.is_staff else "user"
+        return Response(user_data)
     
 # -------------------------------------- User Registration -------------------------------------------
 # Create new User
@@ -82,14 +84,12 @@ class CreateAdoptionApplication(generics.CreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(serializer.data, status=201)
     def perform_create(self, serializer):
-        # Automatically set the user who created the application
+        # Automatically set the adopter_user and update the pet's status
+        pet = serializer.validated_data['pet_id']
         serializer.save(adopter_user=self.request.user)
+        pet.adoption_status = "Pending"  # Update the pet's status to "Pending"
+        pet.save()
 
 # Retrieve and Delete Adoption Application
 class AdoptionView(APIView):
