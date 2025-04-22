@@ -1,3 +1,10 @@
+"""This module contains the API views for the Adoptify Pet Finder application.
+It includes views for user management, pet management, adoption applications,
+favorites, donations, and shelter management.
+
+Each view handles specific HTTP requests and interacts with the database models
+to provide the required functionality."""
+
 # backend/api/views.py
 from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.response import Response
@@ -12,14 +19,23 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 
-from .models import AdoptionApplication, Pet, Shelter, ShelterManagement, Favourite, Adopter
-from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer
+from .models import AdoptionApplication, Pet, Shelter, ShelterManagement, Favourite, Adopter, Donation
+from .serializers import UserSerializer, ApplicationSerializer, AdminUserSerializer, PetSerializer, ShelterSerializer, ShelterManagementSerializer, FavouriteSerializer, DonationSerializer
 
 # -------------------------------------- Health Check Endpoint -------------------------------------------
 # Check if the backend is working (Test Endpoint)
 @api_view(['GET'])
 @renderer_classes([JSONRenderer])
 def test(request):
+    """
+    Test API endpoint to verify the backend is working.
+
+    Args:
+        request (HttpRequest): The HTTP request object.
+
+    Returns:
+        Response: A JSON response with a success message.
+    """
     return Response({"message": "Backend is working!"})
 
 # Basic Health Check Endpoint
@@ -277,3 +293,70 @@ class FavouriteListView(ListAPIView):
         favourites = Favourite.objects.filter(adopter_user_id=request.user)
         serializer = FavouriteSerializer(favourites, many=True)
         return Response(serializer.data)
+
+    def post(self, request, pet_id):
+        try:
+            pet = Pet.objects.get(id=pet_id)
+            favourite, created = Favourite.objects.get_or_create(user=request.user, pet=pet)
+            if created:
+                return Response({"message": "Pet added to favourites!"}, status=201)
+            return Response({"message": "Pet is already in favourites!"}, status=200)
+        except Pet.DoesNotExist:
+            return Response({"error": "Pet not found!"}, status=404)
+
+class RemoveFavouriteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pet_id):
+        try:
+            favourite = Favourite.objects.get(user=request.user, pet_id=pet_id)
+            favourite.delete()
+            return Response({"message": "Pet removed from favourites!"}, status=status.HTTP_204_NO_CONTENT)
+        except Favourite.DoesNotExist:
+            return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
+
+
+# ---------------------------------------- Donation Management -------------------------------------------
+# Create new Donation
+class CreateDonationView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        donator = request.user
+        shelter_id = request.data.get("shelter_id")
+        amount = request.data.get("amount")
+
+        # Validate required fields
+        if not shelter_id or not amount:
+            return Response({"error": "Shelter ID and amount are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Get the shelter object
+            shelter = Shelter.objects.get(pk=shelter_id)
+        except Shelter.DoesNotExist:
+            return Response({"error": "Shelter not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        # Create a new donation using the recordDonation method
+        donation = Donation()
+        donation.recordDonation(donator, shelter, amount)
+
+        # Serialize the created donation
+        serializer = DonationSerializer(donation)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+# View Donation Details
+class DonationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        donation = get_object_or_404(Donation, pk=pk)
+        donation.getDonationDetails()
+        serializer = DonationSerializer(donation)
+        return Response(serializer.data)
+
+class DonationListView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        # List all donations for the authenticated user
+        donations = Donation.objects.filter(adopter_user_id=request.user)
+        serializer = DonationSerializer(donations, many=True)
+        return Response(serializer.data)
+
