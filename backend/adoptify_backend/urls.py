@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api import views
-from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView, FavouriteView
+from api.views import CreateUserView, CreateAdminUserView, UpdateApplicationStatusView, UserDetailsView, AddFavouriteView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.urls import include
 from django.conf import settings
@@ -71,7 +71,7 @@ urlpatterns = [
     path("api/admin/shelters/", views.ShelterListView.as_view(), name="shelter_list"),
 
     # -------------------------------------- Pet Management -------------------------------------------
-    # addPetPet
+    # addPet
     path("api/register-pet/", views.CreatePetView.as_view(), name="register_pet"),  # Pet registration endpoint
 
     # listAllPets
@@ -80,11 +80,17 @@ urlpatterns = [
     # Pet details
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
 
-    # Favourite 
-    path("api/favourite/<int:pk>/", views.FavouriteView.as_view(), name="favourite_pet"),  # Favourite pet endpoint
+    # -------------------------------------- Favourite a Pet ----------------------------------------
+    # Add Favourite 
+    path("api/favourite/<int:pk>/add/", views.AddFavouriteView.as_view(), name="favourite_pet"),  # Favourite pet endpoint
+
+    # Remove Favourite
+    path("api/favourite/<int:pet_id>/remove/", views.RemoveFavouriteView.as_view(), name="remove_favourite"),  # Remove favourite pet endpoint
+
     # Favourite List for a user
     path("api/favourite/list/", views.FavouriteListView.as_view(), name="favourite_list"),  # List of favourite pets for a user
 
+    # -------------------------------------- Donation Management -------------------------------------------
     path("api/donate/", views.CreateDonationView.as_view(), name="donate"),  # Donation endpoint
     path("api/donations/<int:pk>/", views.DonationView.as_view(), name="donation_detail"),  # Donation detail endpoint
     path("api/donations/list/", views.DonationListView.as_view(), name="donation_list"),  # List of donations for a user

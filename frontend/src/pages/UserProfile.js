@@ -18,7 +18,7 @@ function UserProfile() {
 
             try {
                 // Fetch favorited animals
-                const favoritesResponse = await fetch('http://localhost:8000/api/user/favorites/', {
+                const favoritesResponse = await fetch('http://localhost:8000/api/favourite/list/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -27,13 +27,14 @@ function UserProfile() {
 
                 if (favoritesResponse.ok) {
                     const favoritesData = await favoritesResponse.json();
+                    console.log('Favorites data:', favoritesData); // Debug the response
                     setFavorites(favoritesData);
                 } else {
                     console.error('Failed to fetch favorites');
                 }
 
                 // Fetch user applications
-                const applicationsResponse = await fetch('http://localhost:8000/api/user/applications/', {
+                const applicationsResponse = await fetch('http://localhost:8000/api/adoption-application/list', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,

@@ -192,17 +192,25 @@ class Adopter(models.Model):
         if favourite:
             favourite.delete()
 
+# Favourite Model
 class Favourite(models.Model):
-    pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='favourites')
-    adopter_user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites_adpters')
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='favourites')  # Renamed from pet_id to pet
+    adopter_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites')  # Fixed related_name typo
 
     def addPetToFavourites(self, pet, adopter):
         """Add a pet to the user's favourites."""
-        self.pet_id = pet
-        self.adopter_user_id = adopter
-        self.save()
+        # Create a new Favourite entry if it doesn't already exist
+        favourite, created = Favourite.objects.get_or_create(pet=pet, adopter_user=adopter)
+        return favourite
+
     def removePetFromFavourites(self, pet, adopter):
         """Remove a pet from the user's favourites."""
-        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
+        # Find and delete the Favourite entry
+        favourite = Favourite.objects.filter(pet=pet, adopter_user=adopter).first()
         if favourite:
             favourite.delete()
+            return True
+        return False
+
+    def __str__(self):
+        return f"{self.adopter_user.username} - {self.pet.name}"

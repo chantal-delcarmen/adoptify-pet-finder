@@ -256,66 +256,44 @@ class UpdateApplicationStatusView(APIView):
 
 # ---------------------------------------- Favourite Pets Management -------------------------------------------
 
-class FavouriteView(APIView):
+# Add Favourite Pet
+class AddFavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, pk):
+        """Add a pet to the user's favourites."""
         pet = get_object_or_404(Pet, pk=pk)
         adopter = request.user
-        favourite, created = Favourite.objects.get_or_create(pet_id=pet, adopter_user_id=adopter)
-        favourite.addPetToFavourites(pet, adopter)
+        favourite = Favourite().addPetToFavourites(pet, adopter)  # Use the updated method
         if favourite:
             return Response({"message": "Pet added to favourites"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "Pet already in favourites"}, status=status.HTTP_400_BAD_REQUEST)
-    def get(self, request):
-        favourites = Favourite.objects.filter(user=request.user)
-        serializer = FavouriteSerializer(favourites, many=True)
-        return Response(serializer.data)
 
-    def delete(self, request, pk):
-        # Get the pet object
-        pet = get_object_or_404(Pet, pk=pk)
-        adopter = request.user
-        # Check if the pet is in the user's favourites
-        favourite = Favourite.objects.filter(pet_id=pet, adopter_user_id=adopter).first()
-        if not favourite:
-            return Response({"message": "Pet not found in favourites."}, status=status.HTTP_404_NOT_FOUND)
-        # Remove the pet from favourites
-        favourite.removePetFromFavourites(pet, adopter)
-        return Response({"message": f"Pet '{pet.name}' removed from favourites."}, status=status.HTTP_204_NO_CONTENT)
-
-class FavouriteListView(ListAPIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        # Get the list of favourite pets for the authenticated user
-        favourites = Favourite.objects.filter(adopter_user_id=request.user)
-        serializer = FavouriteSerializer(favourites, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, pet_id):
-        try:
-            pet = Pet.objects.get(id=pet_id)
-            favourite, created = Favourite.objects.get_or_create(user=request.user, pet=pet)
-            if created:
-                return Response({"message": "Pet added to favourites!"}, status=201)
-            return Response({"message": "Pet is already in favourites!"}, status=200)
-        except Pet.DoesNotExist:
-            return Response({"error": "Pet not found!"}, status=404)
-
+# Remove Favourite Pet
 class RemoveFavouriteView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, pet_id):
-        try:
-            favourite = Favourite.objects.get(user=request.user, pet_id=pet_id)
-            favourite.delete()
+        """Remove a pet from the user's favourites."""
+        pet = get_object_or_404(Pet, id=pet_id)
+        adopter = request.user
+        removed = Favourite().removePetFromFavourites(pet, adopter)  # Use the updated method
+        if removed:
             return Response({"message": "Pet removed from favourites!"}, status=status.HTTP_204_NO_CONTENT)
-        except Favourite.DoesNotExist:
+        else:
             return Response({"error": "Favourite not found!"}, status=status.HTTP_404_NOT_FOUND)
 
+# List Favourite Pets
+class FavouriteListView(APIView):
+    permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        """Get the list of favourite pets for the authenticated user."""
+        favourites = Favourite.objects.filter(adopter_user=request.user)  # Updated field name
+        serializer = FavouriteSerializer(favourites, many=True)
+        return Response(serializer.data)
+    
 # ---------------------------------------- Donation Management -------------------------------------------
 # Create new Donation
 class CreateDonationView(APIView):
@@ -342,6 +320,7 @@ class CreateDonationView(APIView):
         # Serialize the created donation
         serializer = DonationSerializer(donation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 # View Donation Details
 class DonationView(APIView):
     permission_classes = [IsAuthenticated]
