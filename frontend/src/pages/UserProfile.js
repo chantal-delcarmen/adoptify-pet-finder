@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import PetCard from '../components/PetCard'; // Import the PetCard component
+import ApplicationCard from '../components/ApplicationCard'; // Import the ApplicationCard component
 
 function UserProfile() {
     const [favourites, setFavourites] = useState([]); // State for favourited animals
@@ -91,20 +92,11 @@ function UserProfile() {
             <section className="applications-section">
                 <h2>Your Applications</h2>
                 {applications.length > 0 ? (
-                    <ul className="applications-list">
+                    <div className="applications-grid">
                         {applications.map((application) => (
-                            <li key={application.application_id} className="application-item">
-                                <h3>{application.pet_name || 'Unknown Pet'}</h3> {/* Display pet_name */}
-                                <p>Status: {application.application_status || 'Unknown'}</p> {/* Display application_status */}
-                                <p>
-                                    Submitted on:{' '}
-                                    {application.submission_date
-                                        ? new Date(application.submission_date).toLocaleDateString()
-                                        : 'Unknown Date'} {/* Correctly parse submission_date */}
-                                </p>
-                            </li>
+                            <ApplicationCard key={application.application_id} application={application} />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
                     <p>You have not submitted any applications yet.</p>
                 )}
