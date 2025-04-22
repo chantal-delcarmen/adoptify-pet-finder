@@ -1,11 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
+import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import heart icons
 
 function PetCard({ pet, isAdmin, onEdit, onDelete }) {
     const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
 
-    const handleFavoriteToggle = async () => {
+    useEffect(() => {
+        const fetchFavoriteStatus = async () => {
+            const token = localStorage.getItem('access');
+            if (!token) return;
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    setIsFavorited(true); // Set to true if the pet is already favorited
+                }
+            } catch (err) {
+                console.error('Error fetching favorite status:', err);
+            }
+        };
+
+        fetchFavoriteStatus();
+    }, [pet.pet_id]);
+    const handleFavorite = async () => {
         const token = localStorage.getItem('access');
         if (!token) {
             alert('You must be logged in to favorite or unfavorite a pet.');
@@ -13,23 +36,20 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
         }
 
         try {
-            if (isFavorited) {
-                // Remove from favorites
-                const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/remove/`, {
-                    method: 'DELETE',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
 
-                if (response.ok) {
-                    setIsFavorited(false);
-                    alert('Pet removed from favorites!');
-                } else {
-                    const data = await response.json();
-                    console.error('Backend error:', data);
-                    alert(data.message || 'Failed to remove pet from favorites.');
-                }
+            // Use the appropriate method based on the current state
+            const method = isFavorited ? 'DELETE' : 'POST';
+            const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/`, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.ok) {
+                setIsFavorited(!isFavorited); // Toggle the favorite state
+                //alert(isFavorited ? 'Pet removed from favorites!' : 'Pet added to favorites!');
             } else {
                 // Add to favorites
                 const response = await fetch(`http://localhost:8000/api/favourite/${pet.pet_id}/add/`, {
@@ -64,7 +84,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
                 </button>
             )}
 
-            <img src={`http://localhost:8000${pet.image}`} alt={pet.name} className="pet-image" />
+            <img src={pet.image} alt={pet.name} className="pet-image" />
             <h3>{pet.name}</h3>
             <p><strong>Gender:</strong> {pet.gender}</p>
             <p><strong>Age:</strong> {pet.age} years</p>

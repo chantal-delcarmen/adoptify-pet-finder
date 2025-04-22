@@ -101,6 +101,12 @@ class PetSerializer(serializers.ModelSerializer):
             'image': {'required': False},  # Make image optional
         }
 
+    def get_image(self, obj):
+        # Return the full URL of the image
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
     def validate_shelter_id(self, value):
         # Validate that the shelter exists
         if not Shelter.objects.filter(pk=value.pk).exists():

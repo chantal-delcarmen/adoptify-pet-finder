@@ -80,15 +80,14 @@ urlpatterns = [
     # Pet details
     path("api/pets/<int:pk>/", views.PetDetailView.as_view(), name="pet_detail"),  # Pet detail endpoint
 
-    # -------------------------------------- Favourite a Pet ----------------------------------------
-    # Add Favourite 
-    path("api/favourite/<int:pk>/add/", views.AddFavouriteView.as_view(), name="favourite_pet"),  # Favourite pet endpoint
 
-    # Remove Favourite
-    path("api/favourite/<int:pet_id>/remove/", views.RemoveFavouriteView.as_view(), name="remove_favourite"),  # Remove favourite pet endpoint
+    # -------------------------------------- Favourite a Pet ----------------------------------------
 
     # Favourite List for a user
     path("api/favourite/list/", views.FavouriteListView.as_view(), name="favourite_list"),  # List of favourite pets for a user
+    # Add a pet to favourites
+    path("api/favourite/<int:pk>/", views.FavouriteView.as_view(), name="favourite_pet"),  # Check specific favorite
+
 
     # -------------------------------------- Donation Management -------------------------------------------
     path("api/donate/", views.CreateDonationView.as_view(), name="donate"),  # Donation endpoint
