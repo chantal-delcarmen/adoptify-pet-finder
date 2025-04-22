@@ -10,8 +10,7 @@ function Navbar() {
         <nav className="navbar">
             <div className="navbar__auth">
                 <Link to="/">Home</Link>
-                <Link to="/pets">Pets</Link>
-                <Link to="/apply">Apply</Link>
+                <Link to="/pets">Adopt a Pet</Link>
                 {username ? (
                     <>
                         <span>Welcome, {username}!</span>
