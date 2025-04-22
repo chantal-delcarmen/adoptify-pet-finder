@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
 
-function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, onDelete }) {
+function PetCard({ pet, isAdmin, onEdit, onDelete }) {
     const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
 
     const handleFavoriteToggle = async () => {
@@ -58,9 +58,11 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
     return (
         <div className="pet-card">
             {/* Heart Icon in the Top-Right Corner */}
-            <button className="favorite-icon" onClick={handleFavoriteToggle}>
-                {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
-            </button>
+            {!isAdmin && (
+                <button className="favorite-icon" onClick={handleFavoriteToggle}>
+                    {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
+                </button>
+            )}
 
             <img src={`http://localhost:8000${pet.image}`} alt={pet.name} className="pet-image" />
             <h3>{pet.name}</h3>
@@ -71,7 +73,7 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
             <p><strong>Status:</strong> {pet.adoption_status}</p>
 
             <div className="pet-card-actions">
-                {isAdmin ? (
+                {isAdmin && (
                     <div className="admin-actions">
                         <button className="button button--secondary" onClick={() => onEdit(pet.pet_id)}>
                             Edit
@@ -80,10 +82,6 @@ function PetCard({ pet, onPrimaryAction, primaryActionLabel, isAdmin, onEdit, on
                             Delete
                         </button>
                     </div>
-                ) : (
-                    <button className="button button--primary" onClick={() => onPrimaryAction(pet.pet_id)}>
-                        {primaryActionLabel}
-                    </button>
                 )}
             </div>
         </div>
@@ -103,16 +101,12 @@ PetCard.propTypes = {
         description: PropTypes.string.isRequired,
         petImage: PropTypes.string.isRequired,
     }).isRequired,
-    onPrimaryAction: PropTypes.func,
-    primaryActionLabel: PropTypes.string,
     isAdmin: PropTypes.bool,
     onEdit: PropTypes.func,
     onDelete: PropTypes.func,
 };
 
 PetCard.defaultProps = {
-    onPrimaryAction: null,
-    primaryActionLabel: 'Take Action',
     isAdmin: false,
     onEdit: null,
     onDelete: null,

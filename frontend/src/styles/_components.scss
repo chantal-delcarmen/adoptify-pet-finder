@@ -164,6 +164,7 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease; // Smooth hover effect
   position: relative; // Required for the heart icon to be positioned correctly
   text-align: center;
+  max-width: 250px;
 
   &:hover {
     transform: translateY(-5px); // Lift the card on hover
@@ -406,6 +407,18 @@
     text-decoration: underline;
     color: darken($color-primary, 10%);
   }
+}
+
+.favourites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Default responsive grid
+  gap: $spacing-md; // Space between cards
+}
+
+.profile-favourites-grid {
+  display: grid; // Ensure it's a grid container
+  justify-content: center; // Center the grid items horizontally
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Maintain responsiveness
 }
 
 @media (max-width: 768px) {

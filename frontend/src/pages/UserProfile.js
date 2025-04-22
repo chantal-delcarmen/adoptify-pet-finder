@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import PetCard from '../components/PetCard'; // Import the PetCard component
 
 function UserProfile() {
     const [favourites, setFavourites] = useState([]); // State for favourited animals
@@ -56,34 +57,6 @@ function UserProfile() {
         fetchUserData();
     }, [navigate]);
 
-    const handleRemoveFavourite = async (petId) => {
-        const token = localStorage.getItem('access');
-        if (!token) {
-            alert('You must be logged in to remove a favourite.');
-            return;
-        }
-
-        try {
-            const response = await fetch(`http://localhost:8000/api/favourite/${petId}/remove/`, {
-                method: 'DELETE',
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (response.ok) {
-                alert('Pet removed from favourites!');
-                setFavourites((prevFavourites) => prevFavourites.filter((animal) => animal.pet.id !== petId));
-            } else {
-                console.error('Failed to remove favourite');
-                alert('Failed to remove pet from favourites.');
-            }
-        } catch (err) {
-            console.error('Error removing favourite:', err);
-            alert('An error occurred. Please try again.');
-        }
-    };
-
     return (
         <div className="user-profile">
             <Navbar />
@@ -94,23 +67,21 @@ function UserProfile() {
             <section className="favourites-section">
                 <h2>Your Favourited Animals</h2>
                 {favourites.length > 0 ? (
-                    <ul className="favourites-list">
+                    <div className="favourites-grid profile-favourites-grid">
                         {favourites.map((animal) => (
-                            <li key={animal.id} className="favourite-item">
-                                <img src={animal.pet.image} alt={animal.pet.name} className="animal-image" />
-                                <div>
-                                    <h3>{animal.pet.name}</h3>
-                                    <p>{animal.pet.description}</p>
-                                    <button
-                                        className="remove-favourite-button"
-                                        onClick={() => handleRemoveFavourite(animal.pet.id)}
-                                    >
-                                        Remove from Favourites
-                                    </button>
-                                </div>
-                            </li>
+                            <PetCard
+                                key={animal.id}
+                                pet={animal.pet}
+                                isFavorited={true} // Always true for favourites
+                                onToggleFavorite={(petId) => {
+                                    // Update the favourites list when toggling
+                                    setFavourites((prevFavourites) =>
+                                        prevFavourites.filter((fav) => fav.pet.pet_id !== petId)
+                                    );
+                                }}
+                            />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
                     <p>You have not favourited any animals yet.</p>
                 )}
