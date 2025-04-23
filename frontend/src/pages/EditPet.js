@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import AdminPanel from '../components/AdminPanel'; // Import AdminPanel
 
 function EditPet() {
     const [searchParams] = useSearchParams();
@@ -69,7 +70,7 @@ function EditPet() {
 
             if (response.ok) {
                 alert('Pet details updated successfully!');
-                navigate('/admin/pets'); // Redirect to the admin pets page
+                navigate('/admin-view-pets'); // Redirect to the admin pets page
             } else {
                 const data = await response.json();
                 console.error('Error updating pet:', data);
@@ -95,21 +96,26 @@ function EditPet() {
 
     return (
         <div>
-            <h1>Edit Pet: {petData.name}</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
+            <AdminPanel /> {/* Add AdminPanel at the top */}
+            <div className="form-page">
+                <h1>Edit Pet</h1>
+                <form onSubmit={handleSubmit} className="form">
+                    <label htmlFor="petId">Pet ID:</label>
+                    <input type="text" id="petId" value={petId} readOnly />
+
+                    <label htmlFor="name">Name:</label>
                     <input
                         type="text"
+                        id="name"
                         name="name"
                         value={petData.name}
                         onChange={handleInputChange}
                         required
                     />
-                </label>
-                <label>
-                    Gender:
+
+                    <label htmlFor="gender">Gender:</label>
                     <select
+                        id="gender"
                         name="gender"
                         value={petData.gender}
                         onChange={handleInputChange}
@@ -118,20 +124,20 @@ function EditPet() {
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                     </select>
-                </label>
-                <label>
-                    Age:
+
+                    <label htmlFor="age">Age:</label>
                     <input
                         type="number"
+                        id="age"
                         name="age"
                         value={petData.age}
                         onChange={handleInputChange}
                         required
                     />
-                </label>
-                <label>
-                    Domesticated:
+
+                    <label htmlFor="domesticated">Domesticated:</label>
                     <select
+                        id="domesticated"
                         name="domesticated"
                         value={petData.domesticated ? 'Yes' : 'No'}
                         onChange={(e) =>
@@ -147,20 +153,20 @@ function EditPet() {
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
                     </select>
-                </label>
-                <label>
-                    Type:
+
+                    <label htmlFor="petType">Type:</label>
                     <input
                         type="text"
+                        id="petType"
                         name="pet_type"
                         value={petData.pet_type}
                         onChange={handleInputChange}
                         required
                     />
-                </label>
-                <label>
-                    Status:
+
+                    <label htmlFor="adoptionStatus">Status:</label>
                     <select
+                        id="adoptionStatus"
                         name="adoption_status"
                         value={petData.adoption_status}
                         onChange={handleInputChange}
@@ -170,18 +176,24 @@ function EditPet() {
                         <option value="Pending">Pending</option>
                         <option value="Adopted">Adopted</option>
                     </select>
-                </label>
-                <label>
-                    Description:
+
+                    <label htmlFor="description">Description:</label>
                     <textarea
+                        id="description"
                         name="description"
+                        rows="4"
                         value={petData.description}
                         onChange={handleInputChange}
                         required
-                    />
-                </label>
-                <button type="submit">Save Changes</button>
-            </form>
+                    ></textarea>
+
+                    <button type="submit" className="button button--primary">
+                        Save Changes
+                    </button>
+                </form>
+
+                {error && <p className="error-message">{error}</p>}
+            </div>
         </div>
     );
 }
