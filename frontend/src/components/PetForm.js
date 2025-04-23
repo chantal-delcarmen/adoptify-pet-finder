@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function PetForm({ initialData, onSubmit, shelters }) {
     const [formData, setFormData] = useState(initialData || {
@@ -8,11 +9,13 @@ function PetForm({ initialData, onSubmit, shelters }) {
         domesticated: false,
         pet_type: '',
         shelter_id: '',
+        adopted: false,
         image: null,
     });
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -36,6 +39,7 @@ function PetForm({ initialData, onSubmit, shelters }) {
         try {
             await onSubmit(formData); // Call the onSubmit function passed as a prop
             setSuccess('Operation successful!');
+            navigate('/admin-view-pets'); // Redirect to the admin view pets page after successful submission
         } catch (err) {
             console.error('Error:', err);
             setError('An error occurred. Please try again.');
@@ -116,6 +120,20 @@ function PetForm({ initialData, onSubmit, shelters }) {
                             {shelter.name}
                         </option>
                     ))}
+                </select>
+
+                <label htmlFor="adopted_status">Adopted Status:</label>
+                <select
+                    id="adopted_status"
+                    name="adopted_status"
+                    value={formData.adopted_status}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Select Adopted Status</option>
+                    <option value="Available">Available</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Adopted">Adopted</option>
                 </select>
 
                 <label htmlFor="image">Image:</label>
