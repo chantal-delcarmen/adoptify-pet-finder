@@ -11,7 +11,20 @@ function EditPet() {
     useEffect(() => {
         const fetchPetData = async () => {
             try {
-                const response = await fetch(`http://localhost:8000/api/pets/${petId}/`);
+                const token = localStorage.getItem('access'); // Get the token from localStorage
+                if (!token) {
+                    alert('You must be logged in to edit a pet.');
+                    navigate('/login'); // Redirect to login if not authenticated
+                    return;
+                }
+
+                const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Include the token in the request
+                    },
+                });
+
                 if (response.ok) {
                     const data = await response.json();
                     setPetData(data);
@@ -26,7 +39,7 @@ function EditPet() {
         if (petId) {
             fetchPetData();
         }
-    }, [petId]);
+    }, [petId, navigate]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
