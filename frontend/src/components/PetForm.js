@@ -52,8 +52,13 @@ function PetForm({ initialData, onSubmit, shelters }) {
                 if (key === 'image' && !formData.image) {
                     return; // Skip the image field if no new image is selected
                 }
-                formDataToSend.append(key, formData[key] || ''); // Ensure all fields are included
+                formDataToSend.append(key, formData[key]);
             });
+
+            // Log the FormData for debugging
+            for (let pair of formDataToSend.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
+            }
 
             await onSubmit(formDataToSend);
             setSuccess('Operation successful!');
