@@ -133,6 +133,19 @@ class PetSerializer(serializers.ModelSerializer):
         pet = Pet.objects.create(**validated_data)
         return pet
 
+    def update(self, instance, validated_data):
+        # Handle the image field separately
+        image = validated_data.pop('image', None)
+        if image:
+            instance.image = image  # Update the image if a new file is provided
+
+        # Update other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
 # --------------------------------------- Shelter Management -------------------------------------------
 
 class ShelterSerializer(serializers.ModelSerializer):

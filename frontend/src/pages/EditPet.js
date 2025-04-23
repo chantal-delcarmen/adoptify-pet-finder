@@ -78,8 +78,8 @@ function EditPet() {
 
         const formDataToSend = new FormData();
         Object.keys(formData).forEach((key) => {
-            if (key === 'image' && !formData.image) {
-                return; // Skip the image field if no new image is selected
+            if (key === 'image' && typeof formData.image !== 'object') {
+                return; // Skip the image field if no new file is selected
             }
             formDataToSend.append(key, formData[key]);
         });
