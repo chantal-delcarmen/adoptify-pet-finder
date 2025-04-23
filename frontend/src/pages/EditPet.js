@@ -59,13 +59,22 @@ function EditPet() {
                 return;
             }
 
+            // Create a FormData object to handle file uploads
+            const formData = new FormData();
+            for (const key in petData) {
+                if (key === 'image' && petData[key] instanceof File) {
+                    formData.append(key, petData[key]); // Append the file
+                } else {
+                    formData.append(key, petData[key]); // Append other fields
+                }
+            }
+
             const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // Include the token in the request
                 },
-                body: JSON.stringify(petData),
+                body: formData, // Send the FormData object
             });
 
             if (response.ok) {

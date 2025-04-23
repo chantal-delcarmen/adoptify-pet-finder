@@ -150,7 +150,7 @@ class CreatePetView(APIView):
 
         return Response(serializer.data, status=201)
 
-# Retrieve Pet Info by PK
+# Retrieve and Update Pet Info by PK
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -160,12 +160,22 @@ class PetDetailView(APIView):
         serializer = PetSerializer(pet)
         return Response(serializer.data)
 
+    def put(self, request, pk):
+        # Retrieve the pet with the given primary key (pk)
+        pet = get_object_or_404(Pet, pk=pk)
+        # Deserialize and validate the incoming data
+        serializer = PetSerializer(pet, data=request.data, partial=False)
+        if serializer.is_valid():
+            serializer.save()  # Save the updated pet data
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors, status=400)
+
 # List All Pets
 class PetListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, shelter_id=None):
-        if shelter_id:
+        if (shelter_id):
             shelter = get_object_or_404(Shelter, pk=shelter_id)
             pets = shelter.list_all_pets()
         else:
