@@ -162,21 +162,19 @@ class PetDetailView(APIView):
         return Response(serializer.data)
 
     def put(self, request, pk):
-        # Retrieve the pet with the given primary key (pk)
         pet = get_object_or_404(Pet, pk=pk)
-        
-        # Copy the request data and provide defaults for missing fields
+        print("Incoming request data:", request.data)  # Log the incoming data
+
         data = request.data.copy()
         if not data.get('image'):
-            data.pop('image', None)  # Remove the image field if not provided
-        if not data.get('age'):
-            data['age'] = pet.age  # Retain the existing age if not provided
+            data.pop('image', None)
 
-        # Deserialize and validate the incoming data
-        serializer = PetSerializer(pet, data=data, partial=True)  # Allow partial updates
+        serializer = PetSerializer(pet, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
+            print("Updated pet data:", serializer.data)  # Log the updated data
             return Response(serializer.data, status=200)
+        print("Serializer errors:", serializer.errors)  # Log validation errors
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk):

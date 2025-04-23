@@ -6,6 +6,7 @@ import PetCard from '../components/PetCard'; // Import the PetCard component
 function AdminViewPets() {
   const [pets, setPets] = useState([]);
   const [error, setError] = useState('');
+  const [refresh, setRefresh] = useState(false); // Add a refresh state
   const navigate = useNavigate(); // Initialize navigation
 
   useEffect(() => {
@@ -30,11 +31,15 @@ function AdminViewPets() {
     };
 
     fetchPets();
-  }, []);
+  }, [refresh]); // Re-fetch pets when refresh state changes
 
   const handleEditClick = (petId) => {
     // Navigate to the edit pet page with the pet ID as a query parameter
     navigate(`/edit-pet?petId=${petId}`);
+  };
+
+  const handleEditComplete = () => {
+    setRefresh((prev) => !prev); // Trigger a re-fetch
   };
 
   const handleDeleteClick = async (petId) => {

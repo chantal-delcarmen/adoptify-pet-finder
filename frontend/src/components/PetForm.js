@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function PetForm({ initialData, onSubmit, shelters }) {
     const [formData, setFormData] = useState({
@@ -14,8 +13,6 @@ function PetForm({ initialData, onSubmit, shelters }) {
     });
 
     const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
 
     // Update formData when initialData changes
     useEffect(() => {
@@ -42,33 +39,28 @@ function PetForm({ initialData, onSubmit, shelters }) {
         });
     };
 
-    const handleSubmit = async (e) => {
+    // Validate the form data
+    const validatePetForm = (data) => {
+        const errors = {};
+        if (!data.name) errors.name = 'Name is required.';
+        if (!data.age || data.age <= 0) errors.age = 'Age must be greater than 0.';
+        if (!data.gender) errors.gender = 'Gender is required.';
+        if (!data.pet_type) errors.pet_type = 'Pet type is required.';
+        if (!data.shelter_id) errors.shelter_id = 'Shelter is required.';
+        return errors;
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        setError('');
-        setSuccess('');
-        try {
-            const formDataToSend = new FormData();
-            Object.keys(formData).forEach((key) => {
-                if (key === 'image' && !formData.image) {
-                    return; // Skip the image field if no new image is selected
-                }
-                formDataToSend.append(key, formData[key]);
-            });
 
-            // Log the FormData for debugging
-            for (let pair of formDataToSend.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
-
-            await onSubmit(formDataToSend);
-            setSuccess('Operation successful!');
-            alert('Operation successful!');
-            navigate('/admin-view-pets');
-        } catch (err) {
-            console.error('Error:', err);
-            setError('An error occurred. Please try again.');
-            alert('An error occurred. Please try again.');
+        const validationErrors = validatePetForm(formData);
+        if (Object.keys(validationErrors).length > 0) {
+            setError(Object.values(validationErrors).join(' '));
+            return;
         }
+
+        setError('');
+        onSubmit(formData); // Call the parent-provided onSubmit function
     };
 
     return (
@@ -175,7 +167,6 @@ function PetForm({ initialData, onSubmit, shelters }) {
             </form>
 
             {error && <p className="error-message">{error}</p>}
-            {success && <p className="success-message">{success}</p>}
         </div>
     );
 }
