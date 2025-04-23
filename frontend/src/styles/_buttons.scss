@@ -7,6 +7,7 @@
   border: none;
   cursor: pointer;
   transition: background 0.3s ease;
+  margin: $spacing-xs; // Add spacing around buttons
 
   &--primary {
     background-color: $color-accent;
@@ -34,5 +35,32 @@
     &:hover {
       background-color: $color-secondary;
     }
+  }
+
+  &--success {
+    background-color: $color-success;
+    color: $color-white;
+
+    &:hover {
+        background-color: darken($color-success, 10%);
+    }
+  }
+
+  &--warning {
+      background-color: $color-warning;
+      color: $color-white;
+
+      &:hover {
+          background-color: darken($color-warning, 10%);
+      }
+  }
+
+  &--danger {
+      background-color: $color-danger;
+      color: $color-white;
+
+      &:hover {
+          background-color: darken($color-danger, 10%);
+      }
   }
 }

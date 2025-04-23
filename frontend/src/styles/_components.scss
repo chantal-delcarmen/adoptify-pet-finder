@@ -190,48 +190,6 @@
     margin: $spacing-xs $spacing-sm;
     color: $color-text;
   }
-
-  .button {
-    display: block;
-    width: calc(100% - 30px);
-    margin: $spacing-sm auto;
-    padding: $spacing-xs;
-    text-align: center;
-    background-color: $color-primary; // Primary button color
-    color: $color-white;
-    border: none;
-    border-radius: $radius;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: darken($color-primary, 10%); // Darker on hover
-    }
-  }
-
-  .admin-actions {
-    display: flex;
-    justify-content: space-around;
-    padding: $spacing-sm;
-
-    .button {
-      width: 45%; // Buttons take half the width
-    }
-
-    .button--secondary {
-      background-color: $color-success; // Green for edit
-      &:hover {
-        background-color: darken($color-success, 10%);
-      }
-    }
-
-    .button--danger {
-      background-color: $color-danger; // Red for delete
-      &:hover {
-        background-color: darken($color-danger, 10%);
-      }
-    }
-  }
 }
 
 .favorite-icon {
@@ -307,10 +265,6 @@
         font-size: $font-size-base;
         margin-bottom: $spacing-sm;
         line-height: 1.6;
-      }
-
-      .button--primary {
-        margin-top: $spacing-sm;
       }
     }
   }
@@ -495,3 +449,54 @@
   }
 }
 
+// --------------------------- Manage Shelters --------------------------- //
+
+.manage-shelters-page {
+  padding: $spacing-md;
+  background-color: $color-secondary;
+  min-height: 100vh;
+
+  .page-title {
+    font-size: $font-size-lg;
+    color: $color-primary;
+    text-align: center;
+    margin-bottom: $spacing-md;
+  }
+
+  .shelters-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $color-white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    th,
+    td {
+      border: 1px solid $color-muted;
+      padding: $spacing-sm;
+      text-align: left;
+    }
+
+    th {
+      background-color: $color-primary;
+      color: $color-white;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: lighten($color-secondary, 10%);
+    }
+
+    tr:hover {
+      background-color: lighten($color-secondary, 20%);
+    }
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

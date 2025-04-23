@@ -213,6 +213,12 @@ class ShelterListView(ListAPIView):
     serializer_class = ShelterSerializer
     permission_classes = [IsAdminUser]  # Only admin users can access
 
+# Update Shelter
+class UpdateShelterView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Shelter.objects.all()
+    serializer_class = ShelterSerializer
+    permission_classes = [IsAdminUser]  # Only admin users can update shelters
+
 # ------------------------------------- Shelter Management Records -------------------------------------------
 # Create new Shelter Management Record
 class CreateShelterManagementView(generics.CreateAPIView):
@@ -247,6 +253,12 @@ class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
     queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
     permission_classes = [IsAdminUser]  # Only admin users can retrieve or delete shelter management records
+
+# Update Shelter Management Record
+class UpdateShelterManagementView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ShelterManagement.objects.all()
+    serializer_class = ShelterManagementSerializer
+    permission_classes = [IsAdminUser]  # Only admin users can update shelter management records
 
 # ---------------------------------------- Update Application Status -------------------------------------------
 
