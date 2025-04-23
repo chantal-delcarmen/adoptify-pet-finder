@@ -159,6 +159,23 @@ class PetDetailView(APIView):
         pet = get_object_or_404(Pet, pk=pk)
         serializer = PetSerializer(pet, context={'request': request})
         return Response(serializer.data)
+    def patch(self, request, pk):
+        # Retrieve the pet with the given primary key (pk)
+        pet = get_object_or_404(Pet, pk=pk)
+        if not request.user.is_staff:
+            return Response({"error": "You are not authorized to update this pet."}, status=403)
+        serializer = PetSerializer(pet, data=request.data, partial=True, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=200)
+    def delete(self, request, pk):
+        # Retrieve the pet with the given primary key (pk)
+        pet = get_object_or_404(Pet, pk=pk)
+        if not request.user.is_staff:
+            return Response({"error": "You are not authorized to delete this pet."}, status=403)
+        pet.delete()
+        return Response({"message": "Pet deleted successfully."}, status=204)
+       
 
 # List All Pets
 class PetListView(APIView):
