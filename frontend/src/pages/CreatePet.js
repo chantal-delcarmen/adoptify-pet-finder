@@ -1,231 +1,88 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminPanel from '../components/AdminPanel';
-import { refreshAccessToken } from '../utils/AuthUtils';
+import PetForm from '../components/PetForm';
+import { fetchShelters } from '../utils/FetchShelters'; // Import the fetchShelters utility
+import { refreshAccessToken } from '../utils/AuthUtils'; // Import the token refresh utility
 
 function CreatePet() {
-  const [formData, setFormData] = useState({
-    name: '',
-    age: '',
-    gender: '',
-    domesticated: false,
-    pet_type: '',
-    shelter_id: '',
-    image: null,
-  });
-  const [shelters, setShelters] = useState([]); // State to store the list of shelters
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [shelters, setShelters] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userRole = localStorage.getItem('role'); // Assume role is stored in localStorage
+    const userRole = localStorage.getItem('role');
     if (userRole !== 'admin') {
       navigate('/'); // Redirect non-admin users to the home page
     }
 
-    // Fetch the list of shelters
-    const fetchShelters = async () => {
-      const token = localStorage.getItem('access'); // Use 'access' to get token
-      console.log('Token:', token); // Verify the token is being retrieved
-      try {
-        const response = await fetch('http://localhost:8000/api/admin/shelters/', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`, // Include token for authentication
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const formattedShelters = data.map((shelter) => ({
-            id: shelter.shelter_id,
-            name: shelter.name,
-          }));
-          setShelters(formattedShelters);
-        } else {
-          console.error('Failed to fetch shelters');
+    const fetchSheltersData = async () => {
+      let token = localStorage.getItem('access');
+
+      // Refresh the token if necessary
+      if (!token) {
+        token = await refreshAccessToken(); // Use the AuthUtils function to refresh the token
+        if (!token) {
+          console.error('Failed to refresh token');
+          navigate('/login'); // Redirect to login if token refresh fails
+          return;
         }
-      } catch (err) {
-        console.error('Error fetching shelters:', err);
       }
+
+      // Fetch shelters using the utility
+      const sheltersData = await fetchShelters(token);
+      setShelters(sheltersData);
     };
 
-    fetchShelters();
+    fetchSheltersData();
   }, [navigate]);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
-  };
+  const handleCreatePet = async (formData) => {
+    let token = localStorage.getItem('access');
 
-  const handleFileChange = (e) => {
-    setFormData({
-      ...formData,
-      image: e.target.files[0],
-    });
-  };
-
-  // Validate the form data
-  const validatePetForm = (data) => {
-    const errors = {};
-    if (!data.name) errors.name = 'Name is required.';
-    if (!data.age || data.age <= 0) errors.age = 'Age must be greater than 0.';
-    if (!data.gender) errors.gender = 'Gender is required.';
-    if (!data.pet_type) errors.pet_type = 'Pet type is required.';
-    if (!data.shelter_id) errors.shelter_id = 'Shelter is required.';
-    return errors;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Validate the form data
-    const validationErrors = validatePetForm(formData);
-    if (Object.keys(validationErrors).length > 0) {
-      console.log('Validation Errors:', validationErrors); // Log validation errors
-      setError(Object.values(validationErrors).join(' ')); // Combine all errors into a single message
-      setSuccess('');
-      return;
+    // Refresh the token if necessary
+    if (!token) {
+      token = await refreshAccessToken();
+      if (!token) {
+        console.error('Failed to refresh token');
+        navigate('/login');
+        return;
+      }
     }
 
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
+      if (key === 'image' && !formData.image) {
+        return; // Skip the image field if no new image is selected
+      }
       formDataToSend.append(key, formData[key]);
     });
 
     try {
-      let token = localStorage.getItem('access');
-      if (!token) {
-        token = await refreshAccessToken(navigate); // Use the shared function
-      }
-
       const response = await fetch('http://localhost:8000/api/register-pet/', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`, // Include token for authentication
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: formDataToSend,
       });
 
-      if (response.ok) {
-        console.log('Pet created successfully!'); // Log success message
-        setSuccess('Pet created successfully!');
-        setError('');
-        navigate('/admin-view-pets'); // Redirect to the pets page
-      } else {
-        const data = await response.json();
-        console.error('Error Response:', data); // Log error response
-        setError(data.error || 'Failed to create pet');
-        setSuccess('');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        throw new Error(errorData.detail || 'Failed to create pet');
       }
-    } catch (err) {
-      console.error('Error creating pet:', err); // Log error
-      setError('An error occurred while creating the pet');
-      setSuccess('');
+
+      alert('Pet created successfully!');
+      navigate('/admin-view-pets');
+    } catch (error) {
+      console.error('Error creating pet:', error);
+      alert(error.message || 'An error occurred while creating the pet.');
     }
   };
 
   return (
     <div>
-      <AdminPanel /> {/* Include the AdminPanel for the navbar and header */}
-      <div className="form-page">
-        <h1>Create a New Pet</h1>
-        <form onSubmit={handleSubmit} className="form">
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="age">Age:</label>
-          <input
-            type="number"
-            id="age"
-            name="age"
-            value={formData.age}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="gender">Gender:</label>
-          <select
-            id="gender"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
-
-          <label htmlFor="domesticated">Domesticated:</label>
-          <input
-            type="checkbox"
-            id="domesticated"
-            name="domesticated"
-            checked={formData.domesticated}
-            onChange={handleChange}
-          />
-
-          <label htmlFor="pet_type">Pet Type:</label>
-          <select
-            id="pet_type"
-            name="pet_type"
-            value={formData.pet_type}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Pet Type</option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-            <option value="Bird">Bird</option>
-            <option value="Rabbit">Rabbit</option>
-          </select>
-
-          <label htmlFor="shelter_id">Shelter:</label>
-          <select
-            id="shelter_id"
-            name="shelter_id"
-            value={formData.shelter_id}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Shelter</option>
-            {shelters.map((shelter) => {
-              console.log(shelter); // Log each shelter object
-              return (
-                <option key={shelter.id} value={shelter.id}>
-                  {shelter.name}
-                </option>
-              );
-            })}
-          </select>
-
-          <label htmlFor="image">Image:</label>
-          <input
-            type="file"
-            id="image"
-            name="image"
-            onChange={handleFileChange}
-          />
-
-          <button type="submit" className="button button--primary">
-            Create Pet
-          </button>
-        </form>
-
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
-      </div>
+      <AdminPanel />
+      <h1>Create a New Pet</h1>
+      <PetForm initialData={null} onSubmit={handleCreatePet} shelters={shelters} />
     </div>
   );
 }

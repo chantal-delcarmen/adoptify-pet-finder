@@ -95,13 +95,15 @@ class ApplicationSerializer(serializers.ModelSerializer):
 # --------------------------------------- Pet Management -------------------------------------------
 
 class PetSerializer(serializers.ModelSerializer):
+    shelter_name = serializers.CharField(source='shelter_id.name', read_only=True)  # Add shelter_name
+
     class Meta:
         model = Pet
-        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'image']
+        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'shelter_name', 'image']
         extra_kwargs = {
             'pet_id': {'read_only': True},
             'adoption_status': {'required': True},  # Ensure adoption_status is required
-            'gender': {'required': True},  
+            'gender': {'required': True},
             'pet_type': {'required': True},  # Ensure pet_type is required
             'image': {'required': False},  # Make image optional
         }
@@ -119,8 +121,7 @@ class PetSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        # Ensure age is greater than 0
-        if data.get('age') <= 0:
+        if data.get('age') is not None and data.get('age') <= 0:
             raise serializers.ValidationError({"age": "Age must be greater than 0."})
         return data
 
@@ -131,6 +132,19 @@ class PetSerializer(serializers.ModelSerializer):
             validated_data.pop('adoption_status', None)  # Remove adoption status if not needed
         pet = Pet.objects.create(**validated_data)
         return pet
+
+    def update(self, instance, validated_data):
+        # Handle the image field separately
+        image = validated_data.pop('image', None)
+        if image:
+            instance.image = image  # Update the image if a new file is provided
+
+        # Update other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
 # --------------------------------------- Shelter Management -------------------------------------------
 

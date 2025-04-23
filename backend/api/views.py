@@ -150,9 +150,10 @@ class CreatePetView(APIView):
 
         return Response(serializer.data, status=201)
 
-# Retrieve Pet Info by PK
+# Retrieve and Update Pet Info by PK
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # Add parsers for handling file uploads
 
     def get(self, request, pk):
         # Retrieve the pet with the given primary key (pk)
@@ -160,12 +161,36 @@ class PetDetailView(APIView):
         serializer = PetSerializer(pet)
         return Response(serializer.data)
 
+    def put(self, request, pk):
+        pet = get_object_or_404(Pet, pk=pk)
+        print("Incoming request data:", request.data)  # Log the incoming data
+
+        data = request.data.copy()
+        if not data.get('image'):
+            data.pop('image', None)
+
+        serializer = PetSerializer(pet, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            print("Updated pet data:", serializer.data)  # Log the updated data
+            return Response(serializer.data, status=200)
+        print("Serializer errors:", serializer.errors)  # Log validation errors
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+            pet.delete()
+            return Response({"message": "Pet deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Pet.DoesNotExist:
+            return Response({"error": "Pet not found"}, status=status.HTTP_404_NOT_FOUND)
+
 # List All Pets
 class PetListView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request, shelter_id=None):
-        if shelter_id:
+        if (shelter_id):
             shelter = get_object_or_404(Shelter, pk=shelter_id)
             pets = shelter.list_all_pets()
         else:

@@ -1,174 +1,117 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import AdminPanel from '../components/AdminPanel';
+import PetForm from '../components/PetForm';
+import { fetchShelters } from '../utils/FetchShelters'; // Import the fetchShelters utility
+import { refreshAccessToken } from '../utils/AuthUtils'; // Import the token refresh utility
 
 function EditPet() {
     const [searchParams] = useSearchParams();
-    const petId = searchParams.get('petId'); // Get the petId from the query string
+    const petId = searchParams.get('petId');
     const [petData, setPetData] = useState(null);
-    const [error, setError] = useState('');
+    const [shelters, setShelters] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPetData = async () => {
+            let token = localStorage.getItem('access');
+
+            // Refresh the token if necessary
+            if (!token) {
+                token = await refreshAccessToken();
+                if (!token) {
+                    console.error('Failed to refresh token');
+                    navigate('/login'); // Redirect to login if token refresh fails
+                    return;
+                }
+            }
+
             try {
-                const response = await fetch(`http://localhost:8000/api/pets/${petId}/`);
+                const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
                 if (response.ok) {
                     const data = await response.json();
                     setPetData(data);
                 } else {
-                    setError('Failed to fetch pet data.');
+                    console.error('Failed to fetch pet data');
                 }
             } catch (err) {
-                setError('An error occurred while fetching pet data.');
+                console.error('Error fetching pet data:', err);
             }
         };
 
-        if (petId) {
-            fetchPetData();
-        }
-    }, [petId]);
+        const fetchSheltersData = async () => {
+            let token = localStorage.getItem('access');
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setPetData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const token = localStorage.getItem('access');
+            // Refresh the token if necessary
             if (!token) {
-                alert('You must be logged in to edit a pet.');
+                token = await refreshAccessToken();
+                if (!token) {
+                    console.error('Failed to refresh token');
+                    navigate('/login');
+                    return;
+                }
+            }
+
+            // Fetch shelters using the utility
+            const sheltersData = await fetchShelters(token);
+            setShelters(sheltersData);
+        };
+
+        fetchPetData();
+        fetchSheltersData();
+    }, [petId, navigate]);
+
+    const handleEditPet = async (formData) => {
+        let token = localStorage.getItem('access');
+
+        // Refresh the token if necessary
+        if (!token) {
+            token = await refreshAccessToken();
+            if (!token) {
+                console.error('Failed to refresh token');
+                navigate('/login');
                 return;
             }
+        }
 
+        const formDataToSend = new FormData();
+        Object.keys(formData).forEach((key) => {
+            if (key === 'image' && typeof formData.image !== 'object') {
+                return; // Skip the image field if no new file is selected
+            }
+            formDataToSend.append(key, formData[key]);
+        });
+
+        try {
             const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(petData),
+                headers: { Authorization: `Bearer ${token}` },
+                body: formDataToSend,
             });
 
-            if (response.ok) {
-                alert('Pet details updated successfully!');
-                navigate('/admin/pets'); // Redirect to the admin pets page
-            } else {
-                const data = await response.json();
-                console.error('Error updating pet:', data);
-                alert(data.message || 'Failed to update pet details.');
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error response:', errorData);
+                throw new Error(errorData.detail || 'Failed to update pet');
             }
-        } catch (err) {
-            console.error('Error submitting form:', err);
-            alert('An error occurred. Please try again.');
+
+            alert('Pet updated successfully!');
+            navigate('/admin-view-pets');
+        } catch (error) {
+            console.error('Error updating pet:', error);
+            alert(error.message || 'An error occurred while updating the pet.');
         }
     };
 
-    if (!petId) {
-        return <p>Invalid pet ID.</p>;
-    }
-
-    if (error) {
-        return <p>{error}</p>;
-    }
-
-    if (!petData) {
-        return <p>Loading...</p>;
-    }
+    if (!petData) return <p>Loading...</p>;
 
     return (
         <div>
-            <h1>Edit Pet: {petData.name}</h1>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        name="name"
-                        value={petData.name}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Gender:
-                    <select
-                        name="gender"
-                        value={petData.gender}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </label>
-                <label>
-                    Age:
-                    <input
-                        type="number"
-                        name="age"
-                        value={petData.age}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Domesticated:
-                    <select
-                        name="domesticated"
-                        value={petData.domesticated ? 'Yes' : 'No'}
-                        onChange={(e) =>
-                            handleInputChange({
-                                target: {
-                                    name: 'domesticated',
-                                    value: e.target.value === 'Yes',
-                                },
-                            })
-                        }
-                        required
-                    >
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
-                </label>
-                <label>
-                    Type:
-                    <input
-                        type="text"
-                        name="pet_type"
-                        value={petData.pet_type}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Status:
-                    <select
-                        name="adoption_status"
-                        value={petData.adoption_status}
-                        onChange={handleInputChange}
-                        required
-                    >
-                        <option value="Available">Available</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Adopted">Adopted</option>
-                    </select>
-                </label>
-                <label>
-                    Description:
-                    <textarea
-                        name="description"
-                        value={petData.description}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <button type="submit">Save Changes</button>
-            </form>
+            <AdminPanel />
+            <h1>Edit Pet</h1>
+            <PetForm initialData={petData} onSubmit={handleEditPet} shelters={shelters} />
         </div>
     );
 }

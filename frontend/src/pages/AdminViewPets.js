@@ -6,6 +6,7 @@ import PetCard from '../components/PetCard'; // Import the PetCard component
 function AdminViewPets() {
   const [pets, setPets] = useState([]);
   const [error, setError] = useState('');
+  const [refresh, setRefresh] = useState(false); // Add a refresh state
   const navigate = useNavigate(); // Initialize navigation
 
   useEffect(() => {
@@ -30,29 +31,34 @@ function AdminViewPets() {
     };
 
     fetchPets();
-  }, []);
+  }, [refresh]); // Re-fetch pets when refresh state changes
 
   const handleEditClick = (petId) => {
     // Navigate to the edit pet page with the pet ID as a query parameter
     navigate(`/edit-pet?petId=${petId}`);
   };
 
+  const handleEditComplete = () => {
+    setRefresh((prev) => !prev); // Trigger a re-fetch
+  };
+
   const handleDeleteClick = async (petId) => {
     const token = localStorage.getItem('access'); // Get the admin token
     try {
-      const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`, // Include token for authentication
-        },
-      });
-      if (response.ok) {
-        setPets((prevPets) => prevPets.filter((pet) => pet.petID !== petId)); // Remove the deleted pet from the list
-      } else {
-        setError('Failed to delete pet');
-      }
+        const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`, // Include token for authentication
+            },
+        });
+        if (response.ok) {
+            setPets((prevPets) => prevPets.filter((pet) => pet.pet_id !== petId)); // Use pet.pet_id
+            alert('Pet deleted successfully!'); // Show success alert
+        } else {
+            setError('Failed to delete pet');
+        }
     } catch (err) {
-      setError('An error occurred while deleting the pet');
+        setError('An error occurred while deleting the pet');
     }
   };
 
