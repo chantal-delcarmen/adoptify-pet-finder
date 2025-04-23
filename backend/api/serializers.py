@@ -119,8 +119,7 @@ class PetSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        # Ensure age is greater than 0
-        if data.get('age') <= 0:
+        if data.get('age') is not None and data.get('age') <= 0:
             raise serializers.ValidationError({"age": "Age must be greater than 0."})
         return data
 

@@ -153,6 +153,7 @@ class CreatePetView(APIView):
 # Retrieve and Update Pet Info by PK
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # Add parsers for handling file uploads
 
     def get(self, request, pk):
         # Retrieve the pet with the given primary key (pk)
@@ -163,13 +164,21 @@ class PetDetailView(APIView):
     def put(self, request, pk):
         # Retrieve the pet with the given primary key (pk)
         pet = get_object_or_404(Pet, pk=pk)
+        
+        # Copy the request data and provide defaults for missing fields
+        data = request.data.copy()
+        if not data.get('image'):
+            data.pop('image', None)  # Remove the image field if not provided
+        if not data.get('age'):
+            data['age'] = pet.age  # Retain the existing age if not provided
+
         # Deserialize and validate the incoming data
-        serializer = PetSerializer(pet, data=request.data, partial=False)
+        serializer = PetSerializer(pet, data=data, partial=True)  # Allow partial updates
         if serializer.is_valid():
-            serializer.save()  # Save the updated pet data
+            serializer.save()
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400)
-    
+
     def delete(self, request, pk):
         try:
             pet = Pet.objects.get(pk=pk)

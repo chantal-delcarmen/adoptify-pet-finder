@@ -9,7 +9,7 @@ function PetForm({ initialData, onSubmit, shelters }) {
         domesticated: false,
         pet_type: '',
         shelter_id: '',
-        adopted_status: '', // Ensure this matches the form field name
+        adoption_status: '', // Ensure this matches the form field name
         image: null,
     });
 
@@ -22,7 +22,7 @@ function PetForm({ initialData, onSubmit, shelters }) {
         if (initialData) {
             setFormData({
                 ...initialData,
-                adopted_status: initialData.adoption_status || '', // Map adoption_status to adopted_status
+                adoption_status: initialData.adoption_status || '', // Map adoption_status to adoption_status
             });
         }
     }, [initialData]);
@@ -47,10 +47,18 @@ function PetForm({ initialData, onSubmit, shelters }) {
         setError('');
         setSuccess('');
         try {
-            await onSubmit(formData); // Call the onSubmit function passed as a prop
+            const formDataToSend = new FormData();
+            Object.keys(formData).forEach((key) => {
+                if (key === 'image' && !formData.image) {
+                    return; // Skip the image field if no new image is selected
+                }
+                formDataToSend.append(key, formData[key] || ''); // Ensure all fields are included
+            });
+
+            await onSubmit(formDataToSend);
             setSuccess('Operation successful!');
             alert('Operation successful!');
-            navigate('/admin-view-pets'); // Redirect to the admin view pets page after successful submission
+            navigate('/admin-view-pets');
         } catch (err) {
             console.error('Error:', err);
             setError('An error occurred. Please try again.');
@@ -134,15 +142,15 @@ function PetForm({ initialData, onSubmit, shelters }) {
                     ))}
                 </select>
 
-                <label htmlFor="adopted_status">Adopted Status:</label>
+                <label htmlFor="adoption_status">Adoption Status:</label>
                 <select
-                    id="adopted_status"
-                    name="adopted_status"
-                    value={formData.adopted_status}
+                    id="adoption_status"
+                    name="adoption_status"
+                    value={formData.adoption_status}
                     onChange={handleChange}
                     required
                 >
-                    <option value="">Select Adopted Status</option>
+                    <option value="">Select Adoption Status</option>
                     <option value="Available">Available</option>
                     <option value="Pending">Pending</option>
                     <option value="Adopted">Adopted</option>
