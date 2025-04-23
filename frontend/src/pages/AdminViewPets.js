@@ -40,19 +40,20 @@ function AdminViewPets() {
   const handleDeleteClick = async (petId) => {
     const token = localStorage.getItem('access'); // Get the admin token
     try {
-      const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`, // Include token for authentication
-        },
-      });
-      if (response.ok) {
-        setPets((prevPets) => prevPets.filter((pet) => pet.petID !== petId)); // Remove the deleted pet from the list
-      } else {
-        setError('Failed to delete pet');
-      }
+        const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`, // Include token for authentication
+            },
+        });
+        if (response.ok) {
+            setPets((prevPets) => prevPets.filter((pet) => pet.pet_id !== petId)); // Use pet.pet_id
+            alert('Pet deleted successfully!'); // Show success alert
+        } else {
+            setError('Failed to delete pet');
+        }
     } catch (err) {
-      setError('An error occurred while deleting the pet');
+        setError('An error occurred while deleting the pet');
     }
   };
 

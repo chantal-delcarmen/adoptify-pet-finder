@@ -169,6 +169,14 @@ class PetDetailView(APIView):
             serializer.save()  # Save the updated pet data
             return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400)
+    
+    def delete(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+            pet.delete()
+            return Response({"message": "Pet deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Pet.DoesNotExist:
+            return Response({"error": "Pet not found"}, status=status.HTTP_404_NOT_FOUND)
 
 # List All Pets
 class PetListView(APIView):
