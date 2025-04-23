@@ -12,6 +12,7 @@ import Pets from './pages/Pets';
 import CreatePet from './pages/CreatePet';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminViewPets from './pages/AdminViewPets';
+import AdminUpdatePet from './pages/AdminUpdatePet';
 import LogoutPage from './pages/LogoutPage';
 import UserProfile from './pages/UserProfile';
 
@@ -40,6 +41,7 @@ function App() {
         <Route path="/create-pet" element={<CreatePet />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-view-pets" element={<AdminViewPets />} />
+        <Route path="/edit-pet/:petId" element={<AdminUpdatePet />} />
         <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>

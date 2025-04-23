@@ -129,7 +129,11 @@ function UserProfile() {
                                 <h3>{application.pet_name}</h3>
                                 <p>Status: {application.application_status}</p>
                                 <p>Submitted on: {new Date(application.submission_date).toLocaleDateString()}</p>
-                                <img src={application.pet_image} alt={application.pet_name} className="pet-image" />
+                                <img 
+                                    src={application.pet_image} 
+                                    alt={application.pet_name} 
+                                    style={{ width: '300px', height: 'auto', marginBottom: '10px' }}
+                                    className="pet-image" />
                             </li>
                         ))}
                     </ul>

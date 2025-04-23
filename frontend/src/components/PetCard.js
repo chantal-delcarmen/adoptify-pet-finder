@@ -93,8 +93,18 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
                     {isFavorited ? <FaHeart className="heart-icon favorited" /> : <FaRegHeart className="heart-icon" />}
                 </button>
             )}
-
-            <img src={pet.image} alt={pet.name} className="pet-image" />
+            {console.log("Pet object in PetCard:", pet)}
+            <img 
+                src={`http://localhost:8000${pet.image}`} 
+                alt={pet.name} 
+                style={{
+                    height: '200px',
+                    width: 'auto',
+                    display: 'block',
+                    margin: '0 auto',
+                    objectFit: 'cover',
+                  }}
+                className="pet-image" />
             <h3>{pet.name}</h3>
             <p><strong>Gender:</strong> {pet.gender}</p>
             <p><strong>Age:</strong> {pet.age} years</p>
@@ -133,7 +143,7 @@ PetCard.propTypes = {
         pet_type: PropTypes.string.isRequired, // Updated field
         adoption_status: PropTypes.string.isRequired, // Updated field
         description: PropTypes.string.isRequired,
-        petImage: PropTypes.string.isRequired,
+        Image: PropTypes.string.isRequired,
     }).isRequired,
     isAdmin: PropTypes.bool,
     onEdit: PropTypes.func,

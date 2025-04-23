@@ -34,7 +34,7 @@ function AdminViewPets() {
 
   const handleEditClick = (petId) => {
     // Navigate to the edit pet page with the pet ID as a query parameter
-    navigate(`/edit-pet?petId=${petId}`);
+    navigate(`/edit-pet/${petId}`);
   };
 
   const handleDeleteClick = async (petId) => {
