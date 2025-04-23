@@ -45,20 +45,20 @@ function AdminViewPets() {
   const handleDeleteClick = async (petId) => {
     const token = localStorage.getItem('access'); // Get the admin token
     try {
-        const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`, // Include token for authentication
-            },
-        });
-        if (response.ok) {
-            setPets((prevPets) => prevPets.filter((pet) => pet.pet_id !== petId)); // Use pet.pet_id
-            alert('Pet deleted successfully!'); // Show success alert
-        } else {
-            setError('Failed to delete pet');
-        }
+      const response = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`, // Include token for authentication
+        },
+      });
+      if (response.ok) {
+        setPets((prevPets) => prevPets.filter((pet) => pet.pet_id !== petId)); // Use pet.pet_id
+        alert('Pet deleted successfully!'); // Show success alert
+      } else {
+        setError('Failed to delete pet');
+      }
     } catch (err) {
-        setError('An error occurred while deleting the pet');
+      setError('An error occurred while deleting the pet');
     }
   };
 
@@ -73,15 +73,19 @@ function AdminViewPets() {
       {/* Pets List */}
       <div className="pets-list">
         {error && <p className="error-message">{error}</p>}
-        {pets.map((pet) => (
-          <PetCard
-            key={pet.petID}
-            pet={pet}
-            isAdmin={true} // Indicate that this is an admin view
-            onEdit={handleEditClick} // Pass the edit handler
-            onDelete={handleDeleteClick} // Pass the delete handler
-          />
-        ))}
+        {pets.length === 0 ? (
+          <p className="no-pets-message">No pets to display.</p>
+        ) : (
+          pets.map((pet) => (
+            <PetCard
+              key={pet.petID}
+              pet={pet}
+              isAdmin={true} // Indicate that this is an admin view
+              onEdit={handleEditClick} // Pass the edit handler
+              onDelete={handleDeleteClick} // Pass the delete handler
+            />
+          ))
+        )}
       </div>
     </div>
   );

@@ -40,20 +40,24 @@ function PetForm({ initialData, onSubmit, shelters }) {
     };
 
     // Validate the form data
-    const validatePetForm = (data) => {
+    const validatePetForm = (data, isEdit = false) => {
         const errors = {};
         if (!data.name) errors.name = 'Name is required.';
         if (!data.age || data.age <= 0) errors.age = 'Age must be greater than 0.';
         if (!data.gender) errors.gender = 'Gender is required.';
         if (!data.pet_type) errors.pet_type = 'Pet type is required.';
         if (!data.shelter_id) errors.shelter_id = 'Shelter is required.';
+        // Conditionally validate the image field
+        if (!isEdit && !data.image) errors.image = 'Image is required for new pets.';
         return errors;
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const validationErrors = validatePetForm(formData);
+        // Pass a flag to indicate if this is an edit
+        const isEdit = !!initialData; // If `initialData` exists, it's an edit
+        const validationErrors = validatePetForm(formData, isEdit);
         if (Object.keys(validationErrors).length > 0) {
             setError(Object.values(validationErrors).join(' '));
             return;
@@ -159,7 +163,6 @@ function PetForm({ initialData, onSubmit, shelters }) {
                     id="image"
                     name="image"
                     onChange={handleFileChange}
-                    required
                 />
 
                 <button type="submit" className="button button--primary">

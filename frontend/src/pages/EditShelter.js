@@ -34,6 +34,12 @@ function EditShelter() {
 
     const handleSubmit = async (formData) => {
         const token = localStorage.getItem('access');
+
+        // Remove the image field if it is empty
+        if (!formData.image) {
+            delete formData.image;
+        }
+
         try {
             const response = await fetch(`http://localhost:8000/api/admin/shelter/${shelterId}/`, {
                 method: 'PUT',
