@@ -159,6 +159,7 @@ function PetForm({ initialData, onSubmit, shelters }) {
                     id="image"
                     name="image"
                     onChange={handleFileChange}
+                    required
                 />
 
                 <button type="submit" className="button button--primary">
