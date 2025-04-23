@@ -95,13 +95,15 @@ class ApplicationSerializer(serializers.ModelSerializer):
 # --------------------------------------- Pet Management -------------------------------------------
 
 class PetSerializer(serializers.ModelSerializer):
+    shelter_name = serializers.CharField(source='shelter_id.name', read_only=True)  # Add shelter_name
+
     class Meta:
         model = Pet
-        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'image']
+        fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'shelter_name', 'image']
         extra_kwargs = {
             'pet_id': {'read_only': True},
             'adoption_status': {'required': True},  # Ensure adoption_status is required
-            'gender': {'required': True},  
+            'gender': {'required': True},
             'pet_type': {'required': True},  # Ensure pet_type is required
             'image': {'required': False},  # Make image optional
         }
