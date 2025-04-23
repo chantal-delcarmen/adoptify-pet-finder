@@ -39,10 +39,12 @@ function PetForm({ initialData, onSubmit, shelters }) {
         try {
             await onSubmit(formData); // Call the onSubmit function passed as a prop
             setSuccess('Operation successful!');
+            alert('Operation successful!');
             navigate('/admin-view-pets'); // Redirect to the admin view pets page after successful submission
         } catch (err) {
             console.error('Error:', err);
             setError('An error occurred. Please try again.');
+            alert('An error occurred. Please try again.');
         }
     };
 
