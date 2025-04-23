@@ -2,20 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function PetForm({ initialData, onSubmit, shelters }) {
-    const [formData, setFormData] = useState(initialData || {
+    const [formData, setFormData] = useState({
         name: '',
         age: '',
         gender: '',
         domesticated: false,
         pet_type: '',
         shelter_id: '',
-        adopted: false,
+        adopted_status: '', // Ensure this matches the form field name
         image: null,
     });
 
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const navigate = useNavigate(); // Initialize useNavigate
+
+    // Update formData when initialData changes
+    useEffect(() => {
+        if (initialData) {
+            setFormData({
+                ...initialData,
+                adopted_status: initialData.adoption_status || '', // Map adoption_status to adopted_status
+            });
+        }
+    }, [initialData]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
