@@ -15,6 +15,9 @@ import AdminViewPets from './pages/AdminViewPets';
 import LogoutPage from './pages/LogoutPage';
 import UserProfile from './pages/UserProfile';
 import EditPet from './pages/EditPet';
+import ManageShelters from './pages/ManageShelters';
+import CreateShelter from './pages/CreateShelter';
+import EditShelter from './pages/EditShelter';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -43,6 +46,9 @@ function App() {
         <Route path="/admin-view-pets" element={<AdminViewPets />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/edit-pet" element={<EditPet />} />
+        <Route path="/admin/shelters" element={<ManageShelters />} />
+        <Route path="/admin/add-shelter" element={<CreateShelter />} />
+        <Route path="/admin/edit-shelter/:shelterId" element={<EditShelter />} />
       </Routes>
     </Router>
   );

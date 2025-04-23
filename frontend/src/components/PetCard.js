@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'; // Import heart icons
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import {EditButton, RemoveButton} from './Buttons'; // Import buttons
 
 function PetCard({ pet, isAdmin, onEdit, onDelete }) {
     const [isFavorited, setIsFavorited] = useState(false); // State to track if the pet is favorited
@@ -83,12 +84,8 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
             <div className="pet-card-actions">
                 {isAdmin ? (
                     <div className="admin-actions">
-                        <button className="button button--secondary" onClick={() => onEdit(pet.pet_id)}>
-                            Edit
-                        </button>
-                        <button className="button button--danger" onClick={() => onDelete(pet.pet_id)}>
-                            Delete
-                        </button>
+                        <EditButton onClick={() => onEdit(pet.pet_id)} />
+                        <RemoveButton onClick={() => onDelete(pet.pet_id)} />
                     </div>
                 ) : (
                     <button className="button button--primary" onClick={handleApplyToAdopt}>
