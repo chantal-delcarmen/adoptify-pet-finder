@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import ApplicationCard from '../components/ApplicationCard'; // Import the ApplicationCard component
 import AdminPanel from '../components/AdminPanel';
 import { ApproveButton, RejectButton } from '../components/Buttons'; // Import buttons
@@ -77,7 +76,7 @@ function ManageApplications() {
                                 key={application.application_id}
                                 onClick={() => handleCardClick(application)} // Open modal on click
                             >
-                                <ApplicationCard application={application} isAdmin={true} />
+                                <ApplicationCard application={application} />
                             </div>
                         ))}
                     </div>
@@ -94,7 +93,7 @@ function ManageApplications() {
                             &times;
                         </button>
                         <div className="modal-body">
-                            <ApplicationCard application={selectedApplication} isAdmin={true} isModal={true} />
+                            <ApplicationCard application={selectedApplication} isModal={true} />
                         </div>
                         <div className="modal-actions">
                             <RejectButton onClick={() => handleReject(selectedApplication.application_id)} />

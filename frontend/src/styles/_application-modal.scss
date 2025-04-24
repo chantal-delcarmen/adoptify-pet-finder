@@ -81,22 +81,3 @@
   justify-content: space-between; // Space out the buttons
   margin-top: $spacing-md; // Add spacing above the buttons
 }
-
-// // ApplicationCard inside Modal
-// .application-card--modal {
-//   border: none; // No border for modal
-//   background-color: transparent; // Transparent background
-//   padding: 0; // Remove padding
-//   margin: 0; // Remove margin
-//   text-align: left; // Align text to the left for modal view
-
-//   h3 {
-//     font-size: $font-size-lg; // Larger font size for modal
-//     margin-bottom: $spacing-sm;
-//   }
-
-//   p {
-//     margin: $spacing-xs 0; // Add spacing between paragraphs
-//     font-size: $font-size-base; // Adjust font size for readability
-//   }
-// }
