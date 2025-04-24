@@ -74,12 +74,9 @@ function ManageApplications() {
                         {applications.map((application) => (
                             <div
                                 key={application.application_id}
-                                className="application-card"
                                 onClick={() => handleCardClick(application)} // Open modal on click
                             >
-                                <h3>{application.pet_name}</h3>
-                                <p>Status: {application.status}</p>
-                                <p>Submitted on: {application.submitted_date}</p>
+                                <ApplicationCard application={application} isAdmin={true} />
                             </div>
                         ))}
                     </div>
@@ -96,10 +93,15 @@ function ManageApplications() {
                             &times;
                         </button>
                         <h2>{selectedApplication.pet_name}</h2>
-                        <p>Status: {selectedApplication.status}</p>
-                        <p>Submitted on: {selectedApplication.submitted_date}</p>
-                        <p>Applicant: {selectedApplication.applicant_name}</p>
-                        <p>Additional Details: {selectedApplication.details}</p>
+                        <p>Status: {selectedApplication.application_status}</p>
+                        <p>
+                            Submitted on:{' '}
+                            {selectedApplication.submission_date
+                                ? new Date(selectedApplication.submission_date).toLocaleDateString()
+                                : 'Unknown Date'}
+                        </p>
+                        <p>Applicant: {selectedApplication.applicant_name || 'Unknown'}</p>
+                        <p>Additional Details: {selectedApplication.details || 'No details provided'}</p>
                         <div className="modal-actions">
                             <RejectButton onClick={() => handleReject(selectedApplication.application_id)} />
                             <ApproveButton onClick={() => handleApprove(selectedApplication.application_id)} />
