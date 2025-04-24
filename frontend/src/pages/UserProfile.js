@@ -90,11 +90,14 @@ function UserProfile() {
             </section>
 
             <section className="applications-section">
+                <br /><br />
                 <h2>Your Applications</h2>
                 {applications.length > 0 ? (
                     <div className="applications-grid">
                         {applications.map((application) => (
-                            <ApplicationCard key={application.application_id} application={application} />
+                            <div className="application-card-container">
+                                <ApplicationCard key={application.application_id} application={application} />
+                            </div>
                         ))}
                     </div>
                 ) : (
