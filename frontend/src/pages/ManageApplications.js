@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import ApplicationCard from '../components/ApplicationCard'; // Import the ApplicationCard component
+import AdminPanel from '../components/AdminPanel';
 
 function ManageApplications() {
     const [applications, setApplications] = useState([]); // State for all applications
@@ -44,7 +45,7 @@ function ManageApplications() {
 
     return (
         <div className="manage-applications">
-            <Navbar />
+            <AdminPanel />
             <h1>Manage Adoption Applications</h1>
 
             {error && <p className="error-message">{error}</p>}
