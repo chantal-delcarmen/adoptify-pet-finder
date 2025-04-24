@@ -160,6 +160,7 @@ class AdoptionApplication(models.Model):
     submission_date = models.DateTimeField(auto_now_add=True)
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE)  # Renamed from pet_id to pet
     adopter_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField(null=True, blank=True)  # Add the message field
 
     def __str__(self):
         return f"Application {self.application_id} - {self.application_status}"

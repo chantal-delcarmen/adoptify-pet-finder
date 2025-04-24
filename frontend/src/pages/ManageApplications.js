@@ -69,6 +69,7 @@ function ManageApplications() {
 
             <section className="applications-section">
                 <h2>All Applications</h2>
+                <p>Click on card to view details and to approve or reject an application</p>
                 {applications.length > 0 ? (
                     <div className="applications-grid">
                         {applications.map((application) => (
@@ -92,16 +93,23 @@ function ManageApplications() {
                         <button className="modal-close" onClick={handleCloseModal}>
                             &times;
                         </button>
-                        <h2>{selectedApplication.pet_name}</h2>
-                        <p>Status: {selectedApplication.application_status}</p>
+                        <h2>{selectedApplication.pet_name || 'Unknown Pet'}</h2>
+                        <p><b>Application ID:</b> {selectedApplication.application_id || 'Unknown'}</p>
+                        <p><b>Status:</b> {selectedApplication.application_status || 'Unknown'}</p>
                         <p>
-                            Submitted on:{' '}
+                            <b>Submitted on:</b>{' '}
                             {selectedApplication.submission_date
                                 ? new Date(selectedApplication.submission_date).toLocaleDateString()
                                 : 'Unknown Date'}
                         </p>
-                        <p>Applicant: {selectedApplication.applicant_name || 'Unknown'}</p>
-                        <p>Additional Details: {selectedApplication.details || 'No details provided'}</p>
+                        {selectedApplication.adopter_user && (
+                            <p>
+                                <b>Applicant Name:</b> {selectedApplication.adopter_user.first_name || 'Unknown'}{' '}
+                                {selectedApplication.adopter_user.last_name || 'Unknown'}
+                            </p>
+                        )}
+                        <p><b>Pet ID:</b> {selectedApplication.pet_id || 'Unknown'}</p>
+                        <p><b>Additional Details:</b> {selectedApplication.message || 'No details provided'}</p>
                         <div className="modal-actions">
                             <RejectButton onClick={() => handleReject(selectedApplication.application_id)} />
                             <ApproveButton onClick={() => handleApprove(selectedApplication.application_id)} />

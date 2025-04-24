@@ -12,7 +12,10 @@ function ApplicationCard({ application, isAdmin }) {
                     : 'Unknown Date'}
             </p>
             {isAdmin && application.adopter_user && (
-                <p>Applicant ID: {application.adopter_user}</p>
+                <div>
+                    <p><b>Applicant Name: {application.adopter_user.first_name} {application.adopter_user.last_name}</b></p>
+                    <p><b>Application ID: {application.application_id || 'Unknown'}</b></p> {/* Display application ID */}
+                </div>
             )}
         </div>
     );
