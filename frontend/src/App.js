@@ -18,6 +18,7 @@ import EditPet from './pages/EditPet';
 import ManageShelters from './pages/ManageShelters';
 import CreateShelter from './pages/CreateShelter';
 import EditShelter from './pages/EditShelter';
+import ManageApplications from './pages/ManageApplications';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -49,6 +50,7 @@ function App() {
         <Route path="/admin/shelters" element={<ManageShelters />} />
         <Route path="/admin/add-shelter" element={<CreateShelter />} />
         <Route path="/admin/edit-shelter/:shelterId" element={<EditShelter />} />
+        <Route path="/admin/applications" element={<ManageApplications />} />
       </Routes>
     </Router>
   );
