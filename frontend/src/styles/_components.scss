@@ -375,43 +375,6 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Maintain responsiveness
 }
 
-.application-card {
-    background-color: $color-white; // White background
-    border: 1px solid $color-muted; // Light border
-    border-radius: $radius; // Rounded corners
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow
-    overflow: hidden; // Prevent content overflow
-    transition: transform 0.2s ease, box-shadow 0.2s ease; // Smooth hover effect
-    padding: $spacing-md; // Add padding inside the card
-    text-align: center; // Center-align text
-    max-width: 250px; // Set a max width for the card
-    margin: 0 auto; // Center the card horizontally
-
-    &:hover {
-        transform: translateY(-5px); // Lift the card on hover
-        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); // Stronger shadow on hover
-    }
-
-    h3 {
-        font-size: $font-size-lg;
-        margin: $spacing-sm 0;
-        color: $color-primary;
-    }
-
-    p {
-        font-size: $font-size-base;
-        margin: $spacing-xs 0;
-        color: $color-text;
-    }
-}
-
-.applications-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Responsive grid
-    gap: $spacing-md; // Space between cards
-    padding: $spacing-md;
-}
-
 @media (max-width: 768px) {
   .columns {
     flex-direction: column; // Stack left and right columns vertically on smaller screens

@@ -73,7 +73,7 @@ function ManageApplications() {
                 {applications.length > 0 ? (
                     <div className="applications-grid">
                         {applications.map((application) => (
-                            <div
+                            <div className="application-card-container" // Container for each application card
                                 key={application.application_id}
                                 onClick={() => handleCardClick(application)} // Open modal on click
                             >
@@ -93,23 +93,9 @@ function ManageApplications() {
                         <button className="modal-close" onClick={handleCloseModal}>
                             &times;
                         </button>
-                        <h2>{selectedApplication.pet_name || 'Unknown Pet'}</h2>
-                        <p><b>Application ID:</b> {selectedApplication.application_id || 'Unknown'}</p>
-                        <p><b>Status:</b> {selectedApplication.application_status || 'Unknown'}</p>
-                        <p>
-                            <b>Submitted on:</b>{' '}
-                            {selectedApplication.submission_date
-                                ? new Date(selectedApplication.submission_date).toLocaleDateString()
-                                : 'Unknown Date'}
-                        </p>
-                        {selectedApplication.adopter_user && (
-                            <p>
-                                <b>Applicant Name:</b> {selectedApplication.adopter_user.first_name || 'Unknown'}{' '}
-                                {selectedApplication.adopter_user.last_name || 'Unknown'}
-                            </p>
-                        )}
-                        <p><b>Pet ID:</b> {selectedApplication.pet_id || 'Unknown'}</p>
-                        <p><b>Additional Details:</b> {selectedApplication.message || 'No details provided'}</p>
+                        <div className="modal-body">
+                            <ApplicationCard application={selectedApplication} isAdmin={true} isModal={true} />
+                        </div>
                         <div className="modal-actions">
                             <RejectButton onClick={() => handleReject(selectedApplication.application_id)} />
                             <ApproveButton onClick={() => handleApprove(selectedApplication.application_id)} />
