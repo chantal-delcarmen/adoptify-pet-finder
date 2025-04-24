@@ -26,10 +26,10 @@ function AdminDashboard() {
             <Link to="/admin-view-pets">View All Pets</Link>
           </li>
           <li>
-            <Link to="/apply">Manage Applications</Link>
+            <Link to="/admin/shelters">Manage Shelters</Link>
           </li>
           <li>
-            <Link to="/admin/shelters">Manage Shelters</Link>
+            <Link to="/apply">Manage Applications</Link>
           </li>
         </ul>
       </div>
