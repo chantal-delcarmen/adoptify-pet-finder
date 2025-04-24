@@ -96,7 +96,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
             )}
             {console.log("Pet object in PetCard:", pet)}
             <img 
-                src={`http://localhost:8000${pet.image || '/media/default-image.jpg'}`} 
+                src={pet.image?.startsWith('http') ? pet.image : `http://localhost:8000${pet.image || '/media/default-image.jpg'}`}
                 alt={pet.name} 
                 style={{
                     height: '200px',

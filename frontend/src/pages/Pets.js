@@ -16,6 +16,7 @@ function Pets() {
         const response = await fetch('http://localhost:8000/api/pets/');
         if (response.ok) {
           const data = await response.json();
+          console.log('Fetched pets:', data.map(p => p.image));
           setPets(data);
           console.log('Pets data:', data); // Debug the response
           setFilteredPets(data); // Initialize filteredPets with all pets
