@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { FaHeart, FaRegHeart } from 'react-icons/fa'; // Import heart icons
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import {EditButton, RemoveButton} from './Buttons'; // Import buttons
 
 
 function PetCard({ pet, isAdmin, onEdit, onDelete }) {
@@ -111,16 +112,13 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
             <p><strong>Domesticated:</strong> {pet.domesticated ? 'Yes' : 'No'}</p>
             <p><strong>Type:</strong> {pet.pet_type}</p>
             <p><strong>Status:</strong> {pet.adoption_status}</p>
+            <p><strong>Shelter:</strong> {pet.shelter_name}</p> {/* Added Shelter */}
 
             <div className="pet-card-actions">
                 {isAdmin ? (
                     <div className="admin-actions">
-                        <button className="button button--secondary" onClick={() => onEdit(pet.pet_id)}>
-                            Edit
-                        </button>
-                        <button className="button button--danger" onClick={() => onDelete(pet.pet_id)}>
-                            Delete
-                        </button>
+                        <EditButton onClick={() => onEdit(pet.pet_id)} />
+                        <RemoveButton onClick={() => onDelete(pet.pet_id)} />
                     </div>
                 ) : (
                     <button className="button button--primary" onClick={handleApplyToAdopt}>
@@ -136,13 +134,13 @@ PetCard.propTypes = {
     pet: PropTypes.shape({
         pet_id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
-        breed: PropTypes.string.isRequired,
         gender: PropTypes.string.isRequired,
         age: PropTypes.number.isRequired,
         domesticated: PropTypes.bool.isRequired,
         pet_type: PropTypes.string.isRequired, // Updated field
         adoption_status: PropTypes.string.isRequired, // Updated field
         description: PropTypes.string.isRequired,
+        shelter_name: PropTypes.string.isRequired, // Added Shelter
         image: PropTypes.string.isRequired,
     }).isRequired,
     isAdmin: PropTypes.bool,

@@ -158,7 +158,7 @@ class AdoptionApplication(models.Model):
         default="Pending"
     )
     submission_date = models.DateTimeField(auto_now_add=True)
-    pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)  # Renamed from pet_id to pet
     adopter_user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

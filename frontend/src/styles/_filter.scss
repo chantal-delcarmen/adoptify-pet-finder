@@ -1,0 +1,37 @@
+.filters {
+  max-width: 100%; /* Allow full width for inline filters */
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between; /* Arrange dropdowns in a single line */
+  align-items: center;
+  gap: 1rem; 
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column; /* Stack label and select vertically */
+  align-items: flex-start; /* Align label and select to the left */
+  gap: 0.5rem; /* Space between label and select */
+}
+
+.filters label {
+  font-weight: bold;
+  color: #333333;
+}
+
+.filters select {
+  padding: 0.5rem;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  font-size: 1rem;
+
+  &:focus {
+    outline: none;
+    border-color: #ff9800;
+    box-shadow: 0 0 4px rgba(255, 152, 0, 0.5);
+  }
+}

@@ -150,9 +150,10 @@ class CreatePetView(APIView):
 
         return Response(serializer.data, status=201)
 
-# Retrieve Pet Info by PK
+# Retrieve and Update Pet Info by PK
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # Add parsers for handling file uploads
 
     def get(self, request, pk):
         # Retrieve the pet with the given primary key (pk)
@@ -177,6 +178,30 @@ class PetDetailView(APIView):
         return Response({"message": "Pet deleted successfully."}, status=204)
        
 
+    def put(self, request, pk):
+        pet = get_object_or_404(Pet, pk=pk)
+        print("Incoming request data:", request.data)  # Log the incoming data
+
+        data = request.data.copy()
+        if not data.get('image'):
+            data.pop('image', None)
+
+        serializer = PetSerializer(pet, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            print("Updated pet data:", serializer.data)  # Log the updated data
+            return Response(serializer.data, status=200)
+        print("Serializer errors:", serializer.errors)  # Log validation errors
+        return Response(serializer.errors, status=400)
+
+    def delete(self, request, pk):
+        try:
+            pet = Pet.objects.get(pk=pk)
+            pet.delete()
+            return Response({"message": "Pet deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Pet.DoesNotExist:
+            return Response({"error": "Pet not found"}, status=status.HTTP_404_NOT_FOUND)
+
 # List All Pets
 class PetListView(APIView):
     permission_classes = [AllowAny]
@@ -185,6 +210,7 @@ class PetListView(APIView):
         # list all pets
         pets = Pet.objects.all()
         serializer = PetSerializer(pets, many=True, context={'request': request})
+
         return Response(serializer.data)
     
 
@@ -201,6 +227,12 @@ class ShelterListView(ListAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
     permission_classes = [IsAdminUser]  # Only admin users can access
+
+# Update Shelter
+class UpdateShelterView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Shelter.objects.all()
+    serializer_class = ShelterSerializer
+    permission_classes = [IsAdminUser]  # Only admin users can update shelters
 
 # ------------------------------------- Shelter Management Records -------------------------------------------
 # Create new Shelter Management Record
@@ -236,6 +268,12 @@ class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
     queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
     permission_classes = [IsAdminUser]  # Only admin users can retrieve or delete shelter management records
+
+# Update Shelter Management Record
+class UpdateShelterManagementView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ShelterManagement.objects.all()
+    serializer_class = ShelterManagementSerializer
+    permission_classes = [IsAdminUser]  # Only admin users can update shelter management records
 
 # ---------------------------------------- Update Application Status -------------------------------------------
 

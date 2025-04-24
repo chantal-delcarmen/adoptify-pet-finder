@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LogoutLink from './LogoutLink'; // Import the Logout component
 
 function AdminPanel() {
   return (
@@ -12,6 +13,7 @@ function AdminPanel() {
           <Link to="/admin-view-pets">View All Pets</Link>
           <Link to="/admin/shelters">Manage Shelters</Link>
           <Link to="/admin/applications">Manage Applications</Link>
+          <LogoutLink />
         </nav>
       </header>
     </div>

@@ -6,6 +6,7 @@ import PetCard from '../components/PetCard'; // Import the PetCard component
 function AdminViewPets() {
   const [pets, setPets] = useState([]);
   const [error, setError] = useState('');
+  const [refresh, setRefresh] = useState(false); // Add a refresh state
   const navigate = useNavigate(); // Initialize navigation
 
   useEffect(() => {
@@ -30,11 +31,15 @@ function AdminViewPets() {
     };
 
     fetchPets();
-  }, []);
+  }, [refresh]); // Re-fetch pets when refresh state changes
 
   const handleEditClick = (petId) => {
     // Navigate to the edit pet page with the pet ID as a query parameter
     navigate(`/edit-pet/${petId}`);
+  };
+
+  const handleEditComplete = () => {
+    setRefresh((prev) => !prev); // Trigger a re-fetch
   };
 
   const handleDeleteClick = async (petId) => {
@@ -47,7 +52,8 @@ function AdminViewPets() {
         },
       });
       if (response.ok) {
-        setPets((prevPets) => prevPets.filter((pet) => pet.petID !== petId)); // Remove the deleted pet from the list
+        setPets((prevPets) => prevPets.filter((pet) => pet.pet_id !== petId)); // Use pet.pet_id
+        alert('Pet deleted successfully!'); // Show success alert
       } else {
         setError('Failed to delete pet');
       }
@@ -67,15 +73,19 @@ function AdminViewPets() {
       {/* Pets List */}
       <div className="pets-list">
         {error && <p className="error-message">{error}</p>}
-        {pets.map((pet) => (
-          <PetCard
-            key={pet.petID}
-            pet={pet}
-            isAdmin={true} // Indicate that this is an admin view
-            onEdit={handleEditClick} // Pass the edit handler
-            onDelete={handleDeleteClick} // Pass the delete handler
-          />
-        ))}
+        {pets.length === 0 ? (
+          <p className="no-pets-message">No pets to display.</p>
+        ) : (
+          pets.map((pet) => (
+            <PetCard
+              key={pet.petID}
+              pet={pet}
+              isAdmin={true} // Indicate that this is an admin view
+              onEdit={handleEditClick} // Pass the edit handler
+              onDelete={handleDeleteClick} // Pass the delete handler
+            />
+          ))
+        )}
       </div>
     </div>
   );

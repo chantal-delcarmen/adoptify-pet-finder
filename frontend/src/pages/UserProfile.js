@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import PetCard from '../components/PetCard'; // Import the PetCard component
+import ApplicationCard from '../components/ApplicationCard'; // Import the ApplicationCard component
 
 function UserProfile() {
     const [favourites, setFavourites] = useState([]); // State for favourited animals
@@ -44,39 +45,8 @@ function UserProfile() {
 
                 if (applicationsResponse.ok) {
                     const applicationsData = await applicationsResponse.json();
-                    console.log('Raw Applications Data:', applicationsData);
-
-                    // Get unique pet IDs
-                    const petIds = [...new Set(applicationsData.map(app => app.pet_id))];
-
-                    // Fetch all pet details in parallel
-                    const petFetches = await Promise.all(
-                        petIds.map(id =>
-                            fetch(`http://localhost:8000/api/pets/${id}/`, {
-                                headers: {
-                                    Authorization: `Bearer ${token}`,
-                                },
-                            }).then(res => res.ok ? res.json() : null)
-                        )
-                    );
-
-                    const petMap = {};
-                    petFetches.forEach((pet, index) => {
-                        if (pet) {
-                          petMap[index] = pet; // Map pet ID to pet object
-                        }
-                      });
-                    console.log('Pet Fetches:', petFetches); // Debug the pet fetches
-                    console.log('Pet Map:', petMap); // Debug the pet map   
-                    
-                    // Merge pet name into each application
-                    const enrichedApplications = applicationsData.map((app, index) => ({
-                        ...app,
-                        pet_name: petFetches[index]?.name || 'Unknown Pet',
-                        pet_image: petMap[index]?.image || '',
-                    }));
-                    console.log('Enriched Applications Data:', enrichedApplications);
-                    setApplications(enrichedApplications);
+                    console.log('Applications data:', applicationsData); // Debug the response
+                    setApplications(applicationsData);
                 } else {
                     console.error('Failed to fetch applications');
                 }
@@ -123,20 +93,11 @@ function UserProfile() {
             <section className="applications-section">
                 <h2>Your Applications</h2>
                 {applications.length > 0 ? (
-                    <ul className="applications-list">
+                    <div className="applications-grid">
                         {applications.map((application) => (
-                            <li key={application.id} className="application-item">
-                                <h3>{application.pet_name}</h3>
-                                <p>Status: {application.application_status}</p>
-                                <p>Submitted on: {new Date(application.submission_date).toLocaleDateString()}</p>
-                                <img 
-                                    src={application.pet_image} 
-                                    alt={application.pet_name} 
-                                    style={{ width: '300px', height: 'auto', marginBottom: '10px' }}
-                                    className="pet-image" />
-                            </li>
+                            <ApplicationCard key={application.application_id} application={application} />
                         ))}
-                    </ul>
+                    </div>
                 ) : (
                     <p>You have not submitted any applications yet.</p>
                 )}
