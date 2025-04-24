@@ -19,7 +19,7 @@ function ManageApplications() {
 
             try {
                 // Fetch all adoption applications
-                const response = await fetch('http://localhost:8000/api/admin/adoption-applications/', {
+                const response = await fetch('http://localhost:8000/api/adoption-application/list/', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,

@@ -54,7 +54,7 @@ urlpatterns = [
     # ------------------------------------- Application Management -------------------------------------------
     path("api/adoption-application/", views.CreateAdoptionApplication.as_view(), name="adoption_application"),
     path("api/adoption-application/<int:pk>/", views.AdoptionView.as_view(), name="adoption_application_detail"),  # Adoption application detail view
-    path("api/adoption-application/list", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
+    path("api/adoption-application/list/", views.AdoptionApplicationListView.as_view(), name="adoption_applications"),  # Adoption applications list view
     path("api/adoption-application/<int:pk>/update-status/", UpdateApplicationStatusView.as_view(), name="update_application_status"), # Update application status endpoint
 
     # ------------------------------------- Shelter Management -------------------------------------------
