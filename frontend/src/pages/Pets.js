@@ -15,6 +15,7 @@ function Pets() {
         if (response.ok) {
           const data = await response.json();
           setPets(data);
+          console.log('Pets data:', data); // Debug the response
         } else {
           setError('Failed to fetch pets');
         }
@@ -49,6 +50,7 @@ function Pets() {
           <PetCard
             key={pet.petID}
             pet={pet}
+            image={pet.image}
             onPrimaryAction={handleApplyClick} // Pass the apply handler
             primaryActionLabel="Apply to Adopt Me" // Label for the button
           />

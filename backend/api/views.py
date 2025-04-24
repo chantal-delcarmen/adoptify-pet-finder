@@ -181,13 +181,9 @@ class PetDetailView(APIView):
 class PetListView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request, shelter_id=None):
-        if shelter_id:
-            shelter = get_object_or_404(Shelter, pk=shelter_id)
-            pets = shelter.list_all_pets()
-        else:
-            pets = Pet.objects.all()
-
+    def get(self, request):
+        # list all pets
+        pets = Pet.objects.all()
         serializer = PetSerializer(pets, many=True, context={'request': request})
         return Response(serializer.data)
     

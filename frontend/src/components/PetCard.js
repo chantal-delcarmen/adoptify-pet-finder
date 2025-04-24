@@ -95,7 +95,7 @@ function PetCard({ pet, isAdmin, onEdit, onDelete }) {
             )}
             {console.log("Pet object in PetCard:", pet)}
             <img 
-                src={`http://localhost:8000${pet.image}`} 
+                src={`http://localhost:8000${pet.image || '/media/default-image.jpg'}`} 
                 alt={pet.name} 
                 style={{
                     height: '200px',
@@ -143,7 +143,7 @@ PetCard.propTypes = {
         pet_type: PropTypes.string.isRequired, // Updated field
         adoption_status: PropTypes.string.isRequired, // Updated field
         description: PropTypes.string.isRequired,
-        Image: PropTypes.string.isRequired,
+        image: PropTypes.string.isRequired,
     }).isRequired,
     isAdmin: PropTypes.bool,
     onEdit: PropTypes.func,
