@@ -11,7 +11,6 @@ function Donations() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch the list of shelters
         const fetchShelters = async () => {
             const token = localStorage.getItem('access');
             if (!token) {
@@ -28,6 +27,7 @@ function Donations() {
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('Fetched shelters:', data); // Debug log
                     setShelters(data);
                 } else {
                     setError('Failed to load shelters. Please try again later.');
@@ -101,7 +101,7 @@ function Donations() {
                     >
                         <option value="">-- Select a Shelter --</option>
                         {shelters.map((shelter) => (
-                            <option key={shelter.id} value={shelter.id}> {/* Use shelter.id as the value */}
+                            <option key={shelter.shelter_id} value={shelter.shelter_id}> {/* Use shelter.shelter_id as the value */}
                                 {shelter.name}
                             </option>
                         ))}
