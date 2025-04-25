@@ -37,3 +37,10 @@ h1 {
   text-transform: uppercase;   // Make "ADOPTIFY" all caps
   font-weight: bold;           // Ensure bold styling
 }
+
+.dark-caps h1 {
+  color: $color-muted !important; // Slightly less transparent black text
+  font-size: $font-size-lg * 2; // Double the base font size for emphasis
+  text-transform: uppercase;   // Make "ADOPTIFY" all caps
+  font-weight: bold;           // Ensure bold styling
+}

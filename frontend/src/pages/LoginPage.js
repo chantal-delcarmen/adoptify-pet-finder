@@ -71,7 +71,7 @@ function LoginPage() {
       <Navbar /> {/* Render the Navbar component */}
 
       <div className="form-page">
-        <h1>Login</h1> {/* Page heading */}
+        <h1 className="black-caps"> Login</h1>{/* Page heading */}
         <form onSubmit={handleLogin} className="form">
           <label htmlFor="username">Username:</label>
           <input

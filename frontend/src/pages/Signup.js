@@ -60,7 +60,7 @@ function Signup() {
       {/* Navbar Component */}
       <Navbar /> {/* Render the Navbar component */}
       <div className="form-page">
-        <h1>Sign Up</h1> {/* Page heading */}
+        <h1 className="dark-caps">Sign Up</h1> {/* Page heading */}
         <form onSubmit={handleSignup} className="form">
           <label htmlFor="username">Username:</label>
           <input
