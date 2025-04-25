@@ -18,11 +18,6 @@
     margin-bottom: $spacing-sm;
     color: rgba(255, 255, 255, 0.8); // Slightly transparent white text
   }
-
-  // Use the centralized button class
-  .button--primary {
-    margin-top: $spacing-sm;
-  }
 }
 
 // About Section
@@ -113,11 +108,6 @@
     font-size: $font-size-base;
     margin-bottom: $spacing-sm;
     line-height: 1.6;
-  }
-
-  // Use the centralized button class
-  .button--secondary {
-    margin-top: $spacing-sm;
   }
 }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationCard from '../components/ApplicationCard'; // Import the ApplicationCard component
 import AdminPanel from '../components/AdminPanel';
-import { ApproveButton, RejectButton } from '../components/Buttons'; // Import buttons
+import { ViewDetailsButton, ApproveButton, RejectButton } from '../components/Buttons'; // Import buttons
 
 function ManageApplications() {
     const [applications, setApplications] = useState([]); // State for all applications
@@ -77,6 +77,7 @@ function ManageApplications() {
                                 onClick={() => handleCardClick(application)} // Open modal on click
                             >
                                 <ApplicationCard application={application} />
+                                <ViewDetailsButton />
                             </div>
                         ))}
                     </div>
