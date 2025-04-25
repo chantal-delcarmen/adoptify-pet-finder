@@ -1,3 +1,20 @@
+"""
+This module defines the database models for the Adoptify Pet Finder application.
+
+It includes models for:
+- UserProfile: Extends the default User model with additional fields like phone number and address.
+- AdminUser: Represents admin users with additional fields.
+- Shelter: Represents shelters, including their name, address, phone number, and website URL.
+- ShelterManagement: Represents the management of shelters by admin users.
+- Pet: Represents pets, including their details like age, gender, type, and adoption status.
+- AdoptionApplication: Represents adoption applications submitted by users for pets.
+- Donation: Represents donations made by users to shelters.
+- Adopter: Represents the adoption of pets by users.
+- Favourite: Represents the favourite pets of users.
+
+Each model includes methods for specific operations and string representations for better readability.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator, URLValidator

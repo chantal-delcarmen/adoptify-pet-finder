@@ -1,9 +1,16 @@
-"""This module contains the API views for the Adoptify Pet Finder application.
-It includes views for user management, pet management, adoption applications,
-favorites, donations, and shelter management.
+"""
+This module contains the API views for the Adoptify Pet Finder application.
 
-Each view handles specific HTTP requests and interacts with the database models
-to provide the required functionality."""
+It includes views for:
+- User management: Handles user registration, authentication, and details retrieval.
+- Pet management: Manages pet creation, updates, and retrieval.
+- Adoption applications: Handles creation, updates, and listing of adoption applications.
+- Favourite pets: Allows users to add, remove, and list their favourite pets.
+- Donations: Manages donations made by users to shelters.
+- Shelter management: Handles creation, updates, and listing of shelters and their management records.
+
+Each view interacts with the database models and serializers to provide the required functionality.
+"""
 
 # backend/api/views.py
 from rest_framework.decorators import api_view, renderer_classes

@@ -1,3 +1,19 @@
+"""
+This module defines the serializers for the Adoptify Pet Finder application.
+
+It includes serializers for:
+- UserSerializer: Handles user registration and validation.
+- AdminUserSerializer: Handles admin user registration.
+- ApplicationSerializer: Manages adoption applications.
+- PetSerializer: Handles pet-related operations.
+- ShelterSerializer: Manages shelter-related operations.
+- ShelterManagementSerializer: Handles shelter management by admin users.
+- DonationSerializer: Manages donations made by users to shelters.
+- FavouriteSerializer: Handles favorite pets for users.
+
+Each serializer ensures data validation and provides methods for creating or updating objects.
+"""
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
