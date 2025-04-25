@@ -72,12 +72,12 @@ function ManageApplications() {
                 {applications.length > 0 ? (
                     <div className="applications-grid">
                         {applications.map((application) => (
-                            <div className="application-card-container" // Container for each application card
-                                key={application.application_id}
-                                onClick={() => handleCardClick(application)} // Open modal on click
-                            >
+                            <div className="application-card-container">
                                 <ApplicationCard application={application} />
-                                <ViewDetailsButton />
+                                <ViewDetailsButton 
+                                    key={application.application_id}
+                                    onClick={() => handleCardClick(application)} // Open modal on click
+                                />
                             </div>
                         ))}
                     </div>
