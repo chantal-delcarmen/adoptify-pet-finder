@@ -76,17 +76,18 @@ function ManageApplications() {
                 const petResponse = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
                     method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json', // Ensure this header is included
+                        'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ adoption_status: 'Adopted' }), // Send data as JSON
+                    body: JSON.stringify({ adoption_status: 'Adopted' }),
                 });
 
                 if (petResponse.ok) {
                     console.log('Pet status updated to Adopted.');
+                    setSelectedApplication(null); // Close the modal
                     fetchApplications(); // Refresh the list of applications
                     alert('Application approved successfully!');
-                    navigate('/admin/applications');
+                    navigate('/admin/applications'); // Redirect after refreshing
                 } else {
                     console.error('Failed to update pet status.');
                     alert('Failed to update pet status. Please try again.');
@@ -101,9 +102,65 @@ function ManageApplications() {
         }
     };
 
-    const handleReject = (applicationId) => {
-        console.log(`Rejected application with ID: ${applicationId}`);
-        // Add logic to reject the application
+    const handleReject = async (applicationId) => {
+        const token = localStorage.getItem('access');
+        if (!token) {
+            alert('You must be logged in to reject an application.');
+            navigate('/login');
+            return;
+        }
+
+        try {
+            // Send a PATCH request to update the application status
+            const response = await fetch(`http://localhost:8000/api/adoption-application/${applicationId}/update-status/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ application_status: 'Rejected' }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Application rejected:', data);
+
+                // Ensure pet_id is retrieved correctly
+                const petId = data.pet_id;
+                if (!petId) {
+                    console.error('Pet ID is missing in the response.');
+                    alert('Failed to update pet status. Please try again.');
+                    return;
+                }
+
+                // Update the pet's status to "Available"
+                const petResponse = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ adoption_status: 'Available' }),
+                });
+
+                if (petResponse.ok) {
+                    console.log('Pet status updated to Available.');
+                    setSelectedApplication(null); // Close the modal
+                    fetchApplications(); // Refresh the list of applications
+                    alert('Application rejected successfully!');
+                    navigate('/admin/applications'); // Redirect after refreshing
+                } else {
+                    console.error('Failed to update pet status.');
+                    alert('Failed to update pet status. Please try again.');
+                }
+            } else {
+                console.error('Failed to reject application.');
+                alert('Failed to reject application. Please try again.');
+            }
+        } catch (err) {
+            console.error('Error rejecting application:', err);
+            alert('An error occurred. Please try again.');
+        }
     };
 
     const handleCardClick = (application) => {
