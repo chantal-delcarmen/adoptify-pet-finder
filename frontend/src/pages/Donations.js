@@ -56,6 +56,8 @@ function Donations() {
             return;
         }
 
+        console.log('Sending data:', { shelter_id: selectedShelter, amount: parseFloat(amount) }); // Debug log
+
         try {
             const response = await fetch('http://localhost:8000/api/donate/', {
                 method: 'POST',
@@ -64,7 +66,7 @@ function Donations() {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    shelter_id: selectedShelter,
+                    shelter_id: selectedShelter, // Use selectedShelter directly
                     amount: parseFloat(amount),
                 }),
             });
@@ -99,7 +101,7 @@ function Donations() {
                     >
                         <option value="">-- Select a Shelter --</option>
                         {shelters.map((shelter) => (
-                            <option key={shelter.id} value={shelter.id}>
+                            <option key={shelter.id} value={shelter.id}> {/* Use shelter.id as the value */}
                                 {shelter.name}
                             </option>
                         ))}
@@ -114,7 +116,7 @@ function Donations() {
                         onChange={(e) => setAmount(e.target.value)}
                         placeholder="Enter amount"
                         min="1"
-                        step="0.01"
+                        step="1"
                     />
                 </div>
                 <button type="submit">Donate</button>
