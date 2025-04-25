@@ -121,6 +121,7 @@ class AdoptionApplicationListView(generics.ListAPIView):
             # Regular user can only see their own applications
             adoption_applications = AdoptionApplication.objects.filter(adopter_user=request.user)
         serializer = ApplicationSerializer(adoption_applications, many=True)
+        print(serializer.data)  # Log the serialized data for debugging
         return Response(serializer.data)
 
 
