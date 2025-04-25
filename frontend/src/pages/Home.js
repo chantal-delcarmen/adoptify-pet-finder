@@ -1,21 +1,21 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import Navbar from '../components/Navbar';
-import Hero from '../components/Hero';
-import CTA from '../components/CTA';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faInfoCircle, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import Navbar from '../components/Navbar'; // Import the Navbar component
+import Hero from '../components/Hero'; // Import the Hero component for the hero section
+import CTA from '../components/CTA'; // Import the CTA (Call-To-Action) component
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Import FontAwesomeIcon for icons
+import { faSearch, faInfoCircle, faArrowRight } from '@fortawesome/free-solid-svg-icons'; // Import specific icons
 
 function Home({ message }) {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); // Initialize navigate for programmatic navigation
 
   return (
     <div>
       {/* Navbar Component */}
-      <Navbar />
+      <Navbar /> {/* Render the Navbar component */}
 
       {/* Hero Section */}
-      <Hero />
+      <Hero /> {/* Render the Hero component */}
 
       <div className="content">
         {/* Columns Section */}
@@ -33,17 +33,17 @@ function Home({ message }) {
               <h2>How it Works</h2>
               <div className="steps">
                 <div className="step">
-                  <FontAwesomeIcon icon={faSearch} className="icon" />
+                  <FontAwesomeIcon icon={faSearch} className="icon" /> {/* Search icon */}
                   <h3>Search Pets</h3>
                   <p>Explore our listings of pets available for adoption.</p>
                 </div>
                 <div className="step">
-                  <FontAwesomeIcon icon={faInfoCircle} className="icon" />
+                  <FontAwesomeIcon icon={faInfoCircle} className="icon" /> {/* Info icon */}
                   <h3>Learn More</h3>
                   <p>Read about pet personality, care, and adoption tips.</p>
                 </div>
                 <div className="step">
-                  <FontAwesomeIcon icon={faArrowRight} className="icon" />
+                  <FontAwesomeIcon icon={faArrowRight} className="icon" /> {/* Arrow icon */}
                   <h3>Apply Online</h3>
                   <p>Fill out an application form to begin the adoption process.</p>
                 </div>
@@ -60,7 +60,7 @@ function Home({ message }) {
               </p>
               <button
                 className="button button--primary"
-                onClick={() => navigate('/pets')} // Navigate to /pets
+                onClick={() => navigate('/pets')} // Navigate to /pets when clicked
               >
                 Search Now
               </button>
@@ -74,7 +74,7 @@ function Home({ message }) {
           <p>Find your perfect pet and give them the loving home they deserve.</p>
           <button
             className="button button--primary"
-            onClick={() => navigate('/pets')} // Navigate to /pets
+            onClick={() => navigate('/pets')} // Navigate to /pets when clicked
           >
             Browse Pets
           </button>
@@ -82,9 +82,9 @@ function Home({ message }) {
       </div>
 
       {/* Call-To-Action Section */}
-      <CTA />
+      <CTA /> {/* Render the CTA component */}
     </div>
   );
 }
 
-export default Home;
+export default Home; // Export the Home component

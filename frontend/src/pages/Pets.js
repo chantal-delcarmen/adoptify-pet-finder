@@ -1,33 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import Navbar from '../components/Navbar';
-import PetCard from '../components/PetCard'; // Import the PetCard component
-import FilterPets from '../components/FilterPets'; // Import the FilterPets component
+import Navbar from '../components/Navbar'; // Import the Navbar component
+import PetCard from '../components/PetCard'; // Import the PetCard component for displaying pet details
+import FilterPets from '../components/FilterPets'; // Import the FilterPets component for filtering pets
 
 function Pets() {
-  const [pets, setPets] = useState([]);
-  const [filteredPets, setFilteredPets] = useState([]); // State for filtered pets
-  const [error, setError] = useState('');
+  const [pets, setPets] = useState([]); // State to store the list of pets
+  const [filteredPets, setFilteredPets] = useState([]); // State to store the filtered list of pets
+  const [error, setError] = useState(''); // State to store error messages
   const navigate = useNavigate(); // Initialize navigation
 
   useEffect(() => {
     const fetchPets = async () => {
       try {
-        const response = await fetch('http://localhost:8000/api/pets/');
+        const response = await fetch('http://localhost:8000/api/pets/'); // Fetch the list of pets from the API
         if (response.ok) {
-          const data = await response.json();
-          setPets(data);
+          const data = await response.json(); // Parse the response JSON
+          setPets(data); // Update the pets state with the fetched data
           setFilteredPets(data); // Initialize filteredPets with all pets
         } else {
-          setError('Failed to fetch pets');
+          setError('Failed to fetch pets'); // Set an error message if the request fails
         }
       } catch (err) {
-        setError('An error occurred while fetching pets');
+        setError('An error occurred while fetching pets'); // Handle any errors during the fetch process
       }
     };
 
-    fetchPets();
-  }, []);
+    fetchPets(); // Fetch the list of pets when the component mounts
+  }, []); // Empty dependency array ensures the effect runs only once
 
   const handleApplyClick = (petId) => {
     // Navigate to the application page with the pet ID as a query parameter
@@ -37,35 +37,35 @@ function Pets() {
   return (
     <div className="pets-page">
       {/* Navbar Component */}
-      <Navbar />
+      <Navbar /> {/* Render the Navbar component */}
 
       {/* Hero Section */}
       <section className="hero">
-        <h2>Pets Available for Adoption</h2>
-        <p>Find your perfect companion today!</p>
+        <h2>Pets Available for Adoption</h2> {/* Page heading */}
+        <p>Find your perfect companion today!</p> {/* Subheading */}
       </section>
 
       {/* FilterPets Component */}
-      <FilterPets pets={pets} onFilter={setFilteredPets} />
+      <FilterPets pets={pets} onFilter={setFilteredPets} /> {/* Render the FilterPets component */}
 
       {/* Pets List */}
       <div className="pets-list">
-        {error && <p className="error-message">{error}</p>}
+        {error && <p className="error-message">{error}</p>} {/* Display error message if any */}
         {filteredPets.length > 0 ? (
           filteredPets.map((pet) => (
             <PetCard
-              key={pet.petID}
-              pet={pet}
+              key={pet.petID} // Unique key for each PetCard
+              pet={pet} // Pass the pet data to the PetCard
               onPrimaryAction={handleApplyClick} // Pass the apply handler
               primaryActionLabel="Apply to Adopt Me" // Label for the button
             />
           ))
         ) : (
-          <p>No pets match the selected criteria.</p>
+          <p>No pets match the selected criteria.</p> /* Message if no pets match the filter */
         )}
       </div>
     </div>
   );
 }
 
-export default Pets;
+export default Pets; // Export the Pets component
