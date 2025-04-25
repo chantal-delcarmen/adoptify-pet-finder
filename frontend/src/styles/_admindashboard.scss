@@ -1,0 +1,23 @@
+
+.admin-dashboard ul {
+    list-style: none; /* Remove bullets */
+    padding: 0;
+    margin: 0;
+    display: flex; /* Display links inline */
+    flex-direction: column; /* Stack links vertically */
+    gap: 1rem; /* Add spacing between links */
+  }
+  
+  .admin-dashboard ul li a {
+    text-decoration: none;
+    color: $color-primary; /* Use the primary color for links */
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+  
+    &:hover {
+      text-decoration: underline;
+      color: darken($color-primary, 10%);
+    }
+  }
+  
