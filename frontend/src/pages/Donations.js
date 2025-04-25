@@ -105,10 +105,14 @@ function Donations() {
     return (
         <>
         <Navbar />
+
+        {/* Hero Section */}
+        <section className="hero">
+            <h2>Make a Donation</h2>
+        </section>
+
         <Elements stripe={stripePromise}>
             <div className="donations-page">
-
-                <h1>Make a Donation</h1>
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
                 <form onSubmit={handleDonate} className="donation-form">
