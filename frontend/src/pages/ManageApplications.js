@@ -42,10 +42,10 @@ function ManageApplications() {
     }, [navigate]);
 
     const handleApprove = async (applicationId) => {
-        const token = localStorage.getItem('access'); // Get the user's token
+        const token = localStorage.getItem('access');
         if (!token) {
             alert('You must be logged in to approve an application.');
-            navigate('/login'); // Redirect to login if not authenticated
+            navigate('/login');
             return;
         }
 
@@ -64,23 +64,27 @@ function ManageApplications() {
                 const data = await response.json();
                 console.log('Application approved:', data);
 
+                // Ensure pet_id is retrieved correctly
+                const petId = data.pet_id;
+                if (!petId) {
+                    console.error('Pet ID is missing in the response.');
+                    alert('Failed to update pet status. Please try again.');
+                    return;
+                }
+
                 // Update the pet's status to "Adopted"
-                const petResponse = await fetch(`http://localhost:8000/api/pet/${data.pet_id}/`, {
+                const petResponse = await fetch(`http://localhost:8000/api/pets/${petId}/`, {
                     method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json', // Ensure this header is included
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({ adoption_status: 'Adopted' }),
+                    body: JSON.stringify({ adoption_status: 'Adopted' }), // Send data as JSON
                 });
 
                 if (petResponse.ok) {
                     console.log('Pet status updated to Adopted.');
-
-                    // Refresh the list of applications
-                    fetchApplications();
-
-                    // Redirect back to the Manage Applications page
+                    fetchApplications(); // Refresh the list of applications
                     alert('Application approved successfully!');
                     navigate('/manage-applications');
                 } else {

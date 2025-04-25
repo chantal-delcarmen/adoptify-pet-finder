@@ -124,6 +124,40 @@ class AdoptionApplicationListView(generics.ListAPIView):
         print(serializer.data)  # Log the serialized data for debugging
         return Response(serializer.data)
 
+# Update Application Status View for Admins
+class UpdateApplicationStatusView(APIView):
+    permission_classes = [IsAdminUser]  # Only admins can update application status
+
+    def patch(self, request, pk):
+        # Retrieve the adoption application by primary key (pk)
+        adoption_application = get_object_or_404(AdoptionApplication, pk=pk)
+        
+        # Update the application status
+        new_status = request.data.get('application_status')
+        if new_status not in ['Pending', 'Approved', 'Rejected']:
+            return Response({"error": "Invalid status"}, status=400)
+        
+        adoption_application.application_status = new_status
+        adoption_application.save()
+
+        # Get the related Pet object
+        pet = adoption_application.pet  # Use the `pet` field to get the Pet object
+
+        if new_status == 'Approved':
+            # Automatically set the pet's adoption status to 'Adopted'
+            pet.adoption_status = 'Adopted'
+            pet.save()
+        elif new_status == 'Rejected':
+            # Automatically set the pet's adoption status to 'Available'
+            pet.adoption_status = 'Available'
+            pet.save()
+
+        # Include the pet_id in the response
+        return Response({
+            "message": "Application status updated successfully",
+            "status": new_status,
+            "pet_id": pet.pet_id
+        })
 
 
 # --------------------------------------- Pet Management -------------------------------------------
@@ -154,7 +188,7 @@ class CreatePetView(APIView):
 # Retrieve and Update Pet Info by PK
 class PetDetailView(APIView):
     permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]  # Add parsers for handling file uploads
+    parser_classes = [MultiPartParser, FormParser, JSONParser]  # Add JSONParser to support JSON payloads
 
     def get(self, request, pk):
         # Retrieve the pet with the given primary key (pk)
@@ -176,6 +210,18 @@ class PetDetailView(APIView):
             print("Updated pet data:", serializer.data)  # Log the updated data
             return Response(serializer.data, status=200)
         print("Serializer errors:", serializer.errors)  # Log validation errors
+        return Response(serializer.errors, status=400)
+
+    def patch(self, request, pk):
+        # Retrieve the pet with the given primary key (pk)
+        pet = get_object_or_404(Pet, pk=pk)
+        data = request.data
+
+        # Update the pet's adoption status
+        serializer = PetSerializer(pet, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk):
@@ -260,37 +306,6 @@ class UpdateShelterManagementView(generics.RetrieveUpdateDestroyAPIView):
     queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
     permission_classes = [IsAdminUser]  # Only admin users can update shelter management records
-
-# ---------------------------------------- Update Application Status -------------------------------------------
-
-# Update Application Status View for Admins
-class UpdateApplicationStatusView(APIView):
-    permission_classes = [IsAdminUser]  # Only admins can update application status
-
-    def patch(self, request, pk):
-        # Retrieve the adoption application by primary key (pk)
-        adoption_application = get_object_or_404(AdoptionApplication, pk=pk)
-        
-        # Update the application status
-        new_status = request.data.get('application_status')
-        if new_status not in ['Pending', 'Approved', 'Rejected']:
-            return Response({"error": "Invalid status"}, status=400)
-        
-        adoption_application.application_status = new_status
-        adoption_application.save()
-
-        if new_status == 'Approved':
-            # Automatically set the pet's adoption status to 'Adopted'
-            pet = adoption_application.pet_id
-            pet.adoption_status = 'Adopted'
-            pet.save()
-        elif new_status == 'Rejected':
-            # Automatically set the pet's adoption status to 'Available'
-            pet = adoption_application.pet_id
-            pet.adoption_status = 'Available'
-            pet.save()
-
-        return Response({"message": "Application status updated successfully", "status": new_status})
 
 # ---------------------------------------- Favourite Pets Management -------------------------------------------
 
