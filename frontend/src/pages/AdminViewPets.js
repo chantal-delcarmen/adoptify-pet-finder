@@ -67,8 +67,7 @@ function AdminViewPets() {
       {/* Navbar Component */}
       <AdminPanel />
 
-      <h2>All Pets</h2>
-      <p>Manage all pets in the system.</p>
+      <h2>Manage Pets</h2>
 
       {/* Pets List */}
       <div className="pets-list">

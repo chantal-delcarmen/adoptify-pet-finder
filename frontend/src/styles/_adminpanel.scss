@@ -1,11 +1,10 @@
 .hero.admin-hero {
-  background-color: #333; /* Dark background similar to the home page hero */
   padding: 2rem;
   text-align: center;
 }
 
 .hero__title.admin-hero__title {
-  color: white; /* White font for the header */
+  color: $color-white; /* White font for the header */
   font-size: 2.5rem;
   text-transform: uppercase; /* Uppercase styling for the header */
   margin-bottom: 1rem;
@@ -18,7 +17,7 @@
 }
 
 .admin-navbar__link {
-  color: white; /* White font for the links */
+  color: $color-white; /* White font for the links */
   text-decoration: none;
   font-size: 1rem;
   font-weight: bold;
@@ -29,7 +28,7 @@
 }
 
 .admin-navbar__link:visited {
-  color: white; /* Ensure visited links remain white */
+  color: $color-white; /* Ensure visited links remain white */
 }
 
 .admin-navbar__link:hover {

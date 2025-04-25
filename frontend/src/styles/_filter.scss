@@ -6,7 +6,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
-  justify-content: space-between; /* Arrange dropdowns in a single line */
+  justify-content: center; /* Center the filters horizontally */
   align-items: center;
   gap: 1rem; 
 }
@@ -16,6 +16,7 @@
   flex-direction: column; /* Stack label and select vertically */
   align-items: flex-start; /* Align label and select to the left */
   gap: 0.5rem; /* Space between label and select */
+  padding: 10px;
 }
 
 .filters label {

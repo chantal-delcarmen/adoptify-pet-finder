@@ -81,7 +81,7 @@ function CreatePet() {
   return (
     <div>
       <AdminPanel /> {/* Include the AdminPanel component for the admin navbar */}
-      <h1>Create a New Pet</h1> {/* Page heading */}
+      <h2>Create a New Pet</h2> {/* Page heading */}
       <PetForm initialData={null} onSubmit={handleCreatePet} shelters={shelters} /> {/* PetForm component */}
     </div>
   );

@@ -174,12 +174,11 @@ function ManageApplications() {
     return (
         <div className="manage-applications">
             <AdminPanel /> {/* Include the AdminPanel component for the admin navbar */}
-            <h1>Manage Adoption Applications</h1> {/* Page heading */}
+            <h2>Manage Adoption Applications</h2> {/* Page heading */}
 
             {error && <p className="error-message">{error}</p>} {/* Display error message if any */}
 
             <section className="applications-section">
-                <h2>All Applications</h2>
                 <p>Click on card to view details and to approve or reject an application</p>
                 {applications.length > 0 ? (
                     <div className="applications-grid">

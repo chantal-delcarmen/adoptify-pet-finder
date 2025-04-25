@@ -63,7 +63,7 @@ function ManageShelters() {
         <div className="manage-shelters-page">
             <AdminPanel /> {/* Include the AdminPanel for the navbar and header */}
 
-            <h1 className="page-title">Manage Shelters</h1> {/* Page heading */}
+            <h2>Manage Shelters</h2>
             <AddButton onClick={() => navigate('/admin/add-shelter')}>Add Shelter</AddButton> {/* Button to add a new shelter */}
             <table className="shelters-table">
                 <thead>

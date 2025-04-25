@@ -28,6 +28,7 @@ function Donations() {
         const fetchShelters = async () => {
             const token = localStorage.getItem('access'); // Retrieve the access token from localStorage
             if (!token) {
+                alert('You need to log in first.'); // Alert the user if not authenticated
                 navigate('/login'); // Redirect to login if the user is not authenticated
                 return;
             }

@@ -2,7 +2,7 @@
 @import 'variables';
 @import 'layout';
 @import 'buttons';
-@import 'components';
+@import 'responsive';
 @import 'form';
 @import 'application-modal';
 @import 'donations';
@@ -10,6 +10,13 @@
 @import 'admindashboard';
 @import 'filter';
 @import 'adminpanel';
+@import 'hero';
+@import 'about';
+@import 'howitworks';
+@import 'cta';
+@import 'petcard';
+@import 'favourite';
+@import 'shelters';
 
 // Global Styles
 body {
