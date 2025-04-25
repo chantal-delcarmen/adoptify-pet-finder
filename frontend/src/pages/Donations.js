@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import Navbar from '../components/Navbar';
+
+// Replace with your Stripe publishable key
+const stripePromise = loadStripe('your-publishable-key-here');
 
 function Donations() {
     const [shelters, setShelters] = useState([]);
@@ -9,6 +14,8 @@ function Donations() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const navigate = useNavigate();
+    const stripe = useStripe();
+    const elements = useElements();
 
     useEffect(() => {
         const fetchShelters = async () => {
@@ -27,7 +34,6 @@ function Donations() {
 
                 if (response.ok) {
                     const data = await response.json();
-                    console.log('Fetched shelters:', data); // Debug log
                     setShelters(data);
                 } else {
                     setError('Failed to load shelters. Please try again later.');
@@ -45,20 +51,30 @@ function Donations() {
         setError('');
         setSuccess('');
 
-        const token = localStorage.getItem('access');
-        if (!token) {
-            navigate('/login');
+        if (!stripe || !elements) {
+            setError('Stripe has not loaded yet. Please try again.');
             return;
         }
 
-        if (!selectedShelter || !amount) {
-            setError('Please select a shelter and enter a donation amount.');
-            return;
-        }
-
-        console.log('Sending data:', { shelter_id: selectedShelter, amount: parseFloat(amount) }); // Debug log
+        const cardElement = elements.getElement(CardElement);
 
         try {
+            const { paymentMethod, error: stripeError } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: cardElement,
+            });
+
+            if (stripeError) {
+                setError(stripeError.message);
+                return;
+            }
+
+            const token = localStorage.getItem('access');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
             const response = await fetch('http://localhost:8000/api/donate/', {
                 method: 'POST',
                 headers: {
@@ -66,8 +82,9 @@ function Donations() {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    shelter_id: selectedShelter, // Use selectedShelter directly
+                    shelter_id: selectedShelter,
                     amount: parseFloat(amount),
+                    payment_method_id: paymentMethod.id,
                 }),
             });
 
@@ -75,6 +92,7 @@ function Donations() {
                 setSuccess('Thank you for your donation!');
                 setAmount('');
                 setSelectedShelter('');
+                cardElement.clear();
             } else {
                 const data = await response.json();
                 setError(data.error || 'Failed to process donation. Please try again.');
@@ -85,43 +103,71 @@ function Donations() {
     };
 
     return (
-        <div className="donations-page">
-            <Navbar />
-            
-            <h1>Make a Donation</h1>
-            {error && <p className="error">{error}</p>}
-            {success && <p className="success">{success}</p>}
-            <form onSubmit={handleDonate}>
-                <div>
-                    <label htmlFor="shelter">Select Shelter:</label>
-                    <select
-                        id="shelter"
-                        value={selectedShelter}
-                        onChange={(e) => setSelectedShelter(e.target.value)}
-                    >
-                        <option value="">-- Select a Shelter --</option>
-                        {shelters.map((shelter) => (
-                            <option key={shelter.shelter_id} value={shelter.shelter_id}> {/* Use shelter.shelter_id as the value */}
-                                {shelter.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <label htmlFor="amount">Donation Amount:</label>
-                    <input
-                        type="number"
-                        id="amount"
-                        value={amount}
-                        onChange={(e) => setAmount(e.target.value)}
-                        placeholder="Enter amount"
-                        min="1"
-                        step="1"
-                    />
-                </div>
-                <button type="submit">Donate</button>
-            </form>
-        </div>
+        <>
+        <Navbar />
+        <Elements stripe={stripePromise}>
+            <div className="donations-page">
+
+                <h1>Make a Donation</h1>
+                {error && <p className="error">{error}</p>}
+                {success && <p className="success">{success}</p>}
+                <form onSubmit={handleDonate} className="donation-form">
+                    <div className="form-group">
+                        <label htmlFor="shelter">Select Shelter:</label>
+                        <select
+                            id="shelter"
+                            value={selectedShelter}
+                            onChange={(e) => setSelectedShelter(e.target.value)}
+                            className="form-control"
+                        >
+                            <option value="">-- Select a Shelter --</option>
+                            {shelters.map((shelter) => (
+                                <option key={shelter.shelter_id} value={shelter.shelter_id}>
+                                    {shelter.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="amount">Donation Amount:</label>
+                        <input
+                            type="number"
+                            id="amount"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            placeholder="Enter amount"
+                            min="1"
+                            step="1"
+                            className="form-control"
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Credit Card Details:</label>
+                        <CardElement
+                            options={{
+                                style: {
+                                    base: {
+                                        fontSize: '16px',
+                                        color: '#424770',
+                                        '::placeholder': {
+                                            color: '#aab7c4',
+                                        },
+                                    },
+                                    invalid: {
+                                        color: '#9e2146',
+                                    },
+                                },
+                            }}
+                            className="card-element"
+                        />
+                    </div>
+                    <button type="submit" disabled={!stripe} className="donate-button">
+                        Donate
+                    </button>
+                </form>
+            </div>
+        </Elements>
+        </>
     );
 }
 
