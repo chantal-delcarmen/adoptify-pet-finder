@@ -11,6 +11,7 @@ function Navbar() {
             <div className="navbar__auth">
                 <Link to="/">Home</Link>
                 <Link to="/pets">Adopt a Pet</Link>
+                <Link to="/donations">Donations</Link> {/* Add Donations link */}
                 {username ? (
                     <>
                         <span>Welcome, {username}!</span>

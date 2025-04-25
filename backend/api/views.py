@@ -258,7 +258,7 @@ class CreateShelterView(generics.CreateAPIView):
 class ShelterListView(ListAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
-    permission_classes = [IsAdminUser]  # Only admin users can access
+    permission_classes = [IsAuthenticated]  # Allow all authenticated users to access
 
 # Update Shelter
 class UpdateShelterView(generics.RetrieveUpdateDestroyAPIView):
@@ -351,18 +351,23 @@ class FavouriteListView(APIView):
 # Create new Donation
 class CreateDonationView(APIView):
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         donator = request.user
         shelter_id = request.data.get("shelter_id")
         amount = request.data.get("amount")
+
+        print("Received data:", {"shelter_id": shelter_id, "amount": amount})  # Debug log
 
         # Validate required fields
         if not shelter_id or not amount:
             return Response({"error": "Shelter ID and amount are required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            # Get the shelter object
-            shelter = Shelter.objects.get(pk=shelter_id)
+            # Ensure shelter_id is an integer
+            shelter = Shelter.objects.get(pk=int(shelter_id))
+        except ValueError:
+            return Response({"error": "Invalid shelter ID."}, status=status.HTTP_400_BAD_REQUEST)
         except Shelter.DoesNotExist:
             return Response({"error": "Shelter not found."}, status=status.HTTP_404_NOT_FOUND)
 

@@ -3,6 +3,10 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import './styles/main.scss';
 
+// Stripe imports
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+
 // Pages Routes
 import Home from './pages/Home';
 import Signup from './pages/Signup';
@@ -19,16 +23,20 @@ import ManageShelters from './pages/ManageShelters';
 import CreateShelter from './pages/CreateShelter';
 import EditShelter from './pages/EditShelter';
 import ManageApplications from './pages/ManageApplications';
+import Donations from './pages/Donations';
+
+// Replace with your Stripe publishable key
+const stripePromise = loadStripe('your-publishable-key-here');
 
 function App() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    console.log("🔍 React env URL:", process.env.REACT_APP_API_URL);
+    console.log("React env URL:", process.env.REACT_APP_API_URL);
     axios.get(`${process.env.REACT_APP_API_URL}test/`)
       .then(res => setMessage(res.data.message))
       .catch(err => {
-        console.error("❌ Failed to fetch backend:", err);
+        console.error("Failed to fetch backend:", err);
         setMessage("Error reaching backend.");
       });
   }, []);
@@ -51,6 +59,15 @@ function App() {
         <Route path="/admin/add-shelter" element={<CreateShelter />} />
         <Route path="/admin/edit-shelter/:shelterId" element={<EditShelter />} />
         <Route path="/admin/applications" element={<ManageApplications />} />
+        {/* Wrap Donations in the Elements provider */}
+        <Route
+          path="/donations"
+          element={
+            <Elements stripe={stripePromise}>
+              <Donations />
+            </Elements>
+          }
+        />
       </Routes>
     </Router>
   );
