@@ -116,7 +116,7 @@ function Donations() {
 
         {/* Hero Section */}
         <section className="hero">
-            <h2>Make a Donation</h2>
+            <h1>Make a Donation</h1>
         </section>
 
         <Elements stripe={stripePromise}>
@@ -173,7 +173,7 @@ function Donations() {
                             className="card-element"
                         />
                     </div>
-                    <button type="submit" disabled={!stripe} className="donate-button">
+                    <button type="submit" disabled={!stripe} className="button button-primary">
                         Donate {/* Submit button */}
                     </button>
                 </form>

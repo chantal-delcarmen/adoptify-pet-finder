@@ -65,7 +65,7 @@ function UserProfile() {
             
             {/* Hero Section */}
             <section className="hero">
-                <h2>Your Profile</h2>
+                <h1>Your Profile</h1>
             </section>
 
             {/* Display error message if any */}

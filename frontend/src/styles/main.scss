@@ -29,4 +29,11 @@ body {
     padding: 0;
     box-sizing: border-box;
     text-align: center; // Center text by default
-  }
+}
+
+h1 {
+  color: rgba(255, 255, 255, 0.95) !important; // Slightly less transparent white text
+  font-size: $font-size-lg * 2; // Double the base font size for emphasis
+  text-transform: uppercase;   // Make "ADOPTIFY" all caps
+  font-weight: bold;           // Ensure bold styling
+}

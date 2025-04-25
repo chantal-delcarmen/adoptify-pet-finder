@@ -4,7 +4,7 @@ import Navbar from '../components/Navbar'; // Import the Navbar component
 import PetCard from '../components/PetCard'; // Import the PetCard component for displaying pet details
 import FilterPets from '../components/FilterPets'; // Import the FilterPets component for filtering pets
 
-function Pets() {
+function ViewPets() {
   const [pets, setPets] = useState([]); // State to store the list of pets
   const [filteredPets, setFilteredPets] = useState([]); // State to store the filtered list of pets
   const [error, setError] = useState(''); // State to store error messages
@@ -41,7 +41,7 @@ function Pets() {
 
       {/* Hero Section */}
       <section className="hero">
-        <h2>Pets Available for Adoption</h2> {/* Page heading */}
+        <h1>Pets Available for Adoption</h1> {/* Page heading */}
         <p>Find your perfect companion today!</p> {/* Subheading */}
       </section>
 
@@ -68,4 +68,4 @@ function Pets() {
   );
 }
 
-export default Pets; // Export the Pets component
+export default ViewPets; // Export the Pets component
