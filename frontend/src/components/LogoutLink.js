@@ -14,7 +14,7 @@ function Logout() {
     };
 
     return (
-        <Link to="/logout" onClick={handleLogout} className="logout-link">
+        <Link to="/logout" onClick={handleLogout} className="admin-navbar__link">
             Logout
         </Link>
     );
