@@ -258,7 +258,7 @@ class CreateShelterView(generics.CreateAPIView):
 class ShelterListView(ListAPIView):
     queryset = Shelter.objects.all()
     serializer_class = ShelterSerializer
-    permission_classes = [IsAdminUser]  # Only admin users can access
+    permission_classes = [IsAuthenticated]  # Allow all authenticated users to access
 
 # Update Shelter
 class UpdateShelterView(generics.RetrieveUpdateDestroyAPIView):

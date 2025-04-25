@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 function Donations() {
     const [shelters, setShelters] = useState([]);
@@ -83,6 +84,8 @@ function Donations() {
 
     return (
         <div className="donations-page">
+            <Navbar />
+            
             <h1>Make a Donation</h1>
             {error && <p className="error">{error}</p>}
             {success && <p className="success">{success}</p>}
