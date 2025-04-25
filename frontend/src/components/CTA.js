@@ -6,7 +6,7 @@ function CTA() {
 
   return (
     <div className="cta">
-      <button className="button button--secondary" onClick={() => navigate('/signup')}>Get Started</button>
+      <button className="button button--tertiary" onClick={() => navigate('/signup')}>Get Started</button>
     </div>
   );
 }

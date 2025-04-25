@@ -1,0 +1,50 @@
+
+.manage-shelters-page {
+  padding: $spacing-md;
+  background-color: $color-secondary;
+  min-height: 100vh;
+
+  .page-title {
+    font-size: $font-size-lg;
+    color: $color-primary;
+    text-align: center;
+    margin-bottom: $spacing-md;
+  }
+
+  .shelters-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: $color-white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    th,
+    td {
+      border: 1px solid $color-muted;
+      padding: $spacing-sm;
+      text-align: left;
+    }
+
+    th {
+      background-color: $color-primary;
+      color: $color-white;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: lighten($color-secondary, 10%);
+    }
+
+    tr:hover {
+      background-color: lighten($color-secondary, 20%);
+    }
+
+    a {
+      color: $color-primary;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

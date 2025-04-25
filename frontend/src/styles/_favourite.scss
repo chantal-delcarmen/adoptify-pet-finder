@@ -1,0 +1,36 @@
+.favorite-icon {
+    position: absolute;
+    top: 10px; // Keep it at the top
+    right: 10px; // Move it to the right
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  
+    .heart-icon {
+      font-size: 24px;
+      color: #ccc; // Default color for the heart icon
+      transition: color 0.3s ease;
+    }
+  
+    .heart-icon.favorited {
+      color: #f44336; // Red color for favorited heart
+    }
+  
+    &:hover .heart-icon {
+      color: #f44336; // Red color on hover
+    }
+  }
+
+  .favourites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Default responsive grid
+    gap: $spacing-md; // Space between cards
+  }
+
+  
+.profile-favourites-grid {
+  display: grid; // Ensure it's a grid container
+  justify-content: center; // Center the grid items horizontally
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); // Maintain responsiveness
+}

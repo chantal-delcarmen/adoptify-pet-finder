@@ -1,0 +1,36 @@
+.hero.admin-hero {
+  padding: 2rem;
+  text-align: center;
+}
+
+.hero__title.admin-hero__title {
+  color: $color-white; /* White font for the header */
+  font-size: 2.5rem;
+  text-transform: uppercase; /* Uppercase styling for the header */
+  margin-bottom: 1rem;
+}
+
+.admin-navbar {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.admin-navbar__link {
+  color: $color-white; /* White font for the links */
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+  background: none; /* Ensure buttons like LogoutLink match */
+  border: none;
+  cursor: pointer;
+}
+
+.admin-navbar__link:visited {
+  color: $color-white; /* Ensure visited links remain white */
+}
+
+.admin-navbar__link:hover {
+  color: #ffcc00; /* Highlight color on hover */
+}

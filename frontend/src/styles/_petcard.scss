@@ -1,0 +1,44 @@
+// Pet Card Component
+.pets-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Responsive grid
+    gap: $spacing-md; // Space between cards
+    padding: $spacing-md;
+  }
+  
+  .pet-card {
+    background-color: $color-white; // White background
+    border: 1px solid $color-muted; // Light border
+    border-radius: $radius; // Rounded corners
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow
+    overflow: hidden; // Prevent content overflow
+    transition: transform 0.2s ease, box-shadow 0.2s ease; // Smooth hover effect
+    position: relative; // Required for the heart icon to be positioned correctly
+    text-align: center;
+    max-width: 250px;
+  
+    &:hover {
+      transform: translateY(-5px); // Lift the card on hover
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); // Stronger shadow on hover
+    }
+  
+    .pet-image {
+      width: 100%; // Full width
+      height: 200px; // Fixed height
+      object-fit: cover; // Crop image to fit
+      border-bottom: 1px solid $color-muted; // Separator line
+    }
+  
+    h3 {
+      font-size: $font-size-lg;
+      margin: $spacing-sm 0;
+      text-align: center;
+      color: $color-primary;
+    }
+  
+    p {
+      font-size: $font-size-base;
+      margin: $spacing-xs $spacing-sm;
+      color: $color-text;
+    }
+  }

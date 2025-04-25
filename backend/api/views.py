@@ -1,9 +1,16 @@
-"""This module contains the API views for the Adoptify Pet Finder application.
-It includes views for user management, pet management, adoption applications,
-favorites, donations, and shelter management.
+"""
+This module contains the API views for the Adoptify Pet Finder application.
 
-Each view handles specific HTTP requests and interacts with the database models
-to provide the required functionality."""
+It includes views for:
+- User management: Handles user registration, authentication, and details retrieval.
+- Pet management: Manages pet creation, updates, and retrieval.
+- Adoption applications: Handles creation, updates, and listing of adoption applications.
+- Favourite pets: Allows users to add, remove, and list their favourite pets.
+- Donations: Manages donations made by users to shelters.
+- Shelter management: Handles creation, updates, and listing of shelters and their management records.
+
+Each view interacts with the database models and serializers to provide the required functionality.
+"""
 
 # backend/api/views.py
 from rest_framework.decorators import api_view, renderer_classes
@@ -44,6 +51,7 @@ def health_check(request):
 
 # ---------------------------------------- User Details -------------------------------------------
 
+# Get User Details
 class UserDetailsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -57,6 +65,7 @@ class UserDetailsView(APIView):
         return Response(user_data)
     
 # -------------------------------------- User Registration -------------------------------------------
+
 # Create new User
 class CreateUserView(APIView):
     def post(self, request):
@@ -267,6 +276,7 @@ class UpdateShelterView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]  # Only admin users can update shelters
 
 # ------------------------------------- Shelter Management Records -------------------------------------------
+
 # Create new Shelter Management Record
 class CreateShelterManagementView(generics.CreateAPIView):
     queryset = ShelterManagement.objects.all()
@@ -296,6 +306,7 @@ class ShelterManagementView(APIView):
         shelter_management.delete()
         return Response({"message": "Shelter management deleted successfully."}, status=204)
 
+# View Shelter Management Record
 class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
     queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
@@ -348,6 +359,7 @@ class FavouriteListView(APIView):
         return Response(serializer.data)
     
 # ---------------------------------------- Donation Management -------------------------------------------
+
 # Create new Donation
 class CreateDonationView(APIView):
     permission_classes = [IsAuthenticated]
@@ -389,8 +401,10 @@ class DonationView(APIView):
         serializer = DonationSerializer(donation)
         return Response(serializer.data)
 
+# List All Donations
 class DonationListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         # List all donations for the authenticated user
         donations = Donation.objects.filter(adopter_user_id=request.user)

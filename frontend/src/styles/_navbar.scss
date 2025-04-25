@@ -3,7 +3,7 @@
     justify-content: space-between; /* Separate left and right sections */
     align-items: center;
     background-color: $color-primary; /* Replace with your primary color */
-    padding: 10px 40px;
+    padding: 10px 20px;
     color: $color-white;
     font-family: Arial, sans-serif;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -12,7 +12,7 @@
 
 .navbar__links {
     display: flex;
-    gap: 15px; /* Space between links */
+    gap: 25px; /* Space between links */
 }
 
 .navbar__auth {
@@ -24,7 +24,7 @@
 .navbar__username {
     font-weight: bold;
     margin-right: 10px;
-    color: $color-white; /* White color for the username */
+    color: $color-muted;
 }
 
 .navbar__auth a,

@@ -27,6 +27,15 @@
     }
   }
 
+  &--teriatry {
+    background-color: $color-tertiary;
+    color: $color-white;
+
+    &:hover {
+      background-color: darken($color-tertiary, 10%);
+    }
+  }
+
   &--outline {
     background: none;
     border: 2px solid $color-primary;

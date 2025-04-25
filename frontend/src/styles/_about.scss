@@ -1,0 +1,18 @@
+// About Section
+.about {
+    text-align: center;
+    padding: $spacing-md;
+  
+    h2 {
+      font-size: $font-size-lg;
+      color: $color-text;
+      margin-bottom: $spacing-sm;
+      font-weight: bold;           // Bold for section titles
+    }
+  
+    p {
+      color: $color-muted;
+      font-size: $font-size-base;
+      line-height: 1.6;            // Add line height for better readability
+    }
+  }

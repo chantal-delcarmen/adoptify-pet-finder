@@ -2,12 +2,21 @@
 @import 'variables';
 @import 'layout';
 @import 'buttons';
-@import 'components';
+@import 'responsive';
 @import 'form';
 @import 'application-modal';
 @import 'donations';
 @import 'navbar';
 @import 'admindashboard';
+@import 'filter';
+@import 'adminpanel';
+@import 'hero';
+@import 'about';
+@import 'howitworks';
+@import 'cta';
+@import 'petcard';
+@import 'favourite';
+@import 'shelters';
 
 // Global Styles
 body {
@@ -20,4 +29,18 @@ body {
     padding: 0;
     box-sizing: border-box;
     text-align: center; // Center text by default
-  }
+}
+
+h1 {
+  color: rgba(255, 255, 255, 0.95) !important; // Slightly less transparent white text
+  font-size: $font-size-lg * 2; // Double the base font size for emphasis
+  text-transform: uppercase;   // Make "ADOPTIFY" all caps
+  font-weight: bold;           // Ensure bold styling
+}
+
+.dark-caps h1 {
+  color: $color-muted !important; // Slightly less transparent black text
+  font-size: $font-size-lg * 2; // Double the base font size for emphasis
+  text-transform: uppercase;   // Make "ADOPTIFY" all caps
+  font-weight: bold;           // Ensure bold styling
+}

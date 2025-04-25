@@ -6,19 +6,24 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check the user's role from localStorage
     const role = localStorage.getItem('role');
+    // Redirect non-admin users to the homepage
     if (role !== 'admin') {
-      navigate('/'); // Redirect non-admin users to the homepage
+      navigate('/');
     }
   }, [navigate]);
 
   return (
     <div className="admin-dashboard-page">
-      <AdminPanel /> {/* Include the AdminPanel for the navbar and header */}
+      {/* Include the AdminPanel component for the admin navbar and header */}
+      <AdminPanel />
       <div className="card admin-dashboard">
+        {/* Admin welcome message */}
         <h2>Welcome, Admin!</h2>
         <p>Here are your management options:</p>
         <ul className="admin-dashboard__links">
+          {/* Links to various admin management pages */}
           <li>
             <Link to="/create-pet">Create a New Pet</Link>
           </li>

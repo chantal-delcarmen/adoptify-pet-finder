@@ -12,7 +12,7 @@ import Home from './pages/Home';
 import Signup from './pages/Signup';
 import LoginPage from './pages/LoginPage';
 import Apply from './pages/Apply';
-import Pets from './pages/Pets';
+import ViewPets from './pages/ViewPets';
 import CreatePet from './pages/CreatePet';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminViewPets from './pages/AdminViewPets';
@@ -49,7 +49,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/logout" element={<LogoutPage />} />
         <Route path="/apply" element={<Apply />} />
-        <Route path="/pets" element={<Pets />} />
+        <Route path="/pets" element={<ViewPets />} />
         <Route path="/create-pet" element={<CreatePet />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-view-pets" element={<AdminViewPets />} />

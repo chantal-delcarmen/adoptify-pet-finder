@@ -1,0 +1,50 @@
+// How It Works Section
+.how-it-works {
+    padding: $spacing-md;
+  
+    h2 {
+      text-align: center;
+      font-size: $font-size-lg;
+      color: $color-text;
+      margin-bottom: $spacing-xs;
+    }
+  
+    p {
+      color: $color-muted;
+      font-size: $font-size-base;
+      margin-top: 0; // Remove any top margin
+      margin-bottom: $spacing-sm;
+      line-height: 1.6;
+    }
+  
+    .steps {
+      display: flex;
+      justify-content: space-between;
+      gap: $spacing-sm;
+  
+      .step {
+        flex: 1;
+        text-align: center;
+        background-color: $color-secondary;
+        padding: $spacing-xs;
+        border-radius: $radius;
+  
+        i {
+          font-size: 3rem; // Increase the icon size (was 2rem)
+          color: $color-primary;
+          margin-bottom: $spacing-sm;
+        }
+  
+        h3 {
+          font-size: $font-size-base;
+          color: $color-text;
+          margin-bottom: $spacing-xs;
+        }
+  
+        p {
+          color: $color-muted;
+          font-size: $font-size-sm;
+        }
+      }
+    }
+  }

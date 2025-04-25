@@ -1,0 +1,21 @@
+// Call-to-Action Section
+.cta {
+    text-align: center;
+    padding: $spacing-lg;
+    background-color: $color-primary;
+  
+    h2 {
+      font-size: $font-size-lg;
+      color: $color-text;
+      margin-bottom: $spacing-sm;
+      font-weight: bold;
+    }
+  
+    p {
+      color: $color-muted;
+      font-size: $font-size-base;
+      margin-bottom: $spacing-sm;
+      line-height: 1.6;
+    }
+    
+  }
