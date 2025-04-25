@@ -5,7 +5,7 @@ function ApplicationCard({ application, isModal }) {
         <div className={`application-card ${isModal ? 'application-card--modal' : ''}`}>
             {/* Fields for both modal and non-modal views */}
             <h3>{application.pet_name || 'Unknown Pet'}</h3>
-            <p>Status: {application.application_status || 'Unknown'}</p>
+            <p><b>Application Status: {application.application_status || 'Unknown'}</b></p>
             <p>
                 Submitted on:{' '}
                 {application.submission_date

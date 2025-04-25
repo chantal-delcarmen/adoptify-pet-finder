@@ -10,40 +10,91 @@ function ManageApplications() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchApplications = async () => {
-            const token = localStorage.getItem('access');
-            if (!token) {
-                navigate('/login'); // Redirect to login if not authenticated
-                return;
-            }
+    const fetchApplications = async () => {
+        const token = localStorage.getItem('access');
+        if (!token) {
+            navigate('/login'); // Redirect to login if not authenticated
+            return;
+        }
 
-            try {
-                // Fetch all adoption applications
-                const response = await fetch('http://localhost:8000/api/adoption-application/list/', {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+        try {
+            // Fetch all adoption applications
+            const response = await fetch('http://localhost:8000/api/adoption-application/list/', {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setApplications(data);
-                } else {
-                    setError('Failed to load applications. Please try again later.');
-                }
-            } catch (err) {
+            if (response.ok) {
+                const data = await response.json();
+                setApplications(data);
+            } else {
                 setError('Failed to load applications. Please try again later.');
             }
-        };
+        } catch (err) {
+            setError('Failed to load applications. Please try again later.');
+        }
+    };
 
+    useEffect(() => {
         fetchApplications();
     }, [navigate]);
 
-    const handleApprove = (applicationId) => {
-        console.log(`Approved application with ID: ${applicationId}`);
-        // Add logic to approve the application
+    const handleApprove = async (applicationId) => {
+        const token = localStorage.getItem('access'); // Get the user's token
+        if (!token) {
+            alert('You must be logged in to approve an application.');
+            navigate('/login'); // Redirect to login if not authenticated
+            return;
+        }
+
+        try {
+            // Send a PATCH request to update the application status
+            const response = await fetch(`http://localhost:8000/api/adoption-application/${applicationId}/update-status/`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ application_status: 'Approved' }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Application approved:', data);
+
+                // Update the pet's status to "Adopted"
+                const petResponse = await fetch(`http://localhost:8000/api/pet/${data.pet_id}/`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify({ adoption_status: 'Adopted' }),
+                });
+
+                if (petResponse.ok) {
+                    console.log('Pet status updated to Adopted.');
+
+                    // Refresh the list of applications
+                    fetchApplications();
+
+                    // Redirect back to the Manage Applications page
+                    alert('Application approved successfully!');
+                    navigate('/manage-applications');
+                } else {
+                    console.error('Failed to update pet status.');
+                    alert('Failed to update pet status. Please try again.');
+                }
+            } else {
+                console.error('Failed to approve application.');
+                alert('Failed to approve application. Please try again.');
+            }
+        } catch (err) {
+            console.error('Error approving application:', err);
+            alert('An error occurred. Please try again.');
+        }
     };
 
     const handleReject = (applicationId) => {
