@@ -69,13 +69,25 @@ class AdopterUserSerializer(serializers.ModelSerializer):
 
 class ApplicationSerializer(serializers.ModelSerializer):
     pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
-    adopter_user = serializers.PrimaryKeyRelatedField(read_only=True)  #
-    pet_name = serializers.CharField(source='pet.name', read_only=True)  # Add pet_name from the related pet object
+    adopter_user = serializers.SerializerMethodField()  # Use SerializerMethodField to include full user details
+    pet_name = serializers.CharField(source='pet.name', read_only=True)
 
     class Meta:
         model = AdoptionApplication
-        fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user", "pet_name"]
-        extra_kwargs = {"submission_date": {"read_only": True}}
+        fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user", "pet_name", "message"]
+        extra_kwargs = {
+            "submission_date": {"read_only": True},
+            "message": {"required": False},  # Make the message optional if needed
+        }
+
+    def get_adopter_user(self, obj):
+        # Return the adopter's first and last name
+        if obj.adopter_user:
+            return {
+                "first_name": obj.adopter_user.first_name,
+                "last_name": obj.adopter_user.last_name,
+            }
+        return None
 
     def validate_pet_id(self, value):
         # Ensure the pet is available for adoption

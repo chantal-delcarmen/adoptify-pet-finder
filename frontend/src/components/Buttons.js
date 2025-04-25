@@ -17,3 +17,21 @@ export const RemoveButton = ({ onClick }) => (
         Remove
     </button>
 );
+
+export const ApproveButton = ({ onClick }) => (
+    <button className="button button--success" onClick={onClick}>
+        Approve
+    </button>
+);
+
+export const RejectButton = ({ onClick }) => (
+    <button className="button button--danger" onClick={onClick}>
+        Reject
+    </button>
+);
+
+export const ViewDetailsButton = ({ onClick }) => (
+    <button className="button button--primary" onClick={onClick}>
+        View Details
+    </button>
+);
