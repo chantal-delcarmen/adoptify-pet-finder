@@ -1,0 +1,54 @@
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Separate left and right sections */
+    align-items: center;
+    background-color: $color-primary; /* Replace with your primary color */
+    padding: 10px 40px;
+    color: $color-white;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0 !important; /* Ensure no space below the Navbar */
+}
+
+.navbar__links {
+    display: flex;
+    gap: 15px; /* Space between links */
+}
+
+.navbar__auth {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between links */
+}
+
+.navbar__username {
+    font-weight: bold;
+    margin-right: 10px;
+    color: $color-white; /* White color for the username */
+}
+
+.navbar__auth a,
+.navbar__links a {
+    color: $color-white; /* White links */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.navbar__auth a:visited,
+.navbar__links a:visited {
+    color: $color-white; /* Ensure visited links remain white */
+}
+
+.navbar__auth a:hover,
+.navbar__links a:hover {
+    color: #d4f1d4; /* Lighter green on hover */
+}
+
+.navbar__auth .logout-link {
+    color: $color-white; /* White logout link */
+}
+
+.navbar__auth .logout-link:hover {
+    color: #ffaaaa; /* Light red on hover */
+}

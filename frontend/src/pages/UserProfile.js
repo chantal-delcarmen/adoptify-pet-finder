@@ -62,7 +62,11 @@ function UserProfile() {
     return (
         <div className="user-profile">
             <Navbar />
-            <h1>Your Profile</h1>
+            
+            {/* Hero Section */}
+            <section className="hero">
+                <h2>Your Profile</h2>
+            </section>
 
             {error && <p className="error-message">{error}</p>}
 

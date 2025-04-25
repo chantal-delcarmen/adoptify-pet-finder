@@ -1,22 +1,68 @@
+// Home hero Section
+.home-hero {
+  position: relative;
+  height: 400px; // Adjust the height as needed
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.9); // Slightly less transparent white text
+  // padding: $spacing-lg $spacing-md;
+  margin-bottom: 0 !important;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../assets/images/hero-dog.jpg'); // Path to your image
+    background-size: cover; // Ensure the image covers the entire section
+    background-position: center; // Center the image
+    background-repeat: no-repeat; // Prevent tiling
+    filter: grayscale(100%) opacity(0.5); // Grayscale and 50% transparency
+    z-index: 0; // Place the image behind the content
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1; // Place content above the background image
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.8); // Stronger shadow for better readability
+
+    h1 {
+      font-size: $font-size-lg * 2; // Double the base font size for emphasis
+      text-transform: uppercase;   // Make "ADOPTIFY" all caps
+      font-weight: bold;           // Ensure bold styling
+      margin-bottom: $spacing-sm;
+    }
+
+    h2 {
+      font-size: $font-size-lg;    // Larger font size for the tagline
+      margin-bottom: $spacing-sm;
+    }
+  }
+}
+
 // Hero Section
 .hero {
-  background-color: $color-primary;
-  color: rgba(255, 255, 255, 0.8); // Slightly transparent white text
+  background-color: $color-primary !important;
+  position: relative;
   text-align: center;
-  padding: $spacing-lg $spacing-md;
-
+  color: $color-white;
+  margin-top: 0 !important; // Remove margin-top to avoid spacing issues
+  padding: 20px;
+  text-align: center;
+  
   h1 {
-    font-size: $font-size-lg * 2; // Double the base font size for emphasis
-    text-transform: uppercase;   // Make "ADOPTIFY" all caps
-    font-weight: bold;           // Ensure bold styling
-    margin-bottom: $spacing-sm;
-    color: rgba(255, 255, 255, 0.7); // Slightly less transparent for emphasis
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* Add shadow for better readability */
   }
 
   p {
-    font-size: $font-size-lg;    // Larger font size for the tagline
-    margin-bottom: $spacing-sm;
-    color: rgba(255, 255, 255, 0.8); // Slightly transparent white text
+      font-size: 1.2rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6); /* Add shadow for better readability */
   }
 }
 
@@ -280,78 +326,6 @@
   }
 }
 
-.navbar {
-  display: flex;
-  justify-content: flex-start; /* Align links to the left */
-  padding: 1rem 2rem;
-  background-color: $color-primary; /* Match the primary color of the page */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
-  flex-direction: column; /* Stack links vertically on smaller screens */
-  align-items: flex-start; /* Align links to the left */
-  padding: 1rem;
-}
-
-.navbar__auth {
-  display: flex;
-  gap: 2rem; /* Add spacing between the links */
-}
-
-.navbar__auth a {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.9); /* White text with slight transparency */
-  font-weight: bold;
-  font-size: 1rem; /* Adjust font size for better readability */
-  transition: color 0.3s ease; /* Smooth transition for hover effect */
-  flex-direction: column; /* Stack links vertically */
-  gap: 1rem; /* Adjust spacing for vertical layout */
-}
-
-.navbar__auth a:hover {
-  color: rgba(255, 255, 255, 1); /* Fully opaque white on hover */
-  text-decoration: underline; /* Add underline on hover */
-}
-
-.admin-navbar__auth {
-  display: flex;
-  justify-content: center; /* Center-align the links */
-  gap: 2rem; /* Add spacing between links */
-  margin-top: 1rem;
-
-  a {
-    text-decoration: none;
-    color: rgba(255, 255, 255, 0.9); /* White text with slight transparency */
-    font-weight: bold;
-    font-size: 1rem; /* Match the global link font size */
-    transition: color 0.3s ease; /* Smooth transition for hover effect */
-
-    &:hover {
-      color: rgba(255, 255, 255, 1); /* Fully opaque white on hover */
-      text-decoration: underline; /* Add underline on hover */
-    }
-  }
-}
-
-.admin-dashboard ul {
-  list-style: none; /* Remove bullets */
-  padding: 0;
-  margin: 0;
-  display: flex; /* Display links inline */
-  flex-direction: column; /* Stack links vertically */
-  gap: 1rem; /* Add spacing between links */
-}
-
-.admin-dashboard ul li a {
-  text-decoration: none;
-  color: $color-primary; /* Use the primary color for links */
-  font-weight: bold;
-  font-size: 1.2rem;
-  transition: color 0.3s ease;
-
-  &:hover {
-    text-decoration: underline;
-    color: darken($color-primary, 10%);
-  }
-}
 
 .favourites-grid {
   display: grid;

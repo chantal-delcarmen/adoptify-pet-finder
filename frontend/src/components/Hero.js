@@ -7,20 +7,18 @@ function Hero() {
 
   return (
     // Main container for the Hero section
-    <div className="hero">
+    <div className="home-hero">
       {/* Main heading for the Hero section */}
-      <h1>Adoptify</h1>
-      
-      {/* Subheading for the Hero section */}
-      <h2>Connecting You with Your New Best Friend</h2>
-      
-      {/* Primary button to view pets */}
-      <button
-        className="button button--primary"
-        onClick={() => navigate('/pets')} // Navigate to /pets
-      >
-        View Pets
-      </button>
+      <div className="home-hero__content">
+        <h1>Adoptify</h1>
+        <h2>Connecting You with Your New Best Friend</h2>
+        <button
+          className="button button--primary"
+          onClick={() => navigate('/pets')} // Navigate to /pets
+        >
+          View Pets
+        </button>
+      </div>
     </div>
   );
 }
