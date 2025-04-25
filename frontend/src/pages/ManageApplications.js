@@ -86,7 +86,7 @@ function ManageApplications() {
                     console.log('Pet status updated to Adopted.');
                     fetchApplications(); // Refresh the list of applications
                     alert('Application approved successfully!');
-                    navigate('/manage-applications');
+                    navigate('/admin/applications');
                 } else {
                     console.error('Failed to update pet status.');
                     alert('Failed to update pet status. Please try again.');
