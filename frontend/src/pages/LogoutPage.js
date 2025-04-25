@@ -22,7 +22,7 @@ function LogoutPage() {
 
     return (
         <div className="logout-page">
-            <h1>You have been logged out successfully!</h1> {/* Logout confirmation message */}
+            <h2>You have been logged out successfully!</h2> {/* Logout confirmation message */}
             <p>Redirecting to the home page...</p> {/* Inform the user about the redirection */}
         </div>
     );
