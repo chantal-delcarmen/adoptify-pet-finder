@@ -44,6 +44,7 @@ def health_check(request):
 
 # ---------------------------------------- User Details -------------------------------------------
 
+# Get User Details
 class UserDetailsView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -57,6 +58,7 @@ class UserDetailsView(APIView):
         return Response(user_data)
     
 # -------------------------------------- User Registration -------------------------------------------
+
 # Create new User
 class CreateUserView(APIView):
     def post(self, request):
@@ -267,6 +269,7 @@ class UpdateShelterView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminUser]  # Only admin users can update shelters
 
 # ------------------------------------- Shelter Management Records -------------------------------------------
+
 # Create new Shelter Management Record
 class CreateShelterManagementView(generics.CreateAPIView):
     queryset = ShelterManagement.objects.all()
@@ -296,6 +299,7 @@ class ShelterManagementView(APIView):
         shelter_management.delete()
         return Response({"message": "Shelter management deleted successfully."}, status=204)
 
+# View Shelter Management Record
 class ShelterManagementDetailView(generics.RetrieveDestroyAPIView):
     queryset = ShelterManagement.objects.all()
     serializer_class = ShelterManagementSerializer
@@ -348,6 +352,7 @@ class FavouriteListView(APIView):
         return Response(serializer.data)
     
 # ---------------------------------------- Donation Management -------------------------------------------
+
 # Create new Donation
 class CreateDonationView(APIView):
     permission_classes = [IsAuthenticated]
@@ -389,8 +394,10 @@ class DonationView(APIView):
         serializer = DonationSerializer(donation)
         return Response(serializer.data)
 
+# List All Donations
 class DonationListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         # List all donations for the authenticated user
         donations = Donation.objects.filter(adopter_user_id=request.user)

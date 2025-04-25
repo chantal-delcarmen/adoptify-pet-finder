@@ -1,20 +1,19 @@
 from django.contrib.auth.models import User
-from rest_framework  import serializers
+from rest_framework import serializers
 
 from .models import Pet, Shelter, AdoptionApplication, UserProfile, ShelterManagement, Favourite, Donation
 from django.db import models
 
-
 # -------------------------------------- User Registration -------------------------------------------
 
 class UserSerializer(serializers.ModelSerializer):
-    phone_number = serializers.CharField(source='profile.phone_number', required=False)
-    address = serializers.CharField(source='profile.address', required=False)
+    phone_number = serializers.CharField(source='profile.phone_number', required=False)  # Map phone_number to the UserProfile model
+    address = serializers.CharField(source='profile.address', required=False)  # Map address to the UserProfile model
 
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email', 'password', 'phone_number', 'address']
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True}}  # Ensure the password is write-only
 
     def validate_username(self, value):
         # Check if the username already exists
@@ -29,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
         return value
 
     def validate_phone_number(self, value):
-        # Example: Ensure phone number is numeric
+        # Ensure the phone number contains only digits
         if not value.isdigit():
             raise serializers.ValidationError("Phone number must contain only digits.")
         return value
@@ -47,7 +46,7 @@ class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'password', 'email', 'first_name', 'last_name']
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True}}  # Ensure the password is write-only
 
     def create(self, validated_data):
         # Create a user with admin privileges
@@ -60,7 +59,7 @@ class AdopterUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
-        extra_kwargs = {'password': {'write_only': True}}
+        extra_kwargs = {'password': {'write_only': True}}  # Ensure the password is write-only
 
     def create(self, validated_data):
         # Create a user with adopter privileges
@@ -68,16 +67,16 @@ class AdopterUserSerializer(serializers.ModelSerializer):
         return user
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())
-    adopter_user = serializers.SerializerMethodField()  # Use SerializerMethodField to include full user details
-    pet_name = serializers.CharField(source='pet.name', read_only=True)
+    pet_id = serializers.PrimaryKeyRelatedField(queryset=Pet.objects.all())  # Reference the Pet model
+    adopter_user = serializers.SerializerMethodField()  # Include adopter user details
+    pet_name = serializers.CharField(source='pet.name', read_only=True)  # Include the pet's name
 
     class Meta:
         model = AdoptionApplication
         fields = ["application_id", "application_status", "submission_date", "pet_id", "adopter_user", "pet_name", "message"]
         extra_kwargs = {
-            "submission_date": {"read_only": True},
-            "message": {"required": False},  # Make the message optional if needed
+            "submission_date": {"read_only": True},  # Make submission_date read-only
+            "message": {"required": False},  # Make the message optional
         }
 
     def get_adopter_user(self, obj):
@@ -91,14 +90,14 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
     def validate_pet_id(self, value):
         # Ensure the pet is available for adoption
-        if value.adoption_status != "Available":  # Match the string used in the view
+        if value.adoption_status != "Available":
             raise serializers.ValidationError("This pet is not available for adoption.")
         return value
 
     def create(self, validated_data):
         # Extract the Pet object and replace it with its primary key
-        pet = validated_data.pop('pet_id')  # Get the Pet object
-        validated_data['pet_id'] = pet.pet_id  # Replace it with the primary key (use pet.pet_id if custom primary key)
+        pet = validated_data.pop('pet_id')
+        validated_data['pet_id'] = pet.pet_id  # Replace with the primary key
 
         # Create the AdoptionApplication object
         adopt_application = AdoptionApplication.objects.create(**validated_data)
@@ -107,15 +106,15 @@ class ApplicationSerializer(serializers.ModelSerializer):
 # --------------------------------------- Pet Management -------------------------------------------
 
 class PetSerializer(serializers.ModelSerializer):
-    shelter_name = serializers.CharField(source='shelter_id.name', read_only=True)  # Add shelter_name
+    shelter_name = serializers.CharField(source='shelter_id.name', read_only=True)  # Include the shelter's name
 
     class Meta:
         model = Pet
         fields = ['pet_id', 'age', 'gender', 'domesticated', 'name', 'adoption_status', 'pet_type', 'shelter_id', 'shelter_name', 'image']
         extra_kwargs = {
-            'pet_id': {'read_only': True},
+            'pet_id': {'read_only': True},  # Make pet_id read-only
             'adoption_status': {'required': True},  # Ensure adoption_status is required
-            'gender': {'required': True},
+            'gender': {'required': True},  # Ensure gender is required
             'pet_type': {'required': True},  # Ensure pet_type is required
             'image': {'required': False},  # Make image optional
         }
@@ -133,6 +132,7 @@ class PetSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
+        # Ensure age is greater than 0
         if data.get('age') is not None and data.get('age') <= 0:
             raise serializers.ValidationError({"age": "Age must be greater than 0."})
         return data
@@ -164,14 +164,14 @@ class ShelterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shelter
         fields = ['shelter_id', 'name', 'address', 'phone_number', 'website_url']
-        extra_kwargs = {'shelter_id': {'read_only': True}}
+        extra_kwargs = {'shelter_id': {'read_only': True}}  # Make shelter_id read-only
 
     def create(self, validated_data):
         # Create a new Shelter object
         shelter = Shelter.objects.create(**validated_data)
 
         # Automatically assign the root admin user as the manager
-        root_admin = User.objects.filter(is_superuser=True).first()  # Get the root admin user
+        root_admin = User.objects.filter(is_superuser=True).first()
         if root_admin:
             ShelterManagement.objects.create(
                 shelter_id=shelter,
@@ -181,34 +181,37 @@ class ShelterSerializer(serializers.ModelSerializer):
         return shelter
 
 class ShelterManagementSerializer(serializers.ModelSerializer):
-    admin_user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())
+    admin_user = serializers.HiddenField(default=serializers.CurrentUserDefault())  # Automatically set the current user
+    shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())  # Reference the Shelter model
 
     class Meta:
         model = ShelterManagement
         fields = ['shelter_id', 'admin_user', 'manage_id']
-        extra_kwargs = {'manage_id': {'read_only': True}}
+        extra_kwargs = {'manage_id': {'read_only': True}}  # Make manage_id read-only
 
     def create(self, validated_data):
         # Resolve the SimpleLazyObject to a User instance
         validated_data['admin_user'] = validated_data['admin_user']._wrapped if hasattr(validated_data['admin_user'], '_wrapped') else validated_data['admin_user']
         # Create the ShelterManagement object
         return ShelterManagement.objects.create(**validated_data)
-    
-# --------------------------------------- Donation Management -------------------------------------------    
+
+# --------------------------------------- Donation Management -------------------------------------------
+
 class DonationSerializer(serializers.ModelSerializer):
-    adopter_user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
-    shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())
+    adopter_user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())  # Reference the User model
+    shelter_id = serializers.PrimaryKeyRelatedField(queryset=Shelter.objects.all())  # Reference the Shelter model
 
     class Meta:
         model = Donation
         fields = ['fundId', 'adopter_user_id', 'shelter_id', 'amount', 'donation_date']
-        extra_kwargs = {'donation_id': {'read_only': True}}
+        extra_kwargs = {'donation_id': {'read_only': True}}  # Make donation_id read-only
+
     def create(self, validated_data):
-         # Create a new donation object
+        # Create a new donation object
         return Donation.objects.create(**validated_data)
 
 # --------------------------------------- Favourite Management -------------------------------------------
+
 class FavouriteSerializer(serializers.ModelSerializer):
     pet = PetSerializer(read_only=True)  # Include pet information using PetSerializer
 
@@ -216,7 +219,7 @@ class FavouriteSerializer(serializers.ModelSerializer):
         model = Favourite
         fields = ['id', 'pet', 'adopter_user_id']
         extra_kwargs = {
-            'adopter_user_id': {'read_only': True},
+            'adopter_user_id': {'read_only': True},  # Make adopter_user_id read_only
         }
 
     def create(self, validated_data):

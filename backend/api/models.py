@@ -1,46 +1,44 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator, URLValidator
-#from phonenumber_field.modelfields import PhoneNumberField
 
 def get_root_admin_user():
     return User.objects.filter(is_superuser=True).first()
 
-# Defines the database schema using Django models
-# When to Edit:
-# - To create or modify database tables
-# - To define relationships between tables
+# --------------------------------------- User Profile Model -------------------------------------------
 
-# Example add a new model for pets
-
-# User Profile Model
+# This model extends the default User model to include additional fields like phone number and address.
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    phone_number = models.CharField(max_length=15, blank=True)
-    address = models.TextField(blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # Link to the User model
+    phone_number = models.CharField(max_length=15, blank=True)  # Optional phone number
+    address = models.TextField(blank=True)  # Optional address field
 
     def __str__(self):
-        return self.user.username
+        return self.user.username  # Return the username as the string representation
 
-# Admin User Model
+# --------------------------------------- Admin User Model -------------------------------------------
+
+# This model represents admin users with additional fields like phone number and address.
 class AdminUser(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin_profile')
-    phone_number = models.CharField(max_length=15, blank=True)
-    address = models.TextField(blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='admin_profile')  # Link to the User model
+    phone_number = models.CharField(max_length=15, blank=True)  # Optional phone number
+    address = models.TextField(blank=True)  # Optional address field
 
     def __str__(self):
-        return self.user.username
+        return self.user.username  # Return the username as the string representation
 
-# Shelter Model
+# --------------------------------------- Shelter Model -------------------------------------------
+
+# This model represents shelters, including their name, address, phone number, and website URL.
 class Shelter(models.Model):
     shelter_id = models.BigAutoField(primary_key=True)  # Auto-incrementing ID
-    name = models.CharField(max_length=100, unique=True)  # Shelter name (added uniqueness for better data integrity)
+    name = models.CharField(max_length=100, unique=True)  # Shelter name (unique for data integrity)
     address = models.CharField(max_length=200)  # Shelter address
     phone_number = models.CharField(max_length=15, blank=True, null=True)  # Optional phone number
     website_url = models.URLField(blank=True, null=True)  # Optional website URL
 
     def __str__(self):
-        return self.name
+        return self.name  # Return the shelter name as the string representation
 
     def add_pet(self, pet):
         """Assign a pet to this shelter."""
@@ -66,21 +64,23 @@ class Shelter(models.Model):
         """List all available pets in this shelter."""
         return self.pets.filter(adoption_status="Available")
 
-# Shelter Management Model
+# --------------------------------------- Shelter Management Model -------------------------------------------
+
+# This model represents the management of shelters by admin users.
 class ShelterManagement(models.Model):
-    shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name="management")
+    shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE, related_name="management")  # Link to the Shelter model
     admin_user = models.ForeignKey(
         User,  # Ensure this points to the default User model
         on_delete=models.CASCADE,
         related_name="managed_shelters",
         default=get_root_admin_user  # Default to root admin user
     )
-    manage_id = models.BigAutoField(primary_key=True)
-    start_date = models.DateField(blank=True, null=True)
-    end_date = models.DateField(blank=True, null=True)
+    manage_id = models.BigAutoField(primary_key=True)  # Auto-incrementing ID
+    start_date = models.DateField(blank=True, null=True)  # Optional start date
+    end_date = models.DateField(blank=True, null=True)  # Optional end date
 
     def __str__(self):
-        return f"Shelter Management for {self.shelter_id.name} by {self.admin_user.username}"
+        return f"Shelter Management for {self.shelter_id.name} by {self.admin_user.username}"  # String representation
 
     def add_record(self, admin, shelter, start_date, end_date):
         """Assign an admin to manage a shelter."""
@@ -100,7 +100,9 @@ class ShelterManagement(models.Model):
             "end_date": self.end_date,
         }
 
-# Pet Model
+# --------------------------------------- Pet Model -------------------------------------------
+
+# This model represents pets, including their details like age, gender, type, and adoption status.
 class Pet(models.Model):
     ADOPTION_STATUS_CHOICES = [
         ("Available", "Available"),
@@ -108,22 +110,22 @@ class Pet(models.Model):
         ("Adopted", "Adopted"),
     ]
 
-    pet_id = models.BigAutoField(primary_key=True, null=False)
+    pet_id = models.BigAutoField(primary_key=True, null=False)  # Auto-incrementing ID
     age = models.IntegerField(
         null=False,
-        validators=[MinValueValidator(0.01), MaxValueValidator(99)]
+        validators=[MinValueValidator(0.01), MaxValueValidator(99)]  # Age validation
     )
     gender = models.CharField(
         max_length=10,
-        choices=(("Male", "Male"), ("Female", "Female")),
+        choices=(("Male", "Male"), ("Female", "Female")),  # Gender choices
         default=None,
         blank=False  # Ensure gender is required
     )
-    domesticated = models.BooleanField(null=False)  # Ensure domesticated is required
-    name = models.CharField(max_length=100, blank=False)  # Ensure name is required
+    domesticated = models.BooleanField(null=False)  # Boolean field for domestication status
+    name = models.CharField(max_length=100, blank=False)  # Pet name
     adoption_status = models.CharField(
         max_length=10,
-        choices=ADOPTION_STATUS_CHOICES,
+        choices=ADOPTION_STATUS_CHOICES,  # Adoption status choices
         default="Available",
         blank=False,  # Ensure adoption_status is required
         null=False
@@ -131,44 +133,48 @@ class Pet(models.Model):
     PET_CHOICES = (("Dog", "Dog"), ("Cat", "Cat"), ("Bird", "Bird"), ("Rabbit", "Rabbit"))
     pet_type = models.CharField(
         max_length=10,
-        choices=PET_CHOICES,
+        choices=PET_CHOICES,  # Pet type choices
         blank=False,  # Ensure pet_type is required
         default="Dog"
     )
     shelter_id = models.ForeignKey(
         Shelter,
         on_delete=models.CASCADE,
-        related_name='pets'
+        related_name='pets'  # Link to the Shelter model
     )
     image = models.ImageField(
-        upload_to='pet_images/',
+        upload_to='pet_images/',  # Directory for storing pet images
         blank=True,
         null=True  # Image is optional
     )
 
     def __str__(self):
-        return self.name
+        return self.name  # Return the pet name as the string representation
 
-# Adoption Application Model
+# --------------------------------------- Adoption Application Model -------------------------------------------
+
+# This model represents adoption applications submitted by users for pets.
 class AdoptionApplication(models.Model):
-    application_id = models.BigAutoField(primary_key=True)
+    application_id = models.BigAutoField(primary_key=True)  # Auto-incrementing ID
     application_status = models.CharField(
         max_length=20, 
-        choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")), 
+        choices=(("Pending", "Pending"), ("Approved", "Approved"), ("Rejected", "Rejected")),  # Status choices
         default="Pending"
     )
-    submission_date = models.DateTimeField(auto_now_add=True)
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)  # Renamed from pet_id to pet
-    adopter_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.TextField(null=True, blank=True)  # Add the message field
+    submission_date = models.DateTimeField(auto_now_add=True)  # Automatically set the submission date
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)  # Link to the Pet model
+    adopter_user = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the User model
+    message = models.TextField(null=True, blank=True)  # Optional message field
 
     def __str__(self):
-        return f"Application {self.application_id} - {self.application_status}"
+        return f"Application {self.application_id} - {self.application_status}"  # String representation
 
-# Donation Model
+# --------------------------------------- Donation Model -------------------------------------------
+
+# This model represents donations made by users to shelters.
 class Donation(models.Model):
-    fundId = models.BigAutoField(primary_key=True)
-    adopter_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    fundId = models.BigAutoField(primary_key=True)  # Auto-incrementing ID
+    adopter_user_id = models.ForeignKey(User, on_delete=models.CASCADE)  # Link to the User model
     shelter_id = models.ForeignKey(Shelter, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     donation_date = models.DateTimeField(auto_now_add=True)
@@ -184,7 +190,9 @@ class Donation(models.Model):
     def getDonationDetails(self):
         return {self.fundId, self.adopter_user_id.username, self.shelter_id.name, self.amount, self.donation_date}
 
-# Adopter Model
+# --------------------------------------- Adopter Model -------------------------------------------
+
+# This model represents the adoption of pets by users.
 class Adopter(models.Model):
     adopter_user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     pet_id = models.ForeignKey(Pet, on_delete=models.CASCADE)
@@ -195,7 +203,9 @@ class Adopter(models.Model):
         return self.adopter_user_id.username
     
 
-# Favourite Model
+# --------------------------------------- Favourite Model -------------------------------------------
+
+# This model represents the favourite pets of users.
 class Favourite(models.Model):
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='favourites')  # Renamed from pet_id to pet
     adopter_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favourites')  # Fixed related_name typo
