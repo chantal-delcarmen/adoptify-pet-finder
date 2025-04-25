@@ -49,7 +49,73 @@ adoptify-pet-finder/
 
 ---
 
-## 🚀 Local Setup Guide
+## 🚀 Local Setup Guide to Run (Using Docker)
+
+Follow these steps to quickly run the project using Docker:
+
+---
+
+### ✅ Prerequisites
+
+Before starting, ensure you have the following installed and running:
+
+- 📦 [Docker Desktop](https://www.docker.com/products/docker-desktop)  
+  > **Note**: Make sure Docker Desktop is open and running before proceeding.
+
+---
+
+### 🛠️ Steps to Run the Project
+
+1. **Build The Project**:
+  - Build the containers
+    ```bash
+    docker-compose build
+    ```
+
+2. **Run the Project**:
+   - Start all services (frontend, backend, and database):
+     ```bash
+     docker-compose up
+     ```
+
+3. **Access the Application**:
+   - 🌐 Frontend: [http://localhost:3000](http://localhost:3000)
+   - 🔌 Backend API: [http://localhost:8000/api/](http://localhost:8000/api/)
+
+---
+
+### 🔄 Running in Detached Mode
+
+To run the containers in the background:
+```bash
+docker-compose up -d
+```
+
+---
+
+### 🛠️ Rebuilding Containers (If Needed)
+
+If you make changes to the code, rebuild the affected container(s) before starting:
+```bash
+docker-compose build frontend  # For frontend changes
+docker-compose build backend   # For backend changes
+docker-compose up
+```
+
+---
+
+### 🛑 Stopping the Project
+
+To stop all running containers:
+```bash
+docker-compose down
+```
+
+---
+
+That’s it! Your project should now be running locally using Docker. 🚀
+
+## 🚀 Local Setup Guide for Developing
 
 ### ✅ Prerequisites
 
